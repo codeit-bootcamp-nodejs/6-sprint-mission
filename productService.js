@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import axios from "../lib/axios.js";
+import axios from "./axios.js";
 
 export async function getProductList(params) {
   try {
