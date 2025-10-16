@@ -1,0 +1,23 @@
+{
+  "name": "codeit-6-sprint-mission",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/fresh502/codeit-6-sprint-mission#readme",
+  "bugs": {
+    "url": "https://github.com/fresh502/codeit-6-sprint-mission/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fresh502/codeit-6-sprint-mission.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "axios": "^1.12.2"
+  }
+}
