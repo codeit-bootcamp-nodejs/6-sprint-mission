@@ -45,8 +45,8 @@ for (let i = 0; i < products.length; i++) {
 }
 
 //print result
-//print(productInstance); // view the array for Product Instances
-//print(eProductInstance); // view the array for Electronic Product Instances
+print(productInstance); // view the array for Product Instances
+print(eProductInstance); // view the array for Electronic Product Instances
 print_summary(nP, nEP);
 
 // print(eProductInstance[0].viewAll()); // view all properties including private

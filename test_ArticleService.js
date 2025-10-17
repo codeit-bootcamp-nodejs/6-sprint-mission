@@ -15,10 +15,10 @@ const params = {
 };
 
 let articles;
-articles = await getArticleList(params); // retrieve articles by params
+//articles = await getArticleList(params); // retrieve articles by params
 //articles = await getArticleList();
 
-//articles = await getArticle(5022); // retrieve an article by id
+articles = await getArticle(5023); // retrieve an article by id
 //articles = await getArticle(10); // retrieve an article by id - error test
 
 const articleData = {
@@ -32,7 +32,7 @@ const articleData = {
 
 //articles = await patchArticle(5023, articleData); // modify an existing article
 
-//articles = await deleteArticle(5024); // delete an existing article
+//articles = await deleteArticle(5023); // delete an existing article
 
 if (articles) console.log(articles);
 console.log('');

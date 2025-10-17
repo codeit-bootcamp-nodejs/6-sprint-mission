@@ -28,7 +28,6 @@ export async function getProduct(id) {
 }
 
 export async function createProduct(productData) {
-  const today = new Date();
   try {
     const response = await instance.post(`/products`, productData);
     return response.data;
