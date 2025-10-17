@@ -2,7 +2,8 @@ import axios from 'axios';
 
 const instance = axios.create({
   baseURL: 'https://panda-market-api-crud.vercel.app',
-  timeout: 5000,
+  headers: { 'Content-Type': 'application/json' },
+  timeout: 10000,
 });
 
 export async function getProductList(params = {}) {

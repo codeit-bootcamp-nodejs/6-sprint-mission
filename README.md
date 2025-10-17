@@ -2,8 +2,10 @@
 
 #### 클래스와 API 함수 사용하기
 
-##### ArticleClass.js, ArticleService.js, test_ArticleService.js
+##### class/ ArticleClass.js, ProductClass.js, ElectronicProductClass.js
 
-##### ProductClass.js, ElectronicProductClass.js, ProductService.js, test_ProductService.js
+##### service/ ArticleService.js, ProductService.js
 
-##### main.js
+##### lib/myFuns.js
+
+##### main.js, test_ArticleService.js, test_ProductService.js
