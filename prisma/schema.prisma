@@ -1,0 +1,74 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Tag {
+  NONE // * 없는 분류도 있으니 기본값 설정 의도를 위해 추가함 *
+  FASHION
+  BEAUTY
+  SPORTS
+  ELECTRONICS
+  HOME_INTERIOR
+  HOUSEHOLD_SUPPLIES
+  KITCHENWARE
+}
+
+// 중고 마켓 * 보안이 중요하지 않은 단순 로직으로 판단했기에 id는 정수로 의도함 *
+model Product {
+  id             Int              @id @default(autoincrement())
+  name           String
+  description    String?
+  price          Float
+  stock          Int
+  tags           Tag              @default(NONE)
+  imagePath      String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  purchase       Purchase[]
+  productComment ProductComment[]
+}
+
+// 자유 게시판
+model Article {
+  id        Int       @id @default(autoincrement())
+  title     String
+  content   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  comment   Comment[]
+}
+
+// 자유 게시판 댓글 * 단순 댓글을 의도했기에 불필요한 updatedAt는 제외 시킴 *
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId Int
+}
+
+// 마켓 댓글
+model ProductComment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+}
+
+// 상품 구매
+model Purchase {
+  id        Int      @id @default(autoincrement())
+  quantity  Int
+  unitPrice Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+}
