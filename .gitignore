@@ -1,0 +1,12 @@
+node_modules/
+__http__/
+.env
+.vscode
+main.bak
+
+refactoring_checklist.md
+Sprint Mission 3.md
+src_analysis_report.md
+structure_analysis.md
+GEMINI.md
+PROJECT_REVIEW.md
