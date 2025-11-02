@@ -17,8 +17,23 @@ export const articleCommentService = {
   findById: async (id) => {
     return articleCommentRepository.findCommentById(id);
   },
-  find: async (findOptions) => {
-    return articleCommentRepository.findComments(findOptions);
+  find: async ({ cursor, sort = 'newest', keyword = '', limit = 10 }) => {
+    const sortOptions = {
+      newest: { createdAt: 'desc' },
+      oldest: { createdAt: 'asc' },
+    };
+
+    const findOptions = {
+      take: limit,
+      orderBy: sortOptions[sort] || sortOptions.newest,
+      ...(cursor && { cursor: { id: cursor }, skip: 1 }),
+      ...(keyword && { where: { content: { contains: keyword } } }),
+    };
+
+    const comments = await articleCommentRepository.findComments(findOptions);
+    const nextCursor =
+      comments.length === limit ? comments[limit - 1].id : null;
+    return { comments, nextCursor };
   },
 };
 
@@ -35,7 +50,25 @@ export const productCommentService = {
   findById: async (id) => {
     return productCommentRepository.findCommentById(id);
   },
-  find: async (findOptions) => {
-    return productCommentRepository.findComments(findOptions);
+  find: async ({ cursor, sort = 'newest', keyword = '', limit = 10 }) => {
+    // const  = req.query;
+    // const limit = parseInt(req.query.limit || 10, 10);
+
+    const sortOptions = {
+      newest: { createdAt: 'desc' },
+      oldest: { createdAt: 'asc' },
+    };
+
+    const findOptions = {
+      take: limit,
+      orderBy: sortOptions[sort] || sortOptions.newest,
+      ...(cursor && { cursor: { id: cursor }, skip: 1 }),
+      ...(keyword && { where: { content: { contains: keyword } } }),
+    };
+
+    const comments = await productCommentRepository.findComments(findOptions);
+    const nextCursor =
+      comments.length === limit ? comments[limit - 1].id : null;
+    return { comments, nextCursor };
   },
 };

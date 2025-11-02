@@ -1,15 +1,13 @@
 import { articleService } from '../services/articleService.js';
 
 export const createArticle = async (req, res) => {
-  const data = req.body;
-  const article = await articleService.create(data);
+  const article = await articleService.create(req.body);
   res.status(201).send(article);
 };
 
 export const patchArticle = async (req, res) => {
   const { id } = req.params;
-  const data = req.body;
-  const article = await articleService.update(id, data);
+  const article = await articleService.update(id, req.body);
   res.status(200).send(article);
 };
 
@@ -26,41 +24,9 @@ export const deleteArticle = async (req, res) => {
 };
 
 export const getArticleList = async (req, res) => {
-  const { sort, keyword = '' } = req.query;
-  const limit = parseInt(req.query.limit || 10, 10);
-  const offset = parseInt(req.query.offset || 10, 10);
-  const select = {
-    id: true,
-    title: true,
-    content: true,
-    createdAt: true,
-  };
-
-  const sortOptions = {
-    newest: { createdAt: 'desc' },
-    oldest: { createdAt: 'asc' },
-    priceHighest: { price: 'desc' },
-    priceLowest: { price: 'asc' },
-  };
-
-  const findOptions = {
-    take: limit,
-    orderBy: sortOptions[sort] || sortOptions.newest,
-    ...(keyword && {
-      where: {
-        OR: [
-          { title: { contains: keyword } },
-          { content: { contains: keyword } },
-        ],
-      },
-      select,
-    }),
-    ...(!keyword &&
-      offset && {
-        skip: offset,
-        select,
-      }),
-  };
-  const articles = await articleService.find(findOptions);
+  const { sort, keyword, limit: limitStr, offset: offsetStr } = req.query;
+  const limit = limitStr ? parseInt(limitStr, 10) : undefined;
+  const offset = offsetStr ? parseInt(offsetStr, 10) : undefined;
+  const articles = await articleService.find({ sort, keyword, limit, offset });
   res.status(200).send(articles);
 };

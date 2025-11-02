@@ -41,7 +41,44 @@ export const productService = {
   findById: async (id) => {
     return productRepository.findProductById(id);
   },
-  find: async (findOptions) => {
+  find: async ({ sort, category, status, keyword, limit = 10, offset = 0 }) => {
+    // const  = req.query;
+    // const limit = parseInt(req.query.limit || 10, 10);
+    // const offset = parseInt(req.query.offset || 10, 10);
+    const select = {
+      id: true,
+      name: true,
+      price: true,
+      createdAt: true,
+      status: true,
+      category: true,
+    };
+
+    const sortOptions = {
+      newest: { createdAt: 'desc' },
+      oldest: { createdAt: 'asc' },
+      priceHighest: { price: 'desc' },
+      priceLowest: { price: 'asc' },
+    };
+
+    const where = {
+      ...(category && { category }),
+      ...(status && { status }),
+      ...(keyword && {
+        OR: [
+          { name: { contains: keyword } },
+          { description: { contains: keyword } },
+        ],
+      }),
+    };
+
+    const findOptions = {
+      where,
+      select,
+      take: limit,
+      skip: offset,
+      orderBy: sortOptions[sort] || sortOptions.newest,
+    };
     return productRepository.findProducts(findOptions);
   },
 };

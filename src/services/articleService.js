@@ -16,7 +16,39 @@ export const articleService = {
   findById: async (id) => {
     return articleRepository.findArticleById(id);
   },
-  find: async (findOptions) => {
+  find: async ({ sort, keyword = '', limit = 10, offset = 10 }) => {
+    const select = {
+      id: true,
+      title: true,
+      content: true,
+      createdAt: true,
+      price: true,
+    };
+
+    const sortOptions = {
+      newest: { createdAt: 'desc' },
+      oldest: { createdAt: 'asc' },
+      priceHighest: { price: 'desc' },
+      priceLowest: { price: 'asc' },
+    };
+
+    const where = keyword
+      ? {
+          OR: [
+            { title: { contains: keyword } },
+            { content: { contains: keyword } },
+          ],
+        }
+      : undefined;
+
+    const findOptions = {
+      where,
+      select,
+      take: limit,
+      skip: offset,
+      orderBy: sortOptions[sort] || sortOptions.newest,
+    };
+
     return articleRepository.findArticles(findOptions);
   },
 };
