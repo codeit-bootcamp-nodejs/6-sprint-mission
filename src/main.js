@@ -18,5 +18,5 @@ app.use('/comments', commentRouter);
 app.use('/files', uploadRouter);
 
 app.listen(PORT, () => {
-    console.log(`Server is running on https://localhost:${PORT}`);
+    console.log(`Server is running`);
 });

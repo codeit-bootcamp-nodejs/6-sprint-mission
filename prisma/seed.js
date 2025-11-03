@@ -9,6 +9,11 @@ async function main() {
         data: PRODUCTS,
         skipDuplicates: true,
     });
+    await prisma.article.deleteMany({});
+    await prisma.articleproduct.createMany({
+        data: ARTICLES,
+        skipDuplicates: true,
+    });
 }
 
 main().then(async () => { await prisma.$disconnect(); })
