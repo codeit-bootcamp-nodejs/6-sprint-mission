@@ -22,7 +22,6 @@ export const articleService = {
       title: true,
       content: true,
       createdAt: true,
-      price: true,
     };
 
     const sortOptions = {
