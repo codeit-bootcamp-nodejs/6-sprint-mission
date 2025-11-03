@@ -1,0 +1,23 @@
+{
+  "name": "6-sprint-mission",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/main.js",
+  "scripts": {
+    "dev": "node --watch src/main.js",
+    "start": "node src/main.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev --name init",
+    "seed": "node prisma/seed.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.2"
+  },
+  "devDependencies": {
+    "prisma": "^5.19.0"
+  }
+}
