@@ -1,0 +1,29 @@
+{
+  "name": "03_used_market",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "@prisma/client": "^5.4.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "is-email": "^1.0.2",
+    "is-uuid": "^1.0.2",
+    "multer": "^2.0.2",
+    "prisma": "^5.4.2",
+    "superstruct": "^1.0.4"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^10.1.0",
+    "nodemon": "^3.0.1"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "clear; nodemon src/main.js",
+    "start": "clear; node src/main.js"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  }
+}

@@ -1,0 +1,131 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String           @id @default(uuid())
+  email           String           @unique
+  firstName       String
+  lastName        String
+  fullName        String
+  address         String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  userPreference  UserPreference?
+  products        Product[]
+  articles        Article[]
+  productComments ProductComment[]
+  articleComments ArticleComment[]
+}
+
+model UserPreference {
+  id           String   @id @default(uuid())
+  receiveEmail Boolean
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String   @unique
+}
+
+model Product {
+  id          String           @id @default(uuid())
+  name        String
+  description String?
+  category    Category
+  price       Float
+  stock       Int
+  status      ProductStatus    @default(ON_SALE)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  tags        Tag[]
+  images      Image[]
+  comments    ProductComment[]
+  author      User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId    String
+}
+
+model Tag {
+  id       String    @id @default(uuid())
+  tag      String    @unique
+  products Product[]
+}
+
+model Image {
+  id        String   @id @default(uuid())
+  url       String // 이미지 파일 경로 또는 URL
+  createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+}
+
+enum Category {
+  FASHION
+  BEAUTY
+  SPORTS
+  ELECTRONICS
+  HOME_INTERIOR
+  HOUSEHOLD_SUPPLIES
+  KITCHENWARE
+  MOBILE_TABLET
+  GAME
+  LUXURY_GOODS
+  INFANT_CHILD
+  PET_SUPPLIES
+  HOBBY
+  BOOKS_MUSIC_STATIONERY
+  TICKET_COUPON
+  USED_CAR
+  MOTORCYCLE
+  TOOLS_INDUSTRIAL_SUPPLIES
+  FREE_SHARING
+}
+
+enum ProductStatus {
+  ON_SALE
+  RESERVED
+  COMPLETE
+}
+
+model Article {
+  id        String           @id @default(uuid())
+  title     String
+  content   String
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  comments  ArticleComment[]
+  author    User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String
+}
+
+model ArticleComment {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String
+}
+
+model ProductComment {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String
+}

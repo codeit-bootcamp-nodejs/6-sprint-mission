@@ -1,0 +1,7 @@
+node_modules/
+__http__/
+.env
+.vscode
+
+refactoring_checklist.md
+Sprint Mission 3.md
