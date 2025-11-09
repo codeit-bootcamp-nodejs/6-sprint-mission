@@ -1,0 +1,3 @@
+// 요청 검증: req body, params, query등 validation
+// 권한 검사: auth/role
+// 요청 전후 공통 처리: logging, rate limit 등

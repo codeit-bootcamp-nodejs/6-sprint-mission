@@ -1,0 +1,62 @@
+@baseUrl = http://localhost:3000
+
+GET {{baseUrl}}/users
+
+###
+POST {{baseUrl}}/users/register
+Content-Type: application/json
+
+{
+  "email": "user9@example.com",
+  "nickname": "user9",
+  "password": "password9"
+}
+
+###
+POST {{baseUrl}}/users/login
+Content-Type: application/json
+
+{
+  "email": "user1@example.com",
+  "password": "password1"
+}
+
+###
+POST {{baseUrl}}/users/logout
+
+
+
+// 토큰 발행
+###
+GET {{baseUrl}}/users/tokens
+###
+POST {{baseUrl}}/users/tokens/refresh
+
+
+
+// 토큰 인증
+###
+GET {{baseUrl}}/users/myInfo
+###
+PATCH {{baseUrl}}/users/myInfo/edit
+Content-Type: application/json
+
+{ 
+  "nickname": "user9" 
+}
+
+###
+PATCH {{baseUrl}}/users/myInfo/password/change
+Content-Type: application/json
+
+{
+  "password_now": "password8",
+  "password_new": "password8"
+}
+
+###
+GET {{baseUrl}}/users/myProducts
+###
+GET {{baseUrl}}/users/myArticles 
+
+

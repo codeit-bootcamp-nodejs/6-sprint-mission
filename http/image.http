@@ -1,0 +1,44 @@
+//------------------------product image
+GET http://localhost:3000/images/products/ac432f1d-3a8f-4acb-9038-2b311ae2c521
+
+###
+POST http://localhost:3000/images/products/ac432f1d-3a8f-4acb-9038-2b311ae2c521
+Content-Type: multipart/form-data; boundary=MyBoundary
+
+--MyBoundary
+Content-Disposition: form-data; name="image"; filename="iphone17pro.png"
+Content-Type: image/png
+
+< ./images/iph
+one17pro.png
+--MyBoundary--
+
+###
+DELETE  http://localhost:3000/images/products/ac432f1d-3a8f-4acb-9038-2b311ae2c521
+
+
+
+
+
+//------------------------article image
+// 전망좋은 방  f1912d57-f8f2-4c77-b9c0-b61d00173b67
+// 사촌 비니 42183d12-5a9c-49f1-bea3-861da70d5847
+
+###
+GET http://localhost:3000/images/articles/f1912d57-f8f2-4c77-b9c0-b61d00173b67
+
+###
+POST http://localhost:3000/images/articles/f1912d57-f8f2-4c77-b9c0-b61d00173b67
+Content-Type: multipart/form-data; boundary=MyBoundary
+
+--MyBoundary
+Content-Disposition: form-data; name="image"; filename="aRoomWithaView.png"
+Content-Type: image/png
+
+< ./images/aRoomWithaView.png
+--MyBoundary--
+
+###
+DELETE  http://localhost:3000/images/articles/f1912d57-f8f2-4c77-b9c0-b61d00173b67
+
+

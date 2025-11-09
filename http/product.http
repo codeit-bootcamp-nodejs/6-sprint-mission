@@ -1,0 +1,47 @@
+// 상품 목록 조회
+// 페이지네이션: offset 기반 (default 값: offset=0, limit=undefined)
+// 조회순: order=recent(default)/oldest
+GET http://localhost:3000/products
+###
+GET http://localhost:3000/products?order=oldest
+###
+GET http://localhost:3000/products?order=oldest&offset=0
+
+// 상품 목록 조회
+// 조건 검색: name and/or description에 포함된 단어
+###
+GET http://localhost:3000/products?name=프로
+###
+GET http://localhost:3000/products?description=성능
+###
+GET http://localhost:3000/products?name=프로&description=성능
+
+
+// 상품 상세 조회
+###
+GET http://localhost:3000/products/a64e51b9-08f5-42b8-8b1a-bf017d410b76
+
+###
+POST http://localhost:3000/products
+Content-Type: application/json
+
+{
+  "name": "iPhone 17 Pro",
+  "description": "최신 아이폰",
+  "price": 1790000,
+  "tags": ["전자제품", "스마트폰"]
+}
+
+###
+PATCH http://localhost:3000/products/3d5ce44b-60a1-4ed6-a242-f2a5116ce0e8
+Content-Type: application/json
+
+{
+  "description": "2025년 10월 한국에 발매 시작한 최신 아이폰으로 8배 광학줌을 가진 후면 카메라가 압권입니다.",
+  "price": 1790000,
+  "tags": ["전자제품", "스마트폰", "경량 케이스"]
+}
+
+###
+DELETE http://localhost:3000/products/3d5ce44b-60a1-4ed6-a242-f2a5116ce0e8
+
