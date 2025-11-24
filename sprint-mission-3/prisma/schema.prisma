@@ -1,78 +1,78 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// // This is your Prisma schema file,
+// // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
-generator client {
-  provider = "prisma-client-js"
-  // output   = "../generated/prisma"
-}
+// generator client {
+//   provider = "prisma-client-js"
+//   // output   = "../generated/prisma"
+// }
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_URL")
+// }
 
-//--- User ---
-model User {
-  id              String    @id @default(uuid())
-  firstName       String
-  lastName        String
-  email           String    @unique
-  description     String?
-  address         String
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  sellingProducts Product[]
-  Article         Article[]
-  comment         comment[]
-}
+// //--- User ---
+// model User {
+//   id              String    @id @default(uuid())
+//   firstName       String
+//   lastName        String
+//   email           String    @unique
+//   description     String?
+//   address         String
+//   createdAt       DateTime  @default(now())
+//   updatedAt       DateTime  @updatedAt
+//   sellingProducts Product[]
+//   Article         Article[]
+//   comment         comment[]
+// }
 
-//--- 중고 마켓 --- //id, name, description, price, tags, createdAt, updatedAt필드를 가집니다.
-model Product {
-  id          String        @id @default(uuid())
-  name        String
-  description String
-  price       Float
-  tags        String[]
-  status      ProductStatus @default(SALE)
-  seller      User          @relation(fields: [sellerId], references: [id], onDelete: Cascade)
-  sellerId    String
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  comment     comment[]
-}
+// //--- 중고 마켓 --- //id, name, description, price, tags, createdAt, updatedAt필드를 가집니다.
+// model Product {
+//   id          String        @id @default(uuid())
+//   name        String
+//   description String
+//   price       Float
+//   tags        String[]
+//   status      ProductStatus @default(SALE)
+//   seller      User          @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+//   sellerId    String
+//   createdAt   DateTime      @default(now())
+//   updatedAt   DateTime      @updatedAt
+//   comment     comment[]
+// }
 
-//--- 자유 게시판 --- //id, title, content, createdAt, updatedAt 필드를 가집니다.
-model Article {
-  id        String    @id @default(uuid())
-  author    User?     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  title     String
-  content   String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  comment   comment[]
-  authorId  String?
-}
+// //--- 자유 게시판 --- //id, title, content, createdAt, updatedAt 필드를 가집니다.
+// model Article {
+//   id        String    @id @default(uuid())
+//   author    User?     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+//   title     String
+//   content   String
+//   createdAt DateTime  @default(now())
+//   updatedAt DateTime  @updatedAt
+//   comment   comment[]
+//   authorId  String?
+// }
 
-//--- 댓글 --- id, content,createdAt,updatedAt
-model comment {
-  id        String   @id @default(uuid())
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  productId String?
-  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
-  articleId String?
-  article   Article? @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  authorId  String
-}
+// //--- 댓글 --- id, content,createdAt,updatedAt
+// model comment {
+//   id        String   @id @default(uuid())
+//   author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+//   content   String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   productId String?
+//   product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+//   articleId String?
+//   article   Article? @relation(fields: [articleId], references: [id], onDelete: Cascade)
+//   authorId  String
+// }
 
-//제품 판매 상태
-enum ProductStatus {
-  SALE //판매중
-  RESERVED //예약중
-  SOLD //판매완료
-}
+// //제품 판매 상태
+// enum ProductStatus {
+//   SALE //판매중
+//   RESERVED //예약중
+//   SOLD //판매완료
+// }
