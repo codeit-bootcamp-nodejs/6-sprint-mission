@@ -12,16 +12,16 @@
 ### 🛠️ 1. 초기 세팅 & 데이터베이스 (Prisma)
 
 - [ ] **환경변수(.env) 설정**
-  - [ ] `DATABASE_URL` 확인
-  - [ ] `JWT_SECRET` (토큰 비밀키) 추가 👈 이거!
+  - [x] `DATABASE_URL` 확인
+  - [ ] `JWT_SECRET` (토큰 비밀키)
 - [ ] **User 스키마 작성**
-  - [ ] 필드 구성: `id`, `email`, `nickname`, `image`, `password`, `createdAt`, `updatedAt`
-  - [ ] 기존 모델(`Product`, `Article`, `Comment`)과 1:N 관계 설정 (`relation` 연결)
+  - [x] 필드 구성: `id`, `email`, `nickname`, `image`, `password`, `createdAt`, `updatedAt`
+  - [x] 기존 모델(`Product`, `Article`, `Comment`)과 1:N 관계 설정 (`relation` 연결)
 
 ### 🔐 2. 인증 (Authentication) - 로그인/회원가입
 
 - [ ] **회원가입 API 구현**
-  - [ ] 입력: `email`, `nickname`, `password`
+  - [x] 입력: `email`, `nickname`, `password`
   - [ ] **중요:** 비밀번호는 반드시 **해싱(Hashing)** 하여 저장 (bcrypt 등 사용)
 - [ ] **로그인 API 구현**
   - [ ] 입력: `email`, `password` 검증
