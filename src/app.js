@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import errorHandler from './middlewares/errorHandler.js';
+import authRouter from './routes/auth.router.js';
 // import userRouter from './routes/user.router.js';
 import productRouter from './routes/product.router.js';
 // import articleRouter from './routes/article.router.js';
@@ -17,6 +18,8 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.send('두려워하지 마십시오. 죽음이 끝은 아닙니다.');
 });
+
+app.use('/auth', authRouter);
 
 //중고마켓
 app.use('/products', productRouter);
