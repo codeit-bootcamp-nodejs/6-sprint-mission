@@ -24,10 +24,18 @@ export const CommentIdStruct = s.object({
 
 //===== req.body 검사 =====
 
-//----- User -----
+//----- User / Auth -----
+
+// sign-up
 export const CreateUserStruct = s.object({
   email: s.size(s.string(), 1, 100),
   nickname: s.size(s.string(), 1, 10),
+  password: s.size(s.string(), 4, 20),
+});
+
+// login
+export const LoginUserStruct = s.object({
+  email: s.size(s.string(), 1, 100),
   password: s.size(s.string(), 4, 20),
 });
 

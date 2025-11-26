@@ -1,8 +1,8 @@
 import express from 'express';
 import withAsync from '../lib/withAsync.js';
 import { validate } from '../middlewares/validator.js';
-import { signUp } from '../controllers/auth.controller.js';
-import { CreateUserStruct } from '../lib/structs.js';
+import { login, signUp } from '../controllers/auth.controller.js';
+import { CreateUserStruct, LoginUserStruct } from '../lib/structs.js';
 
 const router = express.Router();
 
@@ -10,7 +10,7 @@ const router = express.Router();
 router.route('/sign-up').post(validate(CreateUserStruct), withAsync(signUp));
 
 // =========== 로그인       POST (/auth/login)
-// router.route('/login').post(validate(), withAsync());
+router.route('/login').post(validate(LoginUserStruct), withAsync(login));
 
 // =========== 토큰 재발급   POST (/auth/refresh)
 // router.route('/refresh').post(validate(), withAsync());
