@@ -3,8 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import errorHandler from './middlewares/errorHandler.js';
 import authRouter from './routes/auth.router.js';
-// import userRouter from './routes/user.router.js';
 import productRouter from './routes/product.router.js';
+import userRouter from './routes/user.router.js';
 // import articleRouter from './routes/article.router.js';
 // import commentRouter from './routes/comment.router.js';
 // import uploadRouter from './routes/upload.router.js';
@@ -20,6 +20,9 @@ app.get('/', (req, res) => {
 });
 
 app.use('/auth', authRouter);
+
+// 유저 관련 요청
+app.use('/users', userRouter);
 
 //중고마켓
 app.use('/products', productRouter);
