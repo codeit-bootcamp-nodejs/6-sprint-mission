@@ -40,7 +40,12 @@ export const LoginUserStruct = s.object({
 });
 
 // partial을 쓰면 내부의 모든 필드가 자동으로 s.optional() 처리가 됨.
-export const PatchUserStruct = s.partial(CreateUserStruct);
+export const PatchUserStruct = s.object({
+  nickname: s.optional(s.size(s.string(), 1, 20)),
+  description: s.optional(s.size(s.string(), 1, 300)),
+  image: s.optional(s.size(s.string())),
+  // (보안상 이메일과 비밀번호 변경은 별도 API로 빼기로 함.)
+});
 
 //----- product -----
 export const CreateProductStruct = s.object({
@@ -48,8 +53,6 @@ export const CreateProductStruct = s.object({
   description: s.size(s.string(), 1, 500),
   price: s.min(s.number(), 0),
   tags: s.optional(s.array(s.string())),
-  // 🚧 [임시] 로그인 만들기 전까지만
-  sellerId: Integer,
 });
 
 export const PatchProductStruct = s.partial(CreateProductStruct);
@@ -58,9 +61,6 @@ export const PatchProductStruct = s.partial(CreateProductStruct);
 export const CreateArticleStruct = s.object({
   title: s.size(s.string(), 1, 30),
   content: s.size(s.string(), 10, 1000),
-
-  // 🚧 [임시] 로그인 만들기 전까지만
-  authorId: Integer,
 });
 
 export const PatchArticleStruct = s.partial(CreateArticleStruct);
@@ -68,9 +68,6 @@ export const PatchArticleStruct = s.partial(CreateArticleStruct);
 //----- comment -----
 export const CreateCommentStruct = s.object({
   content: s.size(s.string(), 10, 200),
-
-  // 🚧 [임시] 로그인 만들기 전까지만
-  authorId: Integer,
 });
 
 export const PatchCommentStruct = s.partial(CreateCommentStruct);

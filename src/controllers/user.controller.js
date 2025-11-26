@@ -37,4 +37,35 @@ export const getUserMe = async (req, res, next) => {
 };
 
 // 내 정보 수정     PATCH   (/users/me)
+export const patchUserMe = async (req, res, next) => {
+  const { id } = req.user; //토큰에서 아이디 쏙
+  const inputData = req.body;
+
+  const updatedUser = await prisma.user.update({
+    where: { id },
+    data: inputData,
+  });
+
+  // 정보 포장하기
+  const responseData = {
+    id: updatedUser.id,
+    email: updatedUser.email,
+    nickname: updatedUser.nickname,
+    description: updatedUser.description,
+    image: updatedUser.image,
+    updatedAt: updatedUser.updatedAt,
+  };
+
+  return res.status(200).json(responseData);
+};
+
 // 회원 탈퇴        DELETE  (/users/me)
+export const deleteUserMe = async (req, res, next) => {
+  const { id } = req.user;
+
+  await prisma.user.delete({
+    where: { id },
+  });
+
+  return res.status(200).json({ message: '회원 탈퇴가 완료되었습니다.' });
+};
