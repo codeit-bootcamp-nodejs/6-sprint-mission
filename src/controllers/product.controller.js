@@ -3,10 +3,11 @@ import { getOrderBy } from '../lib/utils.js';
 
 //POST==========
 const createProduct = async (req, res, next) => {
+  const { id: sellerId } = req.user; //토큰에서 ID 꺼내기 (로그인 한 사람만 가능하니까)
   const inputData = req.body;
 
   const productData = await prisma.product.create({
-    data: inputData,
+    data: { ...inputData, sellerId },
     include: {
       seller: {
         select: { id: true, nickname: true, email: true },
@@ -113,41 +114,64 @@ const getProductById = async (req, res, next) => {
 
 //PATCH id==========
 const patchProductById = async (req, res, next) => {
+  const { id: userId } = req.user;
   const { productId } = req.params;
   const inputData = req.body;
 
-  const newPatchData = await prisma.product.update({
+  // 1. 상품이 존재하는지, 누가 주인인지 확인
+  const product = await prisma.product.findUniqueOrThrow({
+    where: { id: productId },
+  });
+
+  // 2. 본인 확인 (작성자 본인의 상품이 아니라면 return 403)
+  if (product.sellerId !== userId) {
+    return res.status(403).json({ message: '수정 권한이 없습니다.' });
+  }
+
+  // 3. 마침내 상품 업데이트
+  const updatedProduct = await prisma.product.update({
     where: { id: productId },
     data: inputData,
-    include: {
-      seller: { select: { id: true, nickname: true, email: true } },
-    },
+    include: { seller: { select: { id: true, nickname: true, email: true } } },
   });
 
   const responseData = {
-    id: newPatchData.id,
-    status: newPatchData.status,
-    productName: newPatchData.name,
-    description: newPatchData.description,
-    price: newPatchData.price,
-    tags: newPatchData.tags,
-    sellerName: newPatchData.seller.nickname,
-    sellerId: newPatchData.seller.id,
-    email: newPatchData.seller.email,
-    createdAt: newPatchData.createdAt,
-    updatedAt: newPatchData.updatedAt,
+    id: updatedProduct.id,
+    status: updatedProduct.status,
+    productName: updatedProduct.name,
+    description: updatedProduct.description,
+    price: updatedProduct.price,
+    tags: updatedProduct.tags,
+    sellerName: updatedProduct.seller.nickname,
+    sellerId: updatedProduct.seller.id,
+    email: updatedProduct.seller.email,
+    createdAt: updatedProduct.createdAt,
+    updatedAt: updatedProduct.updatedAt,
   };
   res.status(200).json(responseData);
 };
 
 //DELETE id==========
 const deleteProductById = async (req, res, next) => {
+  const { id: userId } = req.user;
   const { productId } = req.params;
 
+  // 1. 상품이 존재하는지, 누가 주인인지 확인
+  const product = await prisma.product.findUniqueOrThrow({
+    where: { id: productId },
+  });
+
+  // 2. 본인 확인 (작성자 본인의 상품이 아니라면 return 403)
+  if (product.sellerId !== userId) {
+    return res.status(403).json({ message: '삭제 권한이 없습니다.' });
+  }
+
+  //3. 상품 삭제하기
   await prisma.product.delete({
     where: { id: productId },
   });
-  res.status(200).json({ message: '제품 삭제 성공' });
+
+  return res.status(200).json({ message: '제품 삭제 성공' });
 };
 
 export { createProduct, getListProducts, getProductById, patchProductById, deleteProductById };

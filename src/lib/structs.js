@@ -23,7 +23,6 @@ export const CommentIdStruct = s.object({
 });
 
 //===== req.body 검사 =====
-
 //----- User / Auth -----
 
 // sign-up

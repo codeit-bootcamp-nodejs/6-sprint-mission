@@ -11,19 +11,19 @@
 
 ### 🛠️ 1. 초기 세팅 & 데이터베이스 (Prisma)
 
-- [ ] **환경변수(.env) 설정**
+- [x] **환경변수(.env) 설정**
   - [x] `DATABASE_URL` 확인
   - [x] `JWT_SECRET` (토큰 비밀키)
-- [ ] **User 스키마 작성**
+- [x] **User 스키마 작성**
   - [x] 필드 구성: `id`, `email`, `nickname`, `image`, `password`, `createdAt`, `updatedAt`
   - [x] 기존 모델(`Product`, `Article`, `Comment`)과 1:N 관계 설정 (`relation` 연결)
 
 ### 🔐 2. 인증 (Authentication) - 로그인/회원가입
 
-- [ ] **회원가입 API 구현**
+- [x] **회원가입 API 구현**
   - [x] 입력: `email`, `nickname`, `password`
   - [x] **중요:** 비밀번호는 반드시 **해싱(Hashing)** 하여 저장 (bcrypt 등 사용)
-- [ ] **로그인 API 구현**
+- [x] **로그인 API 구현**
   - [x] 입력: `email`, `password` 검증
   - [x] 성공 시: **Access Token (JWT)** 발급 및 반환
 
@@ -32,9 +32,9 @@
 > **공통 규칙:** 로그인한 유저만 등록 가능 / 본인만 수정, 삭제 가능
 
 - [x] **인가 미들웨어(Middleware) 구현** (토큰 검증 및 유저 확인)
-- [ ] **상품(Product) 기능 인가**
-  - [ ] 등록: 로그인한 유저만 가능
-  - [ ] 수정/삭제: 상품 등록자(본인)만 가능
+- [x] **상품(Product) 기능 인가**
+  - [x] 등록: 로그인한 유저만 가능
+  - [x] 수정/삭제: 상품 등록자(본인)만 가능
 - [ ] **게시글(Article) 기능 인가**
   - [ ] 등록: 로그인한 유저만 가능
   - [ ] 수정/삭제: 게시글 작성자(본인)만 가능

@@ -1,5 +1,6 @@
 import express from 'express';
 import withAsync from '../lib/withAsync.js';
+import { authMiddleware } from '../middlewares/auth.middleware.js';
 import { validate } from '../middlewares/validator.js';
 import {
   ProductIdStruct,
@@ -19,14 +20,13 @@ import {
   getCommentListProduct,
 } from '../controllers/comment.controller.js';
 
-//.post (validate(CreateProductStruct, 'body'), createProduct);
-
 const router = express.Router();
 
+// 라우트 ===================================================
 router
   .route('/')
   //POST, GET
-  .post(validate(CreateProductStruct, 'body'), withAsync(createProduct))
+  .post(authMiddleware, validate(CreateProductStruct, 'body'), withAsync(createProduct))
   .get(withAsync(getListProducts));
 
 router
@@ -36,19 +36,21 @@ router
 
   //PATCH id,
   .patch(
+    authMiddleware,
     validate(ProductIdStruct, 'params'),
     validate(PatchProductStruct, 'body'),
     withAsync(patchProductById),
   )
 
   //DELETE id
-  .delete(validate(ProductIdStruct, 'params'), withAsync(deleteProductById));
+  .delete(authMiddleware, validate(ProductIdStruct, 'params'), withAsync(deleteProductById));
 
 //중고 장터
 router
   .route('/:productId/comments')
   //POST
   .post(
+    authMiddleware,
     validate(ProductIdStruct, 'params'),
     validate(CreateCommentStruct, 'body'),
     withAsync(createCommentForProduct),
