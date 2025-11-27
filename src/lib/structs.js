@@ -66,7 +66,7 @@ export const PatchArticleStruct = s.partial(CreateArticleStruct);
 
 //----- comment -----
 export const CreateCommentStruct = s.object({
-  content: s.size(s.string(), 10, 200),
+  content: s.size(s.string(), 1, 200),
 });
 
 export const PatchCommentStruct = s.partial(CreateCommentStruct);

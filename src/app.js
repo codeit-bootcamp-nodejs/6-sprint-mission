@@ -6,7 +6,7 @@ import authRouter from './routes/auth.router.js';
 import productRouter from './routes/product.router.js';
 import userRouter from './routes/user.router.js';
 import articleRouter from './routes/article.router.js';
-// import commentRouter from './routes/comment.router.js';
+import commentRouter from './routes/comment.router.js';
 // import uploadRouter from './routes/upload.router.js';
 
 dotenv.config();
@@ -31,7 +31,7 @@ app.use('/products', productRouter);
 app.use('/articles', articleRouter);
 
 // //댓글
-// app.use('/comments', commentRouter);
+app.use('/comments', commentRouter);
 
 // //이미지
 // app.use('/uploads', uploadRouter);

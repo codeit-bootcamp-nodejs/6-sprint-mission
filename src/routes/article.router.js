@@ -5,7 +5,6 @@ import { validate } from '../middlewares/validator.js';
 // import upload from '../middlewares/uploadImages.js';
 import {
   ArticleIdStruct,
-  CommentIdStruct,
   CreateArticleStruct,
   CreateCommentStruct,
   PatchArticleStruct,
@@ -17,10 +16,10 @@ import {
   patchArticleById,
   deleteArticleById,
 } from '../controllers/article.controller.js';
-// import {
-//   createCommentForArticle,
-//   getCommentListArticle,
-// } from '../controllers/comment.controller.js';
+import {
+  createCommentForArticle,
+  getCommentListArticle,
+} from '../controllers/comment.controller.js';
 
 const router = express.Router();
 
@@ -48,18 +47,18 @@ router
   .delete(authMiddleware, validate(ArticleIdStruct, 'params'), withAsync(deleteArticleById));
 
 // 자유게시판 댓글 ===================
-// router
-//   .route('/:articleId/comments')
+router
+  .route('/:articleId/comments')
 
-//   //GET
-//   .get(validate(ArticleIdStruct, 'params'), withAsync(getCommentListArticle)) //자유게시판
+  //GET
+  .get(validate(ArticleIdStruct, 'params'), withAsync(getCommentListArticle)) //자유게시판
 
-//   //POST
-//   .post(
-//     authMiddleware,
-//     validate(ArticleIdStruct, 'params'),
-//     validate(CreateCommentStruct, 'body'),
-//     withAsync(createCommentForArticle),
-//   ); //자유게시판 댓글
+  //POST
+  .post(
+    authMiddleware,
+    validate(ArticleIdStruct, 'params'),
+    validate(CreateCommentStruct, 'body'),
+    withAsync(createCommentForArticle),
+  ); //자유게시판 댓글
 
 export default router;
