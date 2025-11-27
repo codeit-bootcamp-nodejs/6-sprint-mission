@@ -5,7 +5,7 @@ import errorHandler from './middlewares/errorHandler.js';
 import authRouter from './routes/auth.router.js';
 import productRouter from './routes/product.router.js';
 import userRouter from './routes/user.router.js';
-// import articleRouter from './routes/article.router.js';
+import articleRouter from './routes/article.router.js';
 // import commentRouter from './routes/comment.router.js';
 // import uploadRouter from './routes/upload.router.js';
 
@@ -28,7 +28,7 @@ app.use('/users', userRouter);
 app.use('/products', productRouter);
 
 // //자유게시판
-// app.use('/articles', articleRouter);
+app.use('/articles', articleRouter);
 
 // //댓글
 // app.use('/comments', commentRouter);
