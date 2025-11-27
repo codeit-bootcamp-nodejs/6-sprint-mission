@@ -46,6 +46,12 @@ export const PatchUserStruct = s.object({
   // (보안상 이메일과 비밀번호 변경은 별도 API로 빼기로 함.)
 });
 
+// 비밀번호 변경용
+export const PatchPasswordStruct = s.object({
+  oldPassword: s.size(s.string(), 4, 20),
+  newPassword: s.size(s.string(), 4, 20),
+});
+
 //----- product -----
 export const CreateProductStruct = s.object({
   name: s.size(s.string(), 1, 30),

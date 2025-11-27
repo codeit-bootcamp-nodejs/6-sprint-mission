@@ -1,4 +1,6 @@
+import bcrypt from 'bcrypt';
 import prisma from '../lib/prisma.js';
+import { getOrderBy } from '../lib/utils.js';
 /**
 200 OK: 일반적인 성공 (GET, UPDATE 후)
 201 Created: 새로운 리소스 생성 성공 (POST)
@@ -6,6 +8,46 @@ import prisma from '../lib/prisma.js';
 400 Bad Request: 클라이언트 요청 오류 (유효성 검사 실패 등)
 404 Not Found: 요청한 리소스가 없음
  */
+
+//비밀번호 변경
+export const updatePassword = async (req, res) => {
+  const { id } = req.user;
+  const { oldPassword, newPassword } = req.body;
+
+  // 유저가 있는지 확인
+  const user = await prisma.user.findUniqueOrThrow({
+    where: { id },
+  });
+
+  // 기존 비밀번호가 맞는지 확인
+  const isMatch = await bcrypt.compare(oldPassword, user.password);
+  if (!isMatch) {
+    return res.status(400).json({ message: '기존 비밀번호와 일치하지 않습니다.' });
+  }
+
+  //새 비밀번호 해싱
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  //업데이트
+  await prisma.user.update({
+    where: { id },
+    data: { password: hashedPassword },
+  });
+  return res.status(200).json({ message: '비밀번호가 성공적으로 변경되었습니다.' });
+};
+
+//내가 등록한 상품 목록 조회
+export const getMyProducts = async (req, res) => {
+  const { id } = req.user;
+
+  const products = await prisma.product.findMany({
+    where: { sellerId: id },
+    orderBy: { createdAt: 'desc' },
+    include: { images: true },
+  });
+
+  return res.status(200).json(products);
+};
 
 // 내 정보 조회     GET     (/users/me)
 export const getUserMe = async (req, res, next) => {
