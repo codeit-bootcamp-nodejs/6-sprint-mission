@@ -35,7 +35,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH {{baseUrl}}/products/32
+PATCH {{baseUrl}}/products/30
 Content-Type: application/json
 
 {
@@ -45,5 +45,5 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{baseUrl}}/products/32
+DELETE {{baseUrl}}/products/30
 

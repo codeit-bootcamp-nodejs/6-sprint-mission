@@ -10,16 +10,16 @@ async function post(req, res) {
 
 // 게시물 수정
 async function patch(req, res) {
-  const article = await articleService.patch(req.user.id, req.params.articleId, req.body);
+  const article = await articleService.patch(req.params.articleId, req.body);
   console.log(`Article_${req.params.articleId} edited by user${req.user.id}`);
   res.status(200).send(article);
 }
 
 // 게시물 삭제
 async function erase(req, res) {
-  const article = await articleService.erase(req.user.id, req.params.articleId);
+  await articleService.erase(req.params.articleId);
   console.log(`Article_${req.params.articleId} deleted by user${req.user.id}`);
-  res.status(204).send(article);
+  res.status(204).send({ nessage: 'Article deleted' });
 }
 
 // 게시물 목록 조회와 상세 조회: 누구나 가능

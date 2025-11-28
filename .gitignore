@@ -1,18 +1,13 @@
 node_modules/
-mission2/
 images/
 .env
 .prettierrc
-Readme0.md
-prisma/mock copy.js
-prisma/seed_old.js
-prisma/kill_seed.js
-main.js
-test.js
 src/router/index.txt
 src/controller/index.txt
 src/service/index.txt
 src/repository/index.txt
 src/middleware/index.txt
-src/middleware/modelValidate.js
-src/middleware/validateQuery.js
+.vscode/
+hide/
+main.js
+

@@ -14,16 +14,14 @@ async function post(userId, data) {
   return article;
 }
 
-async function patch(userId, articleId, articleData) {
-  await check_sameAuthor(userId, articleId);
+async function patch(articleId, articleData) {
   assert(articleData, PatchArticle);
   const article = await articleRepo.patch(articleId, articleData);
   if (isEmpty(article)) throw new NotFoundError(article, articleId);
   return article;
 }
 
-async function erase(userId, articleId) {
-  await check_sameAuthor(userId, articleId);
+async function erase(articleId) {
   await articleRepo.erase(articleId);
 }
 
@@ -68,15 +66,6 @@ async function get(articleId) {
 
   const { updatedAt, imageUrls, ...rest } = article; // 조회 항목 선택
   return rest;
-}
-
-//-------------------------------------------------------- local functions
-async function check_sameAuthor(userId, articleId) {
-  const article = await articleRepo.findById(articleId);
-  if (userId !== article.userId) {
-    console.log('Unauthorized: Incorrect password');
-    throw new BadRequestError('FORBIDDEN');
-  }
 }
 
 export default {

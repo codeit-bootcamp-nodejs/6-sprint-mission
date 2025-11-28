@@ -14,7 +14,7 @@ async function post(req, res, next) {
 async function patch(req, res, next) {
   const { productId } = req.params;
   const { id: userId } = req.user;
-  const product = await productService.patch(userId, productId, req.body);
+  const product = await productService.patch(productId, req.body);
   console.log(`Product_${productId} patched by ${req.user.nickname}`);
   res.status(200).json(product);
 }
@@ -23,7 +23,7 @@ async function patch(req, res, next) {
 async function erase(req, res, next) {
   const { productId } = req.params;
   const { id: userId } = req.user;
-  await productService.erase(userId, productId);
+  await productService.erase(productId);
   console.log(`Product_${productId} deleted by ${req.user.nickname}`);
   res.sendStatus(204);
 }

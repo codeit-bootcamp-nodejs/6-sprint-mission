@@ -13,17 +13,14 @@ async function post(userId, Data) {
   return product;
 }
 
-async function patch(userId, productId, productData) {
+async function patch(productId, productData) {
   assert(productData, PatchProduct);
-  await check_sameAuthor(userId, productId);
-
   const product = await productRepo.patch(productId, productData);
   if (isEmpty(product)) throw new Error('NOT_FOUND');
   return product;
 }
 
-async function erase(userId, productId) {
-  await check_sameAuthor(userId, productId);
+async function erase(productId) {
   await productRepo.erase(productId);
 }
 
@@ -62,20 +59,6 @@ async function get(productId) {
   // }
   // const { updatedAt, imageUrls, comments, ...rest } = product;
   return product;
-}
-
-//-------------------------------------------------------- local functions
-// async function check_productExist(productId) {
-//   const productExist = await productRepository.countById(productId);
-//   if (!productExist) throw new NotFoundError(product, productId);
-// }
-
-async function check_sameAuthor(userId, productId) {
-  const product = await productRepo.findById(productId);
-  if (userId !== product.userId) {
-    print('Unauthorized');
-    throw new BadRequestError('UNAUTHORIZED');
-  }
 }
 
 export default {
