@@ -1,28 +1,30 @@
+@baseUrl = http://localhost:3000
+
 // 상품 목록 조회
 // 페이지네이션: offset 기반 (default 값: offset=0, limit=undefined)
 // 조회순: order=recent(default)/oldest
-GET http://localhost:3000/products
+GET {{baseUrl}}/products
 ###
-GET http://localhost:3000/products?order=oldest
+GET {{baseUrl}}/products?order=oldest
 ###
-GET http://localhost:3000/products?order=oldest&offset=0
+GET {{baseUrl}}/products?order=oldest&offset=4
 
 // 상품 목록 조회
 // 조건 검색: name and/or description에 포함된 단어
 ###
-GET http://localhost:3000/products?name=프로
+GET {{baseUrl}}/products?name=Pro
 ###
-GET http://localhost:3000/products?description=성능
+GET {{baseUrl}}/products?description=성능
 ###
-GET http://localhost:3000/products?name=프로&description=성능
+GET {{baseUrl}}/products?name=Pro&description=성능
 
 
 // 상품 상세 조회
 ###
-GET http://localhost:3000/products/a64e51b9-08f5-42b8-8b1a-bf017d410b76
+GET {{baseUrl}}/products/28
 
 ###
-POST http://localhost:3000/products
+POST {{baseUrl}}/products
 Content-Type: application/json
 
 {
@@ -33,7 +35,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:3000/products/3d5ce44b-60a1-4ed6-a242-f2a5116ce0e8
+PATCH {{baseUrl}}/products/32
 Content-Type: application/json
 
 {
@@ -43,5 +45,5 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3000/products/3d5ce44b-60a1-4ed6-a242-f2a5116ce0e8
+DELETE {{baseUrl}}/products/32
 

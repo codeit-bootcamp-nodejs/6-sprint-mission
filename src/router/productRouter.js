@@ -1,20 +1,14 @@
 import express from 'express';
-import modelValidate from '../middleware/modelValidate.js';
-import { CreateProduct, PatchProduct } from '../struct/structs.js';
-import {
-  postProduct, // 상품 등록
-  getProductList, // 상품 목록 조회
-  getProduct, // 상품 상세 조회
-  patchProduct, // 상품 수정
-  deleteProduct // 상품 삭제
-} from '../controller/productController.js';
+import authenticateUser from '../middleware/authenticateUser.js';
+import productControl from '../controller/productControl.js';
+import withTryCatch from '../lib/withTryCatch.js';
 
 const productRouter = express.Router();
 
-productRouter.post('/', modelValidate(CreateProduct), postProduct);
-productRouter.get('/', getProductList);
-productRouter.get('/:productId', getProduct);
-productRouter.patch('/:productId', modelValidate(PatchProduct), patchProduct);
-productRouter.delete('/:productId', deleteProduct);
+productRouter.get('/', withTryCatch(productControl.getList));
+productRouter.get('/:productId', withTryCatch(productControl.get));
+productRouter.post('/', authenticateUser, withTryCatch(productControl.post));
+productRouter.patch('/:productId', authenticateUser, withTryCatch(productControl.patch));
+productRouter.delete('/:productId', authenticateUser, withTryCatch(productControl.erase));
 
 export default productRouter;

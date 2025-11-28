@@ -8,7 +8,7 @@ export function defaultNotFoundHandler(req, res, next) {
 }
 
 export function globalErrorHandler(err, req, res, next) {
-  console.error(err); // 개발용 로그
+  //console.error(err); // 개발용 로그
 
   // Superstruct 에러 처리
   if (err instanceof StructError) {
@@ -31,6 +31,8 @@ export function globalErrorHandler(err, req, res, next) {
         return res.status(401).send({ message: '이미 등록된 사용자입니다' });
       case 'INVALID_REFRESHTOKEN':
         return res.status(400).send({ message: '유효한 리프레쉬 토큰이 없습니다' });
+      case 'UNAUTHORIZED':
+        return res.status(401).send({ message: '권한이 없습니다' });
       default:
         return res.status(400).send({ message: err.message || '잘못된 요청입니다.' });
     }

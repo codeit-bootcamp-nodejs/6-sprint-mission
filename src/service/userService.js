@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import BadRequestError from '../middleware/errors/BadRequestError.js';
-import userRepository from '../repository/userRepository.js';
+import userRepo from '../repository/userRepo.js';
 import { ACCESS_TOKEN_COOKIE_NAME, NODE_ENV, REFRESH_TOKEN_COOKIE_NAME } from '../lib/constants.js';
 import { generateTokens, verifyRefreshToken } from '../lib/token.js';
 import NotFoundError from '../middleware/errors/NotFoundError.js';
@@ -9,9 +9,13 @@ import { PatchUser } from '../struct/structs.js';
 import { print, isEmpty } from '../lib/myFuns.js';
 
 async function getList() {
-  const users = await userRepository.getList();
-  if (!users) throw new Error('NOT_FOUND');
-  return filterPassword(users);
+  if (NODE_ENV === 'development') {
+    const users = await userRepo.getList();
+    if (!users) throw new Error('NOT_FOUND');
+    return filterPassword(users);
+  } else {
+    return { message: 'Unauthorized' };
+  }
 }
 
 async function register(data) {
@@ -28,7 +32,7 @@ async function register(data) {
     password: await hashingPassword(password)
   };
 
-  const newUser = await userRepository.create(newData);
+  const newUser = await userRepo.create(newData);
   return filterPassword(newUser);
 }
 
@@ -36,10 +40,12 @@ async function login(req, res) {
   const { email, password } = req.body;
   const user = await check_userRegistration(email);
   if (isEmpty(user)) throw new BadRequestError('USER_EXISTS');
+
   if (!check_passwordValidity(password, user.password)) {
     console.log('Invalid password');
     throw new BadRequestError('FORBIDDEN');
   }
+
   const { accessToken, refreshToken } = generateTokens(user.id);
   return { accessToken, refreshToken };
 }
@@ -58,20 +64,18 @@ async function issueTokens(tokenData) {
 }
 
 async function getInfo(userId) {
-  const user = await userRepository.findById(userId);
+  const user = await userRepo.findById(userId);
   return filterPassword(user);
 }
 
 async function patchInfo(userId, userData) {
   assert(userData, PatchUser);
-  const user = await userRepository.update(userId, userData);
+  const user = await userRepo.update(userId, userData);
   return filterPassword(user);
 }
 
 async function patchPassword(userId, oldPassword, newPassword) {
-  const user = await userRepository.findById(userId);
-  console.log(await hashingPassword(oldPassword));
-  console.log(user.password);
+  const user = await userRepo.findById(userId);
   if (!(await check_passwordValidity(oldPassword, user.password))) {
     print('Invalid current password');
     throw new BadRequestError('FORBIDDEN');
@@ -85,24 +89,24 @@ async function patchPassword(userId, oldPassword, newPassword) {
 
   const userData = { password: await hashingPassword(newPassword) };
   assert(userData, PatchUser);
-  const newUser = await userRepository.update(userId, userData);
+  const newUser = await userRepo.update(userId, userData);
   return filterPassword(newUser);
 }
 
 async function getProducts(userId) {
-  const products = userRepository.getProducts(userId);
+  const products = userRepo.getProducts(userId);
   if (isEmpty(products)) {
-    print('No products registered by current user');
+    print(`No products registered by user_${userId}`);
     throw new NotFoundError(products, userId);
   }
   return products;
 }
 
 async function getArticles(userId) {
-  const articles = userRepository.getArticles(userId);
+  const articles = userRepo.getArticles(userId);
   if (isEmpty(articles)) {
-    print('No products registered by current user');
-    throw new NotFoundError(products, userId);
+    print(`No articles registered by user_${userId}`);
+    throw new NotFoundError(articles, userId);
   }
   return articles;
 }
@@ -127,7 +131,7 @@ async function hashingPassword(textPassword) {
 }
 
 async function check_userRegistration(email) {
-  const user = await userRepository.findByEmail(email);
+  const user = await userRepo.findByEmail(email);
   return user;
 }
 
@@ -138,7 +142,8 @@ async function check_passwordValidity(textPassword, savedPassword) {
 
 function clearTokenCookies(res) {
   res.clearCookie(ACCESS_TOKEN_COOKIE_NAME);
-  res.clearCookie(REFRESH_TOKEN_COOKIE_NAME); // refreshToken 안 없어짐
+  res.clearCookie(REFRESH_TOKEN_COOKIE_NAME, { path: '/users/tokens' });
+  // refreshToken은 지정된 path가 있음
 }
 
 function check_refreshTokenValidity(tokenData) {
@@ -151,7 +156,7 @@ function check_refreshTokenValidity(tokenData) {
 }
 
 async function verifyUserExist(userId) {
-  const user = await userRepository.findById(userId);
+  const user = await userRepo.findById(userId);
   if (!user) {
     console.log('No user found. Resgister again.');
     throw new NotFoundError(user, userId);

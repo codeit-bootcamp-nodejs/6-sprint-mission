@@ -1,7 +1,10 @@
 import prisma from '../lib/prismaClient.js';
 
 async function getList() {
-  return await prisma.user.findMany();
+  return await prisma.user.findMany({
+    orderBy: { createdAt: 'desc' },
+    include: { image: false }
+  });
 }
 
 async function create(data) {
