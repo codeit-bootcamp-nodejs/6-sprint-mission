@@ -57,11 +57,11 @@ async function get(productId) {
   const product = await productRepo.get(productId);
 
   // 댓글을 조회하는 경우, updatedAt 필드 감춤
-  if (product.hasOwnProperty('comments')) {
-    product.comments = product.comments.map(({ articleId, updatedAt, ...rest }) => rest);
-  }
-  const { updatedAt, imageUrls, comments, ...rest } = product;
-  return rest;
+  // if (product.hasOwnProperty('comments')) {
+  //   product.comments = product.comments.map(({ articleId, updatedAt, ...rest }) => rest);
+  // }
+  // const { updatedAt, imageUrls, comments, ...rest } = product;
+  return product;
 }
 
 //-------------------------------------------------------- local functions

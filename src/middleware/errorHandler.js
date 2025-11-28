@@ -8,7 +8,7 @@ export function defaultNotFoundHandler(req, res, next) {
 }
 
 export function globalErrorHandler(err, req, res, next) {
-  //console.error(err); // 개발용 로그
+  console.error(err); // 개발용 로그
 
   // Superstruct 에러 처리
   if (err instanceof StructError) {

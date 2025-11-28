@@ -29,17 +29,11 @@ export const CreateArticle = s.object({
 
 export const PatchArticle = s.partial(CreateArticle);
 
-export const CreateArticleComment = s.object({
+export const CreateComment = s.object({
   content: s.string(),
-  articleId: s.number(),
+  articleId: s.optional(s.number()),
+  productId: s.optional(s.number()),
   userId: s.number()
 });
 
-export const CreateProductComment = s.object({
-  content: s.string(),
-  productId: s.number(),
-  userId: s.number()
-});
-
-export const PatchArticleComment = s.partial(CreateArticleComment);
-export const PatchProductComment = s.partial(CreateProductComment);
+export const PatchComment = s.partial(CreateComment);

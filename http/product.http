@@ -21,7 +21,7 @@ GET {{baseUrl}}/products?name=Pro&description=성능
 
 // 상품 상세 조회
 ###
-GET {{baseUrl}}/products/28
+GET {{baseUrl}}/products/1
 
 ###
 POST {{baseUrl}}/products

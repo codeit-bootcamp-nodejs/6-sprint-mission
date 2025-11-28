@@ -1,0 +1,48 @@
+@baseUrl = http://localhost:3000
+
+
+// 댓글 목록 조회: cursor 기반
+// 첫 조회: offset=0, cursor=undefined
+###
+GET {{baseUrl}}/comments
+###
+GET {{baseUrl}}/comments?type=all&cursor=85
+###
+GET {{baseUrl}}/comments?type=product&limit=3&cursor=3
+###
+GET {{baseUrl}}/comments?type=product&content=소리
+
+
+
+// 댓글 조회
+###
+GET {{baseUrl}}/comments/93
+
+
+// 댓글 등록: 토큰 인증
+###
+POST {{baseUrl}}/comments/products/1
+Content-Type: application/json
+
+{
+  "content": "밥이 맛있어요"
+}
+###
+POST {{baseUrl}}/comments/articles/4
+Content-Type: application/json
+
+{
+  "content": "환타지의 정석"
+}
+
+// 댓글 수정과 삭제: 토큰 인증 + 저자 입증
+###
+PATCH {{baseUrl}}/comments/96
+Content-Type: application/json
+
+{
+  "content": "광대한 세계관"
+}
+
+###
+DELETE {{baseUrl}}/comments/96

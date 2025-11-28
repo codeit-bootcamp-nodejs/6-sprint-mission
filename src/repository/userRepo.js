@@ -16,7 +16,10 @@ async function findByEmail(email) {
 }
 
 async function findById(id) {
-  return await prisma.user.findUnique({ where: { id } });
+  return await prisma.user.findUnique({
+    where: { id },
+    include: { comments: true, likedProducts: true, likedArticles: true }
+  });
 }
 
 async function update(id, data) {

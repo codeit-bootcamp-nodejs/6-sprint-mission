@@ -32,7 +32,8 @@ async function getList(where, orderBy, offset, limit) {
 
 async function get(id) {
   return await prisma.product.findFirstOrThrow({
-    where: { id: Number(id) }
+    where: { id: Number(id) },
+    include: { comments: true }
   });
 }
 

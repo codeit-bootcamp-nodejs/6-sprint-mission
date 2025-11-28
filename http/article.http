@@ -20,7 +20,7 @@ GET http://localhost:3000/articles?title=전망&content=기억
 
 // 게시물 상세 조회
 ###
-GET http://localhost:3000/articles/26
+GET http://localhost:3000/articles/4
 
 
 
