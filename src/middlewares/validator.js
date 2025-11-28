@@ -1,56 +1,24 @@
-//중고 마켓
-const validateProduct = (req, res, next) => {
-  const { name, description, price } = req.body;
-  if (!name) {
-    const err = new Error('상품 이름(name)은 필수입니다');
-    err.status = 400;
-    return next(err);
-  }
+import * as s from 'superstruct';
 
-  if (!description) {
-    const err = new Error('상품 설명(description)은 필수입니다.');
-    err.status = 400;
-    return next(err);
-  }
+//.post (validate(CreateProductStruct, 'body'), createProduct);
+export const validate = (struct, target = 'body') => {
+  return (req, res, next) => {
+    try {
+      // 1. 검사할 데이터 선택 (body냐 params냐)
+      const data = req[target];
 
-  if (!price) {
-    const err = new Error('상품 가격(price)은 필수입니다.');
-    err.status = 400;
-    return next(err);
-  }
+      // 2. 설계도와 대조 (검증)
+      const validatedData = s.create(data, struct);
 
-  next();
+      // 3. 검증된 데이터로 덮어쓰기 (Sanitization 효과)
+      req[target] = validatedData;
+
+      next(); // 통과!
+    } catch (error) {
+      // 4. 실패 시 에러 던지기
+      error.status = 400;
+      error.message = `유효성 검사 에러: ${error.message}`;
+      next(error);
+    }
+  };
 };
-
-//자유 게시판
-const validateArticle = (req, res, next) => {
-  const { title, content } = req.body;
-
-  if (!title) {
-    const err = new Error('게시글 제목(title)은 필수입니다.');
-    err.status = 400;
-    return next(err);
-  }
-
-  if (!content) {
-    const err = new Error('게시글 내용(content)은 필수입니다.');
-    err.status = 400;
-    return next(err);
-  }
-
-  next();
-};
-
-//댓글
-const validateComment = (req, res, next) => {
-  const { content } = req.body;
-
-  if (!content) {
-    const err = new Error('댓글 내용(content)은 필수입니다.');
-    err.status = 400;
-    return next(err);
-  }
-  next();
-};
-
-export { validateProduct, validateArticle, validateComment };

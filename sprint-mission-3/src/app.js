@@ -2,12 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import errorHandler from './middlewares/errorHandler.js';
-import authRouter from './routes/auth.router.js';
-import productRouter from './routes/product.router.js';
-import userRouter from './routes/user.router.js';
-import articleRouter from './routes/article.router.js';
-import commentRouter from './routes/comment.router.js';
-// import uploadRouter from './routes/upload.router.js';
+import productRouter from './routers/productRouter.js';
+import articleRouter from './routers/articleRouter.js';
+import commentRouter from './routers/commentRouter.js';
+import uploadRouter from './routers/uploadRouter.js';
 
 dotenv.config();
 const app = express();
@@ -19,22 +17,17 @@ app.get('/', (req, res) => {
   res.send('두려워하지 마십시오. 죽음이 끝은 아닙니다.');
 });
 
-app.use('/auth', authRouter);
-
-// 유저 관련 요청
-app.use('/users', userRouter);
-
 //중고마켓
 app.use('/products', productRouter);
 
-// //자유게시판
+//자유게시판
 app.use('/articles', articleRouter);
 
-// //댓글
+//댓글
 app.use('/comments', commentRouter);
 
-// //이미지
-// app.use('/uploads', uploadRouter);
+//이미지
+app.use('/uploads', uploadRouter);
 
 //마지막에 실행.
 app.use(errorHandler);

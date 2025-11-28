@@ -1,5 +1,16 @@
-node_modules/
-__http__/
+# 1. 환경 변수
 .env
-/generated/prisma
+.env.*
+
+# 팀원 공유용 예시 파일은 깃에 올려줘 (느낌표는 '이건 제외하고'라는 뜻)
+!.env.example
+
+# 2. 로컬 설정 및 모듈
+__http__/
+node_modules/
+
+# 3. 업로드 파일 관리
+# image 폴더가 업로드용이라면 유지, 아니라면 지워도 됨
 image/
+public/*
+!public/.gitkeep

@@ -5,74 +5,98 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  // output   = "../generated/prisma"
+    provider = "prisma-client-js"
+    // output   = "../generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
+
+//`id`, `email`, `nickname`, `image`, `password`, `createdAt`, `updatedAt`
+// 기존 모델(`Product`, `Article`, `Comment`)과 1:N 관계 설정 (`relation` 연결)
 
 //--- User ---
 model User {
-  id              String    @id @default(uuid())
-  firstName       String
-  lastName        String
-  email           String    @unique
-  description     String?
-  address         String
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  sellingProducts Product[]
-  Article         Article[]
-  comment         comment[]
+    id              Int       @id @default(autoincrement())
+    email           String    @unique
+    nickname        String
+    password        String
+    description     String?
+    address         String?
+    createdAt       DateTime  @default(now())
+    updatedAt       DateTime  @updatedAt
+    sellingProducts Product[] @relation("selling")
+    boughtProducts  Product[] @relation("buying")
+    articles        Article[]
+    comments        Comment[]
+    image           String?
+    images          Image[]
 }
 
 //--- 중고 마켓 --- //id, name, description, price, tags, createdAt, updatedAt필드를 가집니다.
 model Product {
-  id          String        @id @default(uuid())
-  name        String
-  description String
-  price       Float
-  tags        String[]
-  status      ProductStatus @default(SALE)
-  seller      User          @relation(fields: [sellerId], references: [id], onDelete: Cascade)
-  sellerId    String
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  comment     comment[]
+    id          Int           @id @default(autoincrement())
+    name        String
+    description String
+    price       Float
+    tags        String[]
+    status      ProductStatus @default(SALE)
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+    seller      User          @relation("selling", fields: [sellerId], references: [id], onDelete: Cascade)
+    sellerId    Int
+    comment     Comment[]
+    buyer       User?         @relation("buying", fields: [buyerId], references: [id])
+    buyerId     Int?
+    images      Image[]
 }
 
 //--- 자유 게시판 --- //id, title, content, createdAt, updatedAt 필드를 가집니다.
 model Article {
-  id        String    @id @default(uuid())
-  author    User?     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  title     String
-  content   String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  comment   comment[]
-  authorId  String?
+    id        Int       @id @default(autoincrement())
+    title     String
+    content   String
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    authorId  Int
+    comment   Comment[]
+    images    Image[]
 }
 
 //--- 댓글 --- id, content,createdAt,updatedAt
-model comment {
-  id        String   @id @default(uuid())
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  productId String?
-  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
-  articleId String?
-  article   Article? @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  authorId  String
+model Comment {
+    id        Int      @id @default(autoincrement())
+    content   String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    authorId  Int
+    product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+    productId Int?
+    article   Article? @relation(fields: [articleId], references: [id], onDelete: Cascade)
+    articleId Int?
+    images    Image[]
+}
+
+model Image {
+    id        Int      @id @default(autoincrement())
+    imageUrl  String
+    user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    Int?
+    article   Article? @relation(fields: [articleId], references: [id], onDelete: Cascade)
+    articleId Int?
+    product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+    productId Int?
+    comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+    commentId Int?
 }
 
 //제품 판매 상태
 enum ProductStatus {
-  SALE //판매중
-  RESERVED //예약중
-  SOLD //판매완료
+    SALE //판매중
+    RESERVED //예약중
+    SOLD //판매완료
 }
