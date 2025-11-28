@@ -6,6 +6,7 @@ images/
 Readme0.md
 prisma/mock copy.js
 prisma/seed_old.js
+prisma/kill_seed.js
 main.js
 test.js
 src/router/index.txt

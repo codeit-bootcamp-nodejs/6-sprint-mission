@@ -1,0 +1,50 @@
+@baseUrl = http://localhost:3000
+
+
+// 개시물 댓글 목록 조회: cursor 기반
+// 첫 조회: offset=0, cursor=undefined
+
+###
+GET {{baseUrl}}/comments/articles
+###
+GET {{baseUrl}}/comments/articles?cursor=a4d3e2b7-6f9a-4c81-84b2-b91f7c4e8d1a
+###
+GET {{baseUrl}}/comments/articles?limit=10&cursor=2fd019db-81b9-4f64-bb0f-0a7adf41e7e5
+###
+GET {{baseUrl}}/comments/articles?content=인생
+
+// 게시물 댓글 등록
+###
+POST {{baseUrl}}/comments/articles/1
+Content-Type: application/json
+
+{
+  "content": "환타지 쵝오"
+}
+
+
+// 게시물 댓글 조회
+###
+GET {{baseUrl}}/comments/products/1
+
+
+// 게시물 댓글 등록, 수정, 삭제: 토큰 인증된 유저만 가능
+###
+POST {{baseUrl}}/comments/products/1
+Content-Type: application/json
+
+{
+  "content": "가벼워요"
+}
+
+###
+PATCH {{baseUrl}}/comments/products/1
+Content-Type: application/json
+
+{
+  "content": "OST가 너무 감동적이에요."
+}
+
+###
+DELETE {{baseUrl}}/comments/products/1
+

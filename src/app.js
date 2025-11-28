@@ -6,8 +6,8 @@ import { PORT } from './lib/constants.js';
 import userRouter from './router/userRouter.js';
 import productRouter from './router/productRouter.js';
 import articleRouter from './router/articleRouter.js';
-// import commentRouter_article from './router/commentRouter_article.js';
-// import commentRouter_product from './router/commentRouter_product.js';
+import articleCommRouter from './router/articleCommRouter.js';
+import productCommRouter from './router/productCommRouter.js';
 // import imageRouter from './router/imageRouter.js';
 
 const app = express();
@@ -19,8 +19,8 @@ app.use(express.json());
 app.use('/users', userRouter);
 app.use('/products', productRouter);
 app.use('/articles', articleRouter);
-// app.use('/comments', commentRouter_article);
-// app.use('/comments', commentRouter_product);
+app.use('/comments/articles', articleCommRouter);
+app.use('/comments/products', productCommRouter);
 // app.use('/images', imageRouter);
 
 app.use(defaultNotFoundHandler);

@@ -1,12 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-import { USERS, PRODUCTS, ARTICLES, PRODUCTCOMMENTS, ARTICLECOMMENTS } from './mock.js';
+import { USERS, PRODUCTS, ARTICLES, COMMENTS } from './mock.js';
 
 async function main() {
   console.log('Deleting old data...');
-  await prisma.productComment.deleteMany();
-  await prisma.articleComment.deleteMany();
+  await prisma.comment.deleteMany();
   await prisma.product.deleteMany();
   await prisma.article.deleteMany();
   await prisma.user.deleteMany();
@@ -17,11 +16,20 @@ async function main() {
     return { id, email, nickname, password, createdAt, updatedAt };
   });
 
+  const productData = PRODUCTS.map((product) => {
+    const { comments, ...rest } = product;
+    return rest;
+  });
+
+  const articleData = ARTICLES.map((article) => {
+    const { comments, ...rest } = article;
+    return rest;
+  });
+
   await prisma.user.createMany({ data: userData, skipDuplicates: true });
-  await prisma.product.createMany({ data: PRODUCTS, skipDuplicates: true });
-  await prisma.article.createMany({ data: ARTICLES, skipDuplicates: true });
-  await prisma.productComment.createMany({ data: PRODUCTCOMMENTS, skipDuplicates: true });
-  await prisma.articleComment.createMany({ data: ARTICLECOMMENTS, skipDuplicates: true });
+  await prisma.product.createMany({ data: productData, skipDuplicates: true });
+  await prisma.article.createMany({ data: articleData, skipDuplicates: true });
+  await prisma.comment.createMany({ data: COMMENTS, skipDuplicates: true });
 
   for (const user of USERS) {
     if (user.likedProducts && user.likedProducts.length > 0) {
@@ -71,19 +79,11 @@ async function main() {
   );
 `;
 
-  // ProductComment
+  // Comment
   await prisma.$executeRaw`
   SELECT setval(
-    pg_get_serial_sequence('"ProductComment"', 'id'),
-    (SELECT MAX(id) FROM "ProductComment")
-  );
-`;
-
-  // ArticleComment
-  await prisma.$executeRaw`
-  SELECT setval(
-    pg_get_serial_sequence('"ArticleComment"', 'id'),
-    (SELECT MAX(id) FROM "ArticleComment")
+    pg_get_serial_sequence('"Comment"', 'id'),
+    (SELECT MAX(id) FROM "Comment")
   );
 `;
 

@@ -8,67 +8,57 @@ datasource db {
 }
 
 model User {
-  id              Int              @id @default(autoincrement())
-  email           String           @unique
-  nickname        String
-  image           String?
-  password        String
-  products        Product[]
-  articles        Article[]
-  productComments ProductComment[]
-  articleComments ArticleComment[]
-  likedProducts   Product[]        @relation("LikedProducts")
-  likedArticles   Article[]        @relation("likedArticles")
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  nickname      String
+  image         String?
+  password      String
+  products      Product[]
+  articles      Article[]
+  comments      Comment[]
+  likedProducts Product[] @relation("LikedProducts")
+  likedArticles Article[] @relation("likedArticles")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
 
 model Product {
-  id          Int              @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   name        String
   description String
   price       Float
   tags        String[]
   imageUrls   String[]
-  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      Int
-  comments    ProductComment[]
-  likedUsers  User[]           @relation("LikedProducts")
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
+  likedUsers  User[]    @relation("LikedProducts")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  comments    Comment[]
 }
 
 model Article {
-  id         Int              @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   title      String
   content    String
   imageUrls  String[]
-  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     Int
-  comments   ArticleComment[]
-  likedUsers User[]           @relation("likedArticles")
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
+  likedUsers User[]    @relation("likedArticles")
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  comments   Comment[]
 }
 
-model ArticleComment {
+model Comment {
   id        Int      @id @default(autoincrement())
   content   String
-  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  articleId Int
+  article   Article? @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId Int?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int?
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-model ProductComment {
-  id        Int      @id @default(autoincrement())
-  content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId Int
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int
 }

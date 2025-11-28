@@ -1,40 +1,11 @@
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
-
-// 상품 댓글 등록
-// req.params에 commentId 있어야 함
-// 입력 필드: content
-// req.params에 productId 있어야 함
-export async function postProductComment(req, res, next) {
-  const { productId } = req.params;
-  const { content } = req.body;
-  req.body = { productId, content };
-  //assert({ productId, content }, CreateComment);
-
-  const contentArray = Array.isArray(content) ? content : [content];
-  try {
-    const product = await prisma.product.update({
-      where: { id: productId },
-      data: {
-        comments: {
-          create: contentArray.map((c) => ({ content: c }))
-        }
-      },
-      include: { comments: true }
-    });
-    product.comments = product.comments.map(({ articleId, ...rest }) => rest); // articleId = null 가림
-    console.log('Comments created.');
-    res.status(200).send(product);
-  } catch (err) {
-    next(err);
-  }
-}
+import articleCommService from '../service/articleCommService.js';
 
 // 게시물 댓글 등록
 // req.params에 commentId 있어야 함
 // 입력 필드: content
 // req.params에 articleId 있어야 함
-export async function postArticleComment(req, res, next) {
+
+async function postArticleComment(req, res, next) {
   const { articleId } = req.params;
   const { content } = req.body;
   //assert({ articleId, content }, CreateComment);
@@ -53,6 +24,38 @@ export async function postArticleComment(req, res, next) {
     article.comments = article.comments.map(({ productId, ...rest }) => rest); // pdoructId = null 가림
     console.log('Comments updated');
     res.status(200).send(article);
+  } catch (err) {
+    next(err);
+  }
+}
+
+// 1개 댓글 수정
+// req.params에 commentId 있어야 함
+// 입력 필드: content
+async function patchComment(req, res, next) {
+  const { commentId: id } = req.params;
+  //assert(req.body, PatchComment);
+
+  try {
+    const comment = await prisma.comment.update({
+      where: { id },
+      data: req.body
+    });
+    console.log('Comments edited.');
+    res.status(201).send(comment);
+  } catch (err) {
+    next(err);
+  }
+}
+
+// 1개 댓글 삭제
+// req.params에 commentId 있어야 함
+async function deleteComment(req, res, next) {
+  const { commentId: id } = req.params;
+  try {
+    const comment = await prisma.comment.delete({ where: { id } });
+    console.log('Comment deleted.');
+    res.status(201).send('Comment deleted.');
   } catch (err) {
     next(err);
   }
@@ -112,38 +115,6 @@ export async function getComment(req, res, next) {
     });
     console.log('Comments retrieved.');
     res.status(200).send(comment);
-  } catch (err) {
-    next(err);
-  }
-}
-
-// 1개 댓글 수정
-// req.params에 commentId 있어야 함
-// 입력 필드: content
-export async function patchComment(req, res, next) {
-  const { commentId: id } = req.params;
-  //assert(req.body, PatchComment);
-
-  try {
-    const comment = await prisma.comment.update({
-      where: { id },
-      data: req.body
-    });
-    console.log('Comments edited.');
-    res.status(201).send(comment);
-  } catch (err) {
-    next(err);
-  }
-}
-
-// 1개 댓글 삭제
-// req.params에 commentId 있어야 함
-export async function deleteComment(req, res, next) {
-  const { commentId: id } = req.params;
-  try {
-    const comment = await prisma.comment.delete({ where: { id } });
-    console.log('Comment deleted.');
-    res.status(201).send('Comment deleted.');
   } catch (err) {
     next(err);
   }

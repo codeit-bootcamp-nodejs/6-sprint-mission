@@ -1,4 +1,6 @@
+//----------------------------------------
 // USERS: 7명
+//----------------------------------------
 export const USERS = [
   {
     id: 1,
@@ -72,7 +74,9 @@ export const USERS = [
   }
 ];
 
+//----------------------------------------
 // PRODUCTS: 27개
+//----------------------------------------
 export const PRODUCTS = [
   {
     id: 1,
@@ -429,7 +433,9 @@ export const PRODUCTS = [
   }
 ];
 
-// ARTICLES: 22개
+//----------------------------------------
+// ARTICLE: 22개
+//----------------------------------------
 export const ARTICLES = [
   {
     id: 1,
@@ -649,356 +655,10 @@ export const ARTICLES = [
   }
 ];
 
-// ARTICLE COMMENTS: 43개
-export const ARTICLECOMMENTS = [
-  {
-    id: 1,
-    content: '색감이 예술이에요.',
-    articleId: 1,
-    userId: 5,
-    createdAt: '2025-10-26T15:00:00Z',
-    updatedAt: '2025-10-26T15:30:00Z'
-  },
-  {
-    id: 2,
-    content: '디테일이 환상적이에요.',
-    articleId: 2,
-    userId: 3,
-    createdAt: '2025-10-26T15:00:00Z',
-    updatedAt: '2025-10-26T15:30:00Z'
-  },
-  {
-    id: 3,
-    content: '스파이더맨의 새로운 해석이 좋았어요!',
-    articleId: 3,
-    userId: 5,
-    createdAt: '2025-10-27T10:00:00Z',
-    updatedAt: '2025-10-27T11:00:00Z'
-  },
-  {
-    id: 4,
-    content: '쿠키영상까지 완벽했습니다.',
-    articleId: 4,
-    userId: 1,
-    createdAt: '2025-10-27T10:00:00Z',
-    updatedAt: '2025-10-27T11:00:00Z'
-  },
-  {
-    id: 5,
-    content: '하울의 성 디자인이 너무 예뻐요.',
-    articleId: 6,
-    userId: 4,
-    createdAt: '2025-10-29T09:15:00Z',
-    updatedAt: '2025-10-29T09:30:00Z'
-  },
-  {
-    id: 6,
-    content: 'OST 들을 때마다 눈물이 납니다.',
-    articleId: 8,
-    userId: 5,
-    createdAt: '2025-10-29T09:15:00Z',
-    updatedAt: '2025-10-29T09:30:00Z'
-  },
-  {
-    id: 7,
-    content: '인생 영화입니다.',
-    articleId: 8,
-    userId: 3,
-    createdAt: '2025-10-30T10:20:00Z',
-    updatedAt: '2025-10-30T11:10:00Z'
-  },
-  {
-    id: 8,
-    content: '포레스트 검프의 순수함이 감동적이에요.',
-    articleId: 8,
-    userId: 1,
-    createdAt: '2025-10-30T10:20:00Z',
-    updatedAt: '2025-10-30T11:10:00Z'
-  },
-  {
-    id: 9,
-    content: '인간미를 찾을 수 없는 각박한 이야기네요.',
-    articleId: 9,
-    userId: 2,
-    createdAt: '2025-10-31T12:00:00Z',
-    updatedAt: '2025-10-31T13:00:00Z'
-  },
-  {
-    id: 10,
-    content: '두 주인공의 케미가 끔직하게 좋아요.',
-    articleId: 10,
-    userId: 5,
-    createdAt: '2025-10-31T12:20:00Z',
-    updatedAt: '2025-10-31T13:00:00Z'
-  },
-  {
-    id: 11,
-    content: '실화라 더 충격적이었어요.',
-    articleId: 11,
-    userId: 3,
-    createdAt: '2025-11-01T08:00:00Z',
-    updatedAt: '2025-11-01T09:00:00Z'
-  },
-  {
-    id: 12,
-    content: '배우 연기력이 모두 대단했습니다.',
-    articleId: 9,
-    userId: 1,
-    createdAt: '2025-11-01T08:00:00Z',
-    updatedAt: '2025-11-01T09:00:00Z'
-  },
-  {
-    id: 13,
-    content: '엔드게임은 진정한 대서사시!',
-    articleId: 1,
-    userId: 5,
-    createdAt: '2025-11-01T13:00:00Z',
-    updatedAt: '2025-11-01T13:30:00Z'
-  },
-  {
-    id: 14,
-    content: '사회경제적 지위, 인종 따위를 넘어서는 인간미의 승리',
-    articleId: 13,
-    userId: 5,
-    createdAt: '2025-11-01T13:00:00Z',
-    updatedAt: '2025-11-01T13:30:00Z'
-  },
-  {
-    id: 15,
-    content: '민주화를 꿈꾸는 시민군의 열망이 느껴져요',
-    articleId: 14,
-    userId: 3,
-    createdAt: '2025-11-02T08:00:00Z',
-    updatedAt: '2025-11-02T09:00:00Z'
-  },
-  {
-    id: 16,
-    content: '진짜 판타지의 정석',
-    articleId: 4,
-    userId: 3,
-    createdAt: '2025-11-02T08:00:00Z',
-    updatedAt: '2025-11-02T09:00:00Z'
-  },
-  {
-    id: 17,
-    content: '조커 연기가 미쳤어요.',
-    articleId: 17,
-    userId: 3,
-    createdAt: '2025-11-02T10:00:00Z',
-    updatedAt: '2025-11-02T11:00:00Z'
-  },
-  {
-    id: 18,
-    content: '엔딩에서 소름 돋았습니다.',
-    articleId: 17,
-    userId: 1,
-    createdAt: '2025-11-02T10:00:00Z',
-    updatedAt: '2025-11-02T11:00:00Z'
-  },
-  {
-    id: 19,
-    content: '눈물이 멈추지 않았어요',
-    articleId: 18,
-    userId: 4,
-    createdAt: '2025-11-02T21:00:00Z',
-    updatedAt: '2025-11-02T21:40:00Z'
-  },
-  {
-    id: 20,
-    content: '레오나르도 연기가 압권입니다',
-    articleId: 11,
-    userId: 1,
-    createdAt: '2025-11-02T21:00:00Z',
-    updatedAt: '2025-11-02T21:40:00Z'
-  },
-  {
-    id: 21,
-    content: '시간의 개념을 이렇게 표현하다니 대단해요',
-    articleId: 5,
-    userId: 5,
-    createdAt: '2025-11-02T22:00:00Z',
-    updatedAt: '2025-11-02T23:00:00Z'
-  },
-  {
-    id: 22,
-    content: 'OST도 정말 좋았어요',
-    articleId: 16,
-    userId: 3,
-    createdAt: '2025-11-02T22:00:00Z',
-    updatedAt: '2025-11-02T23:00:00Z'
-  },
-  {
-    id: 23,
-    content: '호랑이랑의 관계가 인상 깊었어요.',
-    articleId: 19,
-    userId: 1,
-    createdAt: '2025-11-03T09:00:00Z',
-    updatedAt: '2025-11-03T10:00:00Z'
-  },
-  {
-    id: 24,
-    content: '생명에 대한 메시지가 강렬했어요.',
-    articleId: 19,
-    userId: 5,
-    createdAt: '2025-11-03T09:00:00Z',
-    updatedAt: '2025-11-03T10:00:00Z'
-  },
-  {
-    id: 25,
-    content: '환상적인 세계관!',
-    articleId: 19,
-    userId: 5,
-    createdAt: '2025-11-03T10:00:00Z',
-    updatedAt: '2025-11-03T10:30:00Z'
-  },
-  {
-    id: 26,
-    content: '치히로의 성장 서사가 인상적이에요',
-    articleId: 15,
-    userId: 3,
-    createdAt: '2025-11-03T10:00:00Z',
-    updatedAt: '2025-11-03T10:30:00Z'
-  },
-  {
-    id: 27,
-    content: '결말의 반전이 충격적이었어요',
-    articleId: 10,
-    userId: 5,
-    createdAt: '2025-11-03T12:00:00Z',
-    updatedAt: '2025-11-03T12:40:00Z'
-  },
-  {
-    id: 28,
-    content: '박찬욱 감독다운 긴장감',
-    articleId: 18,
-    userId: 2,
-    createdAt: '2025-11-03T12:00:00Z',
-    updatedAt: '2025-11-03T12:40:00Z'
-  },
-  {
-    id: 29,
-    content: '음악과 색감이 너무 아름다워요',
-    articleId: 16,
-    userId: 5,
-    createdAt: '2025-11-03T12:10:00Z',
-    updatedAt: '2025-11-03T13:20:00Z'
-  },
-  {
-    id: 30,
-    content: '엔딩이 마음 아파요',
-    articleId: 18,
-    userId: 2,
-    createdAt: '2025-11-03T12:10:00Z',
-    updatedAt: '2025-11-03T13:20:00Z'
-  },
-  {
-    id: 31,
-    content: '꿈과 현실의 경계가 흥미로워요',
-    articleId: 7,
-    userId: 4,
-    createdAt: '2025-11-03T14:30:00Z',
-    updatedAt: '2025-11-03T15:00:00Z'
-  },
-  {
-    id: 32,
-    content: '음악도 완벽했어요',
-    articleId: 16,
-    userId: 4,
-    createdAt: '2025-11-03T14:30:00Z',
-    updatedAt: '2025-11-03T15:00:00Z'
-  },
-  {
-    id: 33,
-    content: '사랑과 기억에 대한 철학적인 영화예요',
-    articleId: 20,
-    userId: 5,
-    createdAt: '2025-11-04T07:45:00Z',
-    updatedAt: '2025-11-04T08:05:00Z'
-  },
-  {
-    id: 34,
-    content: '희망을 잃지 않는 주인공의 모습이 감동적이에요',
-    articleId: 12,
-    userId: 4,
-    createdAt: '2025-11-04T08:00:00Z',
-    updatedAt: '2025-11-04T08:45:00Z'
-  },
-  {
-    id: 35,
-    content: '서스펜스가 대단해요',
-    articleId: 10,
-    userId: 2,
-    createdAt: '2025-11-04T21:00:00Z',
-    updatedAt: '2025-11-04T21:30:00Z'
-  },
-  {
-    id: 36,
-    content: '음악이 분위기를 살려줘요',
-    articleId: 4,
-    userId: 3,
-    createdAt: '2025-11-04T21:00:00Z',
-    updatedAt: '2025-11-04T21:30:00Z'
-  },
-  {
-    id: 37,
-    content: '봉준호 감독의 연출력 최고',
-    articleId: 9,
-    userId: 4,
-    createdAt: '2025-11-05T18:15:00Z',
-    updatedAt: '2025-11-05T18:40:00Z'
-  },
-  {
-    id: 38,
-    content: '마지막 장면이 소름 돋았어요',
-    articleId: 17,
-    userId: 3,
-    createdAt: '2025-11-05T19:15:00Z',
-    updatedAt: '2025-11-07T21:25:00Z'
-  },
-  {
-    id: 39,
-    content: '영국식 감성이 너무 좋아요',
-    articleId: 21,
-    userId: 4,
-    createdAt: '2025-11-06T09:15:00Z',
-    updatedAt: '2025-11-06T10:20:00Z'
-  },
-  {
-    id: 40,
-    content: '잔잔하지만 감정이 깊어요',
-    articleId: 21,
-    userId: 4,
-    createdAt: '2025-11-06T10:11:00Z',
-    updatedAt: '2025-11-06T10:20:00Z'
-  },
-  {
-    id: 41,
-    content: '조 페시의 연기 정말 웃겼어요!',
-    articleId: 22,
-    userId: 2,
-    createdAt: '2025-11-07T10:00:00Z',
-    updatedAt: '2025-11-07T11:00:00Z'
-  },
-  {
-    id: 42,
-    content: '대사 하나하나에 박장대소. 특히 초반의 감옥씬',
-    articleId: 22,
-    userId: 1,
-    createdAt: '2025-11-07T10:30:00Z',
-    updatedAt: '2025-11-07T11:00:00Z'
-  },
-  {
-    id: 43,
-    content: '조 페시와 마리사 토메이, 환상의 연기 궁합',
-    articleId: 22,
-    userId: 1,
-    createdAt: '2025-11-07T11:00:00Z',
-    updatedAt: '2025-11-07T11:00:00Z'
-  }
-];
-
-// PRODUCT COMMENTS: 49개
-export const PRODUCTCOMMENTS = [
+//----------------------------------------
+// COMMENTS: 92개
+//----------------------------------------
+export const COMMENTS = [
   {
     id: 1,
     content: '압력 기능이 강력해요!',
@@ -1012,7 +672,7 @@ export const PRODUCTCOMMENTS = [
     content: '요리 초보도 쉽게 써요.',
     productId: 1,
     userId: 2,
-    createdAt: '2023-05-10T11:00:00Z',
+    createdAt: '2023-05-10T11:10:00Z',
     updatedAt: '2023-05-10T11:45:00Z'
   },
   {
@@ -1044,7 +704,7 @@ export const PRODUCTCOMMENTS = [
     content: '휴대용으로 너무 좋아요',
     productId: 5,
     userId: 4,
-    createdAt: '2023-05-25T13:45:00Z',
+    createdAt: '2023-05-25T13:51:00Z',
     updatedAt: '2023-05-26T07:00:00Z'
   },
   {
@@ -1060,7 +720,7 @@ export const PRODUCTCOMMENTS = [
     content: 'SSD 덕분에 로딩이 정말 빨라요',
     productId: 7,
     userId: 3,
-    createdAt: '2023-06-06T10:00:00Z',
+    createdAt: '2023-06-06T10:22:00Z',
     updatedAt: '2023-06-06T10:30:00Z'
   },
   {
@@ -1068,7 +728,7 @@ export const PRODUCTCOMMENTS = [
     content: '작고 예뻐요.',
     productId: 8,
     userId: 3,
-    createdAt: '2023-06-13T09:00:00Z',
+    createdAt: '2023-06-13T08:00:00Z',
     updatedAt: '2023-06-13T09:00:00Z'
   },
   {
@@ -1076,8 +736,8 @@ export const PRODUCTCOMMENTS = [
     content: '야외에서도 소리가 좋아요.',
     productId: 5,
     userId: 4,
-    createdAt: '2023-06-13T08:00:00Z',
-    updatedAt: '2023-06-13T08:30:00Z'
+    createdAt: '2023-06-13T09:00:00Z',
+    updatedAt: '2023-06-13T09:30:00Z'
   },
   {
     id: 11,
@@ -1092,7 +752,7 @@ export const PRODUCTCOMMENTS = [
     content: '고속 충전 정말 잘 됩니다',
     productId: 7,
     userId: 5,
-    createdAt: '2023-06-26T10:00:00Z',
+    createdAt: '2023-06-26T10:40:00Z',
     updatedAt: '2023-06-26T10:40:00Z'
   },
   {
@@ -1116,7 +776,7 @@ export const PRODUCTCOMMENTS = [
     content: '영화 볼 때 몰입감 최고',
     productId: 10,
     userId: 5,
-    createdAt: '2023-07-12T18:30:00Z',
+    createdAt: '2023-07-12T18:46:00Z',
     updatedAt: '2023-07-13T07:10:00Z'
   },
   {
@@ -1164,8 +824,8 @@ export const PRODUCTCOMMENTS = [
     content: '착용감이 편안합니다',
     productId: 13,
     userId: 1,
-    createdAt: '2023-07-20T14:05:00Z',
-    updatedAt: '2023-07-21T08:22:00Z'
+    createdAt: '2023-07-20T14:07:00Z',
+    updatedAt: '2023-07-21T21:22:00Z'
   },
   {
     id: 22,
@@ -1220,7 +880,7 @@ export const PRODUCTCOMMENTS = [
     content: '가벼워서 손목이 덜 아파요',
     productId: 15,
     userId: 5,
-    createdAt: '2023-08-01T09:00:00Z',
+    createdAt: '2023-08-01T09:10:00Z',
     updatedAt: '2023-08-01T10:00:00Z'
   },
   {
@@ -1236,7 +896,7 @@ export const PRODUCTCOMMENTS = [
     content: '야간 촬영 품질이 훌륭합니다',
     productId: 16,
     userId: 3,
-    createdAt: '2023-08-03T09:20:00Z',
+    createdAt: '2023-08-03T09:29:00Z',
     updatedAt: '2023-08-03T09:50:00Z'
   },
   {
@@ -1276,8 +936,8 @@ export const PRODUCTCOMMENTS = [
     content: '가격 대비 성능이 뛰어납니다',
     productId: 18,
     userId: 2,
-    createdAt: '2023-08-04T10:45:00Z',
-    updatedAt: '2023-08-04T11:15:00Z'
+    createdAt: '2023-08-04T10:49:00Z',
+    updatedAt: '2023-08-04T11:10:00Z'
   },
   {
     id: 36,
@@ -1300,8 +960,8 @@ export const PRODUCTCOMMENTS = [
     content: '배터리도 오래가네요.',
     productId: 21,
     userId: 1,
-    createdAt: '2023-08-17T12:30:00Z',
-    updatedAt: '2023-08-17T13:00:00Z'
+    createdAt: '2023-08-17T11:00:00Z',
+    updatedAt: '2023-08-17T11:00:00Z'
   },
   {
     id: 39,
@@ -1324,8 +984,8 @@ export const PRODUCTCOMMENTS = [
     content: '액션캠 중 최고네요.',
     productId: 23,
     userId: 1,
-    createdAt: '2023-09-12T09:00:00Z',
-    updatedAt: '2023-09-12T09:30:00Z'
+    createdAt: '2023-09-12T10:20:00Z',
+    updatedAt: '2023-09-12T10:30:00Z'
   },
   {
     id: 42,
@@ -1340,7 +1000,7 @@ export const PRODUCTCOMMENTS = [
     content: '배터리 오래가네요.',
     productId: 24,
     userId: 2,
-    createdAt: '2023-09-16T10:00:00Z',
+    createdAt: '2023-09-16T10:23:00Z',
     updatedAt: '2023-09-16T10:45:00Z'
   },
   {
@@ -1356,8 +1016,8 @@ export const PRODUCTCOMMENTS = [
     content: '어디에서든 게임 가능!',
     productId: 14,
     userId: 1,
-    createdAt: '2023-09-22T10:15:00Z',
-    updatedAt: '2023-09-22T10:30:00Z'
+    createdAt: '2023-09-22T11:15:00Z',
+    updatedAt: '2023-09-22T11:30:00Z'
   },
   {
     id: 46,
@@ -1380,7 +1040,7 @@ export const PRODUCTCOMMENTS = [
     content: '휴대성이 좋아요',
     productId: 26,
     userId: 4,
-    createdAt: '2023-10-05T08:00:00Z',
+    createdAt: '2023-10-05T09:00:00Z',
     updatedAt: '2023-10-05T09:00:00Z'
   },
   {
@@ -1388,7 +1048,351 @@ export const PRODUCTCOMMENTS = [
     content: '조작이 간단해요',
     productId: 25,
     userId: 5,
-    createdAt: '2023-10-05T08:00:00Z',
-    updatedAt: '2023-10-05T09:00:00Z'
+    createdAt: '2023-10-05T21:00:00Z',
+    updatedAt: '2023-10-05T21:00:00Z'
+  },
+  {
+    id: 50,
+    content: '색감이 예술이에요.',
+    articleId: 1,
+    userId: 5,
+    createdAt: '2025-10-26T15:00:00Z',
+    updatedAt: '2025-10-26T15:30:00Z'
+  },
+  {
+    id: 51,
+    content: '디테일이 환상적이에요.',
+    articleId: 2,
+    userId: 3,
+    createdAt: '2025-10-26T15:10:00Z',
+    updatedAt: '2025-10-26T15:10:00Z'
+  },
+  {
+    id: 52,
+    content: '스파이더맨의 새로운 해석이 좋았어요!',
+    articleId: 3,
+    userId: 5,
+    createdAt: '2025-10-27T10:00:00Z',
+    updatedAt: '2025-10-27T11:00:00Z'
+  },
+  {
+    id: 53,
+    content: '쿠키영상까지 완벽했습니다.',
+    articleId: 4,
+    userId: 1,
+    createdAt: '2025-10-27T10:22:00Z',
+    updatedAt: '2025-10-27T11:00:00Z'
+  },
+  {
+    id: 54,
+    content: '하울의 성 디자인이 너무 예뻐요.',
+    articleId: 6,
+    userId: 4,
+    createdAt: '2025-10-29T09:15:00Z',
+    updatedAt: '2025-10-29T09:30:00Z'
+  },
+  {
+    id: 55,
+    content: 'OST 들을 때마다 눈물이 납니다.',
+    articleId: 8,
+    userId: 5,
+    createdAt: '2025-10-29T09:18:00Z',
+    updatedAt: '2025-10-29T09:30:00Z'
+  },
+  {
+    id: 56,
+    content: '인생 영화입니다.',
+    articleId: 8,
+    userId: 3,
+    createdAt: '2025-10-30T10:20:00Z',
+    updatedAt: '2025-10-30T11:10:00Z'
+  },
+  {
+    id: 57,
+    content: '포레스트 검프의 순수함이 감동적이에요.',
+    articleId: 8,
+    userId: 1,
+    createdAt: '2025-10-30T10:30:00Z',
+    updatedAt: '2025-10-30T11:10:00Z'
+  },
+  {
+    id: 58,
+    content: '인간미를 찾을 수 없는 각박한 이야기네요.',
+    articleId: 9,
+    userId: 2,
+    createdAt: '2025-10-31T12:00:00Z',
+    updatedAt: '2025-10-31T13:00:00Z'
+  },
+  {
+    id: 59,
+    content: '두 주인공의 케미가 끔직하게 좋아요.',
+    articleId: 10,
+    userId: 5,
+    createdAt: '2025-10-31T12:20:00Z',
+    updatedAt: '2025-10-31T13:00:00Z'
+  },
+  {
+    id: 60,
+    content: '실화라 더 충격적이었어요.',
+    articleId: 11,
+    userId: 3,
+    createdAt: '2025-11-01T08:00:00Z',
+    updatedAt: '2025-11-01T09:00:00Z'
+  },
+  {
+    id: 61,
+    content: '배우 연기력이 모두 대단했습니다.',
+    articleId: 9,
+    userId: 1,
+    createdAt: '2025-11-01T08:17:00Z',
+    updatedAt: '2025-11-01T09:00:00Z'
+  },
+  {
+    id: 62,
+    content: '엔드게임은 진정한 대서사시!',
+    articleId: 1,
+    userId: 5,
+    createdAt: '2025-11-01T13:00:00Z',
+    updatedAt: '2025-11-01T13:30:00Z'
+  },
+  {
+    id: 63,
+    content: '사회경제적 지위, 인종 따위를 넘어서는 인간미의 승리',
+    articleId: 13,
+    userId: 5,
+    createdAt: '2025-11-01T13:10:00Z',
+    updatedAt: '2025-11-01T13:30:00Z'
+  },
+  {
+    id: 64,
+    content: '민주화를 꿈꾸는 시민군의 열망이 느껴져요',
+    articleId: 14,
+    userId: 3,
+    createdAt: '2025-11-02T08:00:00Z',
+    updatedAt: '2025-11-02T09:00:00Z'
+  },
+  {
+    id: 65,
+    content: '진짜 판타지의 정석',
+    articleId: 4,
+    userId: 3,
+    createdAt: '2025-11-02T08:54:00Z',
+    updatedAt: '2025-11-02T09:00:00Z'
+  },
+  {
+    id: 66,
+    content: '조커 연기가 미쳤어요.',
+    articleId: 17,
+    userId: 3,
+    createdAt: '2025-11-02T10:00:00Z',
+    updatedAt: '2025-11-02T11:00:00Z'
+  },
+  {
+    id: 67,
+    content: '엔딩에서 소름 돋았습니다.',
+    articleId: 17,
+    userId: 1,
+    createdAt: '2025-11-02T10:35:00Z',
+    updatedAt: '2025-11-02T11:00:00Z'
+  },
+  {
+    id: 68,
+    content: '눈물이 멈추지 않았어요',
+    articleId: 18,
+    userId: 4,
+    createdAt: '2025-11-02T21:10:00Z',
+    updatedAt: '2025-11-02T21:40:00Z'
+  },
+  {
+    id: 69,
+    content: '레오나르도 연기가 압권입니다',
+    articleId: 11,
+    userId: 1,
+    createdAt: '2025-11-02T21:40:00Z',
+    updatedAt: '2025-11-02T21:40:00Z'
+  },
+  {
+    id: 70,
+    content: '시간의 개념을 이렇게 표현하다니 대단해요',
+    articleId: 5,
+    userId: 5,
+    createdAt: '2025-11-02T22:20:00Z',
+    updatedAt: '2025-11-02T23:00:00Z'
+  },
+  {
+    id: 71,
+    content: 'OST도 정말 좋았어요',
+    articleId: 16,
+    userId: 3,
+    createdAt: '2025-11-02T22:45:00Z',
+    updatedAt: '2025-11-02T23:00:00Z'
+  },
+  {
+    id: 72,
+    content: '호랑이랑의 관계가 인상 깊었어요.',
+    articleId: 19,
+    userId: 1,
+    createdAt: '2025-11-03T09:28:00Z',
+    updatedAt: '2025-11-03T10:00:00Z'
+  },
+  {
+    id: 73,
+    content: '생명에 대한 메시지가 강렬했어요.',
+    articleId: 19,
+    userId: 5,
+    createdAt: '2025-11-03T09:31:00Z',
+    updatedAt: '2025-11-03T10:00:00Z'
+  },
+  {
+    id: 74,
+    content: '환상적인 세계관!',
+    articleId: 19,
+    userId: 5,
+    createdAt: '2025-11-03T10:21:00Z',
+    updatedAt: '2025-11-03T10:30:00Z'
+  },
+  {
+    id: 75,
+    content: '치히로의 성장 서사가 인상적이에요',
+    articleId: 15,
+    userId: 3,
+    createdAt: '2025-11-03T10:40:00Z',
+    updatedAt: '2025-11-03T10:40:00Z'
+  },
+  {
+    id: 76,
+    content: '결말의 반전이 충격적이었어요',
+    articleId: 10,
+    userId: 5,
+    createdAt: '2025-11-03T12:08:00Z',
+    updatedAt: '2025-11-03T12:40:00Z'
+  },
+  {
+    id: 77,
+    content: '박찬욱 감독다운 긴장감',
+    articleId: 18,
+    userId: 2,
+    createdAt: '2025-11-03T12:29:00Z',
+    updatedAt: '2025-11-03T12:40:00Z'
+  },
+  {
+    id: 78,
+    content: '음악과 색감이 너무 아름다워요',
+    articleId: 16,
+    userId: 5,
+    createdAt: '2025-11-03T12:30:00Z',
+    updatedAt: '2025-11-03T13:30:00Z'
+  },
+  {
+    id: 79,
+    content: '엔딩이 마음 아파요',
+    articleId: 18,
+    userId: 2,
+    createdAt: '2025-11-03T13:34:00Z',
+    updatedAt: '2025-11-03T13:34:00Z'
+  },
+  {
+    id: 80,
+    content: '꿈과 현실의 경계가 흥미로워요',
+    articleId: 7,
+    userId: 4,
+    createdAt: '2025-11-03T14:30:00Z',
+    updatedAt: '2025-11-03T15:00:00Z'
+  },
+  {
+    id: 81,
+    content: '음악도 완벽했어요',
+    articleId: 16,
+    userId: 4,
+    createdAt: '2025-11-03T14:45:00Z',
+    updatedAt: '2025-11-03T15:00:00Z'
+  },
+  {
+    id: 82,
+    content: '사랑과 기억에 대한 철학적인 영화예요',
+    articleId: 20,
+    userId: 5,
+    createdAt: '2025-11-04T07:45:00Z',
+    updatedAt: '2025-11-04T08:05:00Z'
+  },
+  {
+    id: 83,
+    content: '희망을 잃지 않는 주인공의 모습이 감동적이에요',
+    articleId: 12,
+    userId: 4,
+    createdAt: '2025-11-04T08:00:00Z',
+    updatedAt: '2025-11-04T08:45:00Z'
+  },
+  {
+    id: 84,
+    content: '서스펜스가 대단해요',
+    articleId: 10,
+    userId: 2,
+    createdAt: '2025-11-04T21:00:00Z',
+    updatedAt: '2025-11-04T21:30:00Z'
+  },
+  {
+    id: 85,
+    content: '음악이 분위기를 살려줘요',
+    articleId: 4,
+    userId: 3,
+    createdAt: '2025-11-04T21:15:00Z',
+    updatedAt: '2025-11-04T21:30:00Z'
+  },
+  {
+    id: 86,
+    content: '봉준호 감독의 연출력 최고',
+    articleId: 9,
+    userId: 4,
+    createdAt: '2025-11-05T18:15:00Z',
+    updatedAt: '2025-11-05T18:40:00Z'
+  },
+  {
+    id: 87,
+    content: '마지막 장면이 소름 돋았어요',
+    articleId: 17,
+    userId: 3,
+    createdAt: '2025-11-05T19:15:00Z',
+    updatedAt: '2025-11-07T21:25:00Z'
+  },
+  {
+    id: 88,
+    content: '영국식 감성이 너무 좋아요',
+    articleId: 21,
+    userId: 4,
+    createdAt: '2025-11-06T09:52:00Z',
+    updatedAt: '2025-11-06T10:20:00Z'
+  },
+  {
+    id: 89,
+    content: '잔잔하지만 감정이 깊어요',
+    articleId: 21,
+    userId: 4,
+    createdAt: '2025-11-06T10:11:00Z',
+    updatedAt: '2025-11-06T10:20:00Z'
+  },
+  {
+    id: 90,
+    content: '조 페시의 연기 정말 웃겼어요!',
+    articleId: 22,
+    userId: 2,
+    createdAt: '2025-11-07T10:00:00Z',
+    updatedAt: '2025-11-07T11:00:00Z'
+  },
+  {
+    id: 91,
+    content: '대사 하나하나에 박장대소. 특히 초반의 감옥씬',
+    articleId: 22,
+    userId: 1,
+    createdAt: '2025-11-07T10:30:00Z',
+    updatedAt: '2025-11-07T11:00:00Z'
+  },
+  {
+    id: 92,
+    content: '조 페시와 마리사 토메이, 환상의 연기 궁합',
+    articleId: 22,
+    userId: 1,
+    createdAt: '2025-11-07T11:00:00Z',
+    updatedAt: '2025-11-07T11:00:00Z'
   }
 ];
