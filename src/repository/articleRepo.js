@@ -7,7 +7,7 @@ async function post(data) {
 async function patch(id, data) {
   return prisma.article.update({
     where: { id: Number(id) },
-    data
+    data: data
   });
 }
 
@@ -24,15 +24,11 @@ async function getList(where, orderBy, offset, limit) {
   });
 }
 
-async function get(id) {
-  return await prisma.article.findUniqueOrThrow({
+async function findById(id) {
+  return prisma.article.findUniqueOrThrow({
     where: { id: Number(id) },
     include: { comments: true, likedUsers: true } // 관계형 필드도 일단 가져온다
   });
-}
-
-async function findById(id) {
-  return prisma.article.findUniqueOrThrow({ where: { id: Number(id) } });
 }
 
 export default {
@@ -40,6 +36,5 @@ export default {
   patch,
   erase,
   findById,
-  getList,
-  get
+  getList
 };

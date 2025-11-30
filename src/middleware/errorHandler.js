@@ -8,7 +8,7 @@ export function defaultNotFoundHandler(req, res, next) {
 }
 
 export function globalErrorHandler(err, req, res, next) {
-  //console.error(err); // 개발용 로그
+  console.error(err); // 개발용 로그
 
   // Superstruct 에러 처리
   if (err instanceof StructError) {
@@ -102,6 +102,6 @@ export function globalErrorHandler(err, req, res, next) {
 
   // 기타 알 수 없는 오류: 지금까지 에러가 안 걸러졌다면, 반드시 여기서 걸리게.
   return res.status(500).send({
-    message: '알 수 없는 서버 내부 문제가 발생했습니다'
+    message: '서버 내부 문제가 발생했습니다'
   });
 }

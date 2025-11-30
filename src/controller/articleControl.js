@@ -10,15 +10,15 @@ async function post(req, res) {
 
 // 게시물 수정
 async function patch(req, res) {
-  const article = await articleService.patch(req.params.articleId, req.body);
-  console.log(`Article_${req.params.articleId} edited by user${req.user.id}`);
+  const article = await articleService.patch(req.params.id, req.body);
+  console.log(`Article_${req.params.id} edited by user${req.user.id}`);
   res.status(200).send(article);
 }
 
 // 게시물 삭제
 async function erase(req, res) {
-  await articleService.erase(req.params.articleId);
-  console.log(`Article_${req.params.articleId} deleted by user${req.user.id}`);
+  await articleService.erase(req.params.id);
+  console.log(`Article_${req.params.id} deleted by user${req.user.id}`);
   res.status(204).send({ nessage: 'Article deleted' });
 }
 
@@ -32,7 +32,7 @@ async function getList(req, res) {
 
 // 게시물 상세 조회
 async function get(req, res) {
-  const article = await articleService.get(req.params.articleId);
+  const article = await articleService.get(req.params.id);
   console.log('Article fetched (in detail)');
   res.status(200).send(article);
 }

@@ -1,44 +1,65 @@
-//------------------------product image
-GET http://localhost:3000/images/products/ac432f1d-3a8f-4acb-9038-2b311ae2c521
+@baseUrl = http://localhost:3000
 
+//------------------------상품 이미지 APIs
+GET {{baseUrl}}/images/products/29
 ###
-POST http://localhost:3000/images/products/ac432f1d-3a8f-4acb-9038-2b311ae2c521
+
+// 토큰 인증 + 인가 (상품을 등록한 유저만 가능)
+###
+POST {{baseUrl}}/images/products/29
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
 Content-Disposition: form-data; name="image"; filename="iphone17pro.png"
 Content-Type: image/png
 
-< ./images/iph
-one17pro.png
+< ./images/product/iphone17pro.png
 --MyBoundary--
 
 ###
-DELETE  http://localhost:3000/images/products/ac432f1d-3a8f-4acb-9038-2b311ae2c521
+DELETE {{baseUrl}}/images/products/29
 
 
 
 
-
-//------------------------article image
-// 전망좋은 방  f1912d57-f8f2-4c77-b9c0-b61d00173b67
-// 사촌 비니 42183d12-5a9c-49f1-bea3-861da70d5847
-
-###
-GET http://localhost:3000/images/articles/f1912d57-f8f2-4c77-b9c0-b61d00173b67
+//------------------------ 게시물 이미지 APIs
+// 전망좋은 방  
+// 사촌 비니 
 
 ###
-POST http://localhost:3000/images/articles/f1912d57-f8f2-4c77-b9c0-b61d00173b67
+GET {{baseUrl}}/images/articles/27
+
+###
+POST {{baseUrl}}/images/articles/21
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
 Content-Disposition: form-data; name="image"; filename="aRoomWithaView.png"
 Content-Type: image/png
 
-< ./images/aRoomWithaView.png
+< ./images/article/aRoomWithaView.png
 --MyBoundary--
 
 ###
-DELETE  http://localhost:3000/images/articles/f1912d57-f8f2-4c77-b9c0-b61d00173b67
+DELETE {{baseUrl}}/images/articles/21
 
+
+//------------------------ 사용자 이미지 APIs
+
+###
+GET {{baseUrl}}/images/users/1
+
+###
+POST {{baseUrl}}/images/users/2
+Content-Type: multipart/form-data; boundary=MyBoundary
+
+--MyBoundary
+Content-Disposition: form-data; name="image"; filename="Frodo2.png"
+Content-Type: image/png
+
+< ./images/user/Frodo2.png
+--MyBoundary--
+
+###
+DELETE {{baseUrl}}/images/users/1
 

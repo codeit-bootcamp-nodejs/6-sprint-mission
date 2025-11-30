@@ -18,7 +18,7 @@ async function getList(limit, cursor, typeStr, contentStr) {
 }
 
 async function get(commentId) {
-  const comment = await commentRepo.get(Number(commentId));
+  const comment = await commentRepo.findById(Number(commentId));
   const { id, content, articleId, productId, userId, createdAt, updatedAt } = comment;
   if (comment.articleId == null) return { id, content, productId, userId, createdAt };
   if (comment.productId == null) return { id, content, articleId, userId, createdAt };

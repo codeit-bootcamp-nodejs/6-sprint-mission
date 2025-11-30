@@ -1,13 +1,15 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import path from 'path';
 import { defaultNotFoundHandler, globalErrorHandler } from './middleware/errorHandler.js';
+import { PUBLIC_IMG_PATH, STATIC_IMG_PATH } from './lib/constants.js';
 import { PORT } from './lib/constants.js';
 import userRouter from './router/userRouter.js';
 import productRouter from './router/productRouter.js';
 import articleRouter from './router/articleRouter.js';
 import commentRouter from './router/commentRouter.js';
-// import imageRouter from './router/imageRouter.js';
+import imageRouter from './router/imageRouter.js';
 
 const app = express();
 
@@ -15,11 +17,21 @@ app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 
+app.use(
+  path.join(PUBLIC_IMG_PATH, 'product'),
+  express.static(path.join(STATIC_IMG_PATH, 'product'))
+);
+app.use(
+  path.join(PUBLIC_IMG_PATH, 'article'),
+  express.static(path.join(STATIC_IMG_PATH, 'article'))
+);
+app.use(path.join(PUBLIC_IMG_PATH, 'user'), express.static(path.join(STATIC_IMG_PATH, 'user')));
+
 app.use('/users', userRouter);
 app.use('/products', productRouter);
 app.use('/articles', articleRouter);
 app.use('/comments', commentRouter);
-// app.use('/images', imageRouter);
+app.use('/images', imageRouter);
 
 app.use(defaultNotFoundHandler);
 app.use(globalErrorHandler);

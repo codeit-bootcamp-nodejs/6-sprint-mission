@@ -12,7 +12,7 @@ async function post(req, res, next) {
 
 // 상품 수정: 토큰 인증된 유저가 자기가 등록한 상품인 경우만 가능
 async function patch(req, res, next) {
-  const { productId } = req.params;
+  const { id: productId } = req.params;
   const { id: userId } = req.user;
   const product = await productService.patch(productId, req.body);
   console.log(`Product_${productId} patched by ${req.user.nickname}`);
@@ -21,8 +21,7 @@ async function patch(req, res, next) {
 
 // 상품 삭제: 토큰 인증된 유저가 자기가 등록한 상품인 경우만 가능
 async function erase(req, res, next) {
-  const { productId } = req.params;
-  const { id: userId } = req.user;
+  const { id: productId } = req.params;
   await productService.erase(productId);
   console.log(`Product_${productId} deleted by ${req.user.nickname}`);
   res.sendStatus(204);
@@ -43,7 +42,7 @@ async function getList(req, res, next) {
 // 상품 상세 조회
 // 조회 필드: id, name, description, price, tags, createdAt
 async function get(req, res, next) {
-  const { productId } = req.params;
+  const { id: productId } = req.params;
   const product = await productService.get(productId);
   console.log(`Product_${productId} fetched (in detail)`);
   res.status(200).send(product);

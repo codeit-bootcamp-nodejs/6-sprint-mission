@@ -12,13 +12,34 @@ Content-Type: application/json
   "password": "password13"
 }
 
+// 등록할 때 사용자 이미지도 함께 등록하도록 변경할 예정
+# POST {{baseUrl}}/users/register
+# Content-Type: multipart/form-data; boundary=MyBoundary
+ 
+# --MyBoundary
+# Content-Disposition: form-data; name="data"
+# Content-Type: application/json
+
+# {
+#   "email": "Frodo@example.com",
+#   "nickname": "Frodo",
+#   "password": "Frodo"
+# }
+
+# --MyBoundary
+# Content-Disposition: form-data; name="image"; filename="Frodo2.png"
+# Content-Type: image/png
+
+# < ./images/user/Frodo2.png
+# --MyBoundary--
+
 ###
 POST {{baseUrl}}/users/login
 Content-Type: application/json
 
 {
-  "email": "user3@example.com",
-  "password": "password3"
+  "email": "user2@example.com",
+  "password": "password2"
 }
 
 ###
@@ -42,16 +63,37 @@ PATCH {{baseUrl}}/users/myInfo/edit
 Content-Type: application/json
 
 { 
-  "nickname": "user2" 
+  "nickname": "user3" 
 }
+
+// 나의 정보 수정할 때 이미지도 수정할 수 있도록 변경할 예정
+# PATCH {{baseUrl}}/users/MyInfo/edit
+# Content-Type: multipart/form-data; boundary=MyBoundary
+ 
+# --MyBoundary
+# Content-Disposition: form-data; name="data"
+# Content-Type: application/json
+
+# { 
+#   "nickname": "user2" 
+# }
+
+# --MyBoundary
+# Content-Disposition: form-data; name="image"; filename="Frodo1.png"
+# Content-Type: image/png
+
+# < ./images/user/Frodo1.png
+# --MyBoundary--
+
+
 
 ###
 PATCH {{baseUrl}}/users/myInfo/password/change
 Content-Type: application/json
 
 {
-  "password_now": "password22",
-  "password_new": "password2"
+  "password_now": "password2",
+  "password_new": "password3"
 }
 
 ###

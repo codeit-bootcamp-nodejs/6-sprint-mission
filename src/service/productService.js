@@ -51,7 +51,7 @@ async function getList(offset, limit, orderStr, nameStr, descriptionStr) {
 // 상품 상세 조회
 // 조회 필드: id, name, description, price, tags, createdAt
 async function get(productId) {
-  const product = await productRepo.get(productId);
+  const product = await productRepo.findById(productId);
 
   // 댓글을 조회하는 경우, updatedAt 필드 감춤
   // if (product.hasOwnProperty('comments')) {

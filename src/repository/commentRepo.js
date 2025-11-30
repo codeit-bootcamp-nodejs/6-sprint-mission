@@ -18,7 +18,7 @@ async function getList(where, type, limit, cursor) {
   });
 }
 
-async function get(id) {
+async function findById(id) {
   return await prisma.comment.findUniqueOrThrow({
     where: { id }
   });
@@ -41,7 +41,7 @@ async function erase(id) {
 
 export default {
   getList,
-  get,
+  findById,
   post,
   patch,
   erase

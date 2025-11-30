@@ -21,7 +21,7 @@ GET {{baseUrl}}/products?name=Pro&description=성능
 
 // 상품 상세 조회
 ###
-GET {{baseUrl}}/products/1
+GET {{baseUrl}}/products/32
 
 ###
 POST {{baseUrl}}/products
@@ -35,7 +35,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH {{baseUrl}}/products/30
+PATCH {{baseUrl}}/products/34
 Content-Type: application/json
 
 {
@@ -45,5 +45,5 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{baseUrl}}/products/30
+DELETE {{baseUrl}}/products/32
 

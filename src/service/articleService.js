@@ -53,7 +53,7 @@ async function getList(offset, limit, orderStr, titleStr, contentStr) {
 // 조회 필드 요구: id, title, content, createdAt
 // 조회 필드 추가: comments, likedUsers
 async function get(articleId) {
-  const article = await articleRepo.get(articleId);
+  const article = await articleRepo.findById(articleId);
 
   // 댓글은 조회 요구 필드가 아니지만....userId와 content만 남기고 삭제
   article.comments = article.comments.map((c) => {

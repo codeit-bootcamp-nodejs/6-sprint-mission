@@ -6,7 +6,7 @@ async function post(data) {
 }
 
 async function patch(id, data) {
-  return await prisma.product.update({ where: { id: Number(id) }, data });
+  return await prisma.product.update({ where: { id: Number(id) }, data: data });
 }
 
 async function erase(id) {
@@ -15,10 +15,6 @@ async function erase(id) {
 
 async function countById(id) {
   return await prisma.product.count({ where: { id: Number(id) } });
-}
-
-async function findById(id) {
-  return await prisma.product.findUniqueOrThrow({ where: { id: Number(id) } });
 }
 
 async function getList(where, orderBy, offset, limit) {
@@ -30,10 +26,10 @@ async function getList(where, orderBy, offset, limit) {
   });
 }
 
-async function get(id) {
+async function findById(id) {
   return await prisma.product.findFirstOrThrow({
     where: { id: Number(id) },
-    include: { comments: true }
+    include: { comments: true, likedUsers: true } // 관계형 필드도 일단 가져옴
   });
 }
 
@@ -43,6 +39,5 @@ export default {
   erase,
   findById,
   countById,
-  getList,
-  get
+  getList
 };

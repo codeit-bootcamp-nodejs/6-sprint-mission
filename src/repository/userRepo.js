@@ -3,7 +3,7 @@ import prisma from '../lib/prismaClient.js';
 async function getList() {
   return await prisma.user.findMany({
     orderBy: { createdAt: 'desc' },
-    include: { image: false }
+    include: { imageUrls: false, updatedAt: false }
   });
 }
 
@@ -12,20 +12,20 @@ async function create(data) {
 }
 
 async function findByEmail(email) {
-  return await prisma.user.findUnique({ where: { email } });
+  return await prisma.user.findUniqueOrThrow({ where: { email } });
 }
 
 async function findById(id) {
-  return await prisma.user.findUnique({
+  return await prisma.user.findUniqueOrThrow({
     where: { id },
     include: { comments: true, likedProducts: true, likedArticles: true }
   });
 }
 
-async function update(id, data) {
+async function patch(id, data) {
   return prisma.user.update({
     where: { id },
-    data
+    data: data
   });
 }
 
@@ -44,7 +44,7 @@ async function getArticles(userId) {
 export default {
   getList,
   create,
-  update,
+  patch,
   findByEmail,
   findById,
   getProducts,

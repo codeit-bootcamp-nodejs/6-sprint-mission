@@ -7,19 +7,9 @@ import withTryCatch from '../lib/withTryCatch.js';
 const productRouter = express.Router();
 
 productRouter.get('/', withTryCatch(productControl.getList));
-productRouter.get('/:productId', withTryCatch(productControl.get));
+productRouter.get('/:id', withTryCatch(productControl.get));
 productRouter.post('/', authenticateUser, withTryCatch(productControl.post));
-productRouter.patch(
-  '/:productId',
-  authenticateUser,
-  authorizeUser,
-  withTryCatch(productControl.patch)
-);
-productRouter.delete(
-  '/:productId',
-  authenticateUser,
-  authorizeUser,
-  withTryCatch(productControl.erase)
-);
+productRouter.patch('/:id', authenticateUser, authorizeUser, withTryCatch(productControl.patch));
+productRouter.delete('/:id', authenticateUser, authorizeUser, withTryCatch(productControl.erase));
 
 export default productRouter;

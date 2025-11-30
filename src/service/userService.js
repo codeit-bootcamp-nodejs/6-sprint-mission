@@ -25,7 +25,6 @@ async function register(data) {
     console.log('User registered already');
     throw new BadRequestError('USER_EXISTS');
   }
-
   const newData = {
     email,
     nickname,
@@ -70,7 +69,7 @@ async function getInfo(userId) {
 
 async function patchInfo(userId, userData) {
   assert(userData, PatchUser);
-  const user = await userRepo.update(userId, userData);
+  const user = await userRepo.patch(userId, userData);
   return filterPassword(user);
 }
 
@@ -89,7 +88,7 @@ async function patchPassword(userId, oldPassword, newPassword) {
 
   const userData = { password: await hashingPassword(newPassword) };
   assert(userData, PatchUser);
-  const newUser = await userRepo.update(userId, userData);
+  const newUser = await userRepo.patch(userId, userData);
   return filterPassword(newUser);
 }
 
@@ -175,5 +174,6 @@ export default {
   patchPassword,
   getProducts,
   getArticles,
-  verifyUserExist
+  verifyUserExist,
+  filterPassword
 };

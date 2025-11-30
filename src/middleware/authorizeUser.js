@@ -1,4 +1,5 @@
 import BadRequestError from './errors/BadRequestError.js';
+import userRepo from '../repository/userRepo.js';
 import articleRepo from '../repository/articleRepo.js';
 import productRepo from '../repository/productRepo.js';
 import commentRepo from '../repository/commentRepo.js';
@@ -6,15 +7,18 @@ import commentRepo from '../repository/commentRepo.js';
 async function authorizeUser(req, res, next) {
   try {
     let item;
-    if (req.baseUrl.includes('product')) {
-      item = await productRepo.findById(Number(req.params.productId));
-    } else if (req.baseUrl.includes('article')) {
-      item = await articleRepo.findById(Number(req.params.articleId));
-    } else if (req.baseUrl.includes('comment')) {
-      item = await commentRepo.get(Number(req.params.commentId));
+    if (req.originalUrl.includes('users')) {
+      item = await userRepo.findById(Number(req.params.id));
+      item.userId = item.id;
+    } else if (req.originalUrl.includes('products')) {
+      item = await productRepo.findById(Number(req.params.id));
+    } else if (req.originalUrl.includes('articles')) {
+      item = await articleRepo.findById(Number(req.params.id));
+    } else if (req.originalUrl.includes('comments')) {
+      item = await commentRepo.findById(Number(req.params.id));
     } else {
       console.log('');
-      console.log('Type should be article / product / comment');
+      console.log('Something went wrong');
       throw new BadRequestError('BADREQUEST');
     }
 
