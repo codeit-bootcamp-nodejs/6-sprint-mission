@@ -8,6 +8,8 @@ const articleRouter = express.Router();
 
 articleRouter.get('/', withTryCatch(articleControl.getList));
 articleRouter.get('/:id', withTryCatch(articleControl.get));
+articleRouter.post('/:id/like', authenticateUser, withTryCatch(articleControl.like));
+articleRouter.post('/:id/like/cancel', authenticateUser, withTryCatch(articleControl.cancelLike));
 articleRouter.post('/', authenticateUser, withTryCatch(articleControl.post));
 articleRouter.patch('/:id', authenticateUser, authorizeUser, withTryCatch(articleControl.patch));
 articleRouter.delete('/:id', authenticateUser, authorizeUser, withTryCatch(articleControl.erase));

@@ -37,10 +37,23 @@ async function get(req, res) {
   res.status(200).send(article);
 }
 
+// 게시물: 좋아요/좋아요-취소
+async function like(req, res, next) {
+  const article = await articleService.like(req.user.id, req.params.id);
+  res.status(200).send(article);
+}
+
+async function cancelLike(req, res, next) {
+  const article = await articleService.cancelLike(req.user.id, req.params.id);
+  res.status(200).send(article);
+}
+
 export default {
   post,
   patch,
   erase,
   getList,
-  get
+  get,
+  like,
+  cancelLike
 };

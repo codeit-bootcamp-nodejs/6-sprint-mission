@@ -25,6 +25,9 @@ userRouter.patch(
 userRouter.get('/myProducts', authenticateUser, withTryCatch(userControl.getProducts)); // 자신이 등록한 상품 목록 조회
 userRouter.get('/myArticles', authenticateUser, withTryCatch(userControl.getArticles)); // 부가 기능
 
+userRouter.get('/myLikedProducts', authenticateUser, withTryCatch(userControl.getLikedProducts)); // 자신이 등록한 상품 목록 조회
+userRouter.get('/myLikedArticles', authenticateUser, withTryCatch(userControl.getLikedArticles)); // 부가 기능
+
 //userRouter.post('/myInfo/delete', deleteUser); // 부가 기능
 
 export default userRouter;

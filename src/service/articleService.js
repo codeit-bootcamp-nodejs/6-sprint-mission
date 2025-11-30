@@ -68,10 +68,38 @@ async function get(articleId) {
   return rest;
 }
 
+async function like(userId, articleId) {
+  let article = await articleRepo.findById(Number(articleId));
+  if (article.likedUsers.find((n) => n.id === userId)) {
+    console.log('Already one of your liked articles');
+  } else {
+    console.log('Now, one of your liked articles');
+    article = await articleRepo.patch(Number(articleId), {
+      likedUsers: { connect: { id: userId } }
+    });
+  }
+  return { isLiked: true, ...article };
+}
+
+async function cancelLike(userId, articleId) {
+  let article = await articleRepo.findById(Number(articleId));
+  if (!article.likedUsers.find((n) => n.id === userId)) {
+    console.log('Already not one of your liked articles');
+  } else {
+    console.log('Now, not one of your liked articles');
+    article = await articleRepo.patch(Number(articleId), {
+      likedUsers: { disconnect: { id: userId } }
+    });
+  }
+  return { isLiked: false, ...article };
+}
+
 export default {
   post,
   patch,
   erase,
   getList,
-  get
+  get,
+  like,
+  cancelLike
 };

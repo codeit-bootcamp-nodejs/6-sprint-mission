@@ -48,10 +48,23 @@ async function get(req, res, next) {
   res.status(200).send(product);
 }
 
+// 상품: 좋아요/좋아요-취소
+async function like(req, res, next) {
+  const product = await productService.like(req.user.id, req.params.id);
+  res.status(200).send(product);
+}
+
+async function cancelLike(req, res, next) {
+  const product = await productService.cancelLike(req.user.id, req.params.id);
+  res.status(200).send(product);
+}
+
 export default {
   post,
   patch,
   erase,
   getList,
-  get
+  get,
+  like,
+  cancelLike
 };

@@ -53,12 +53,44 @@ async function getList(offset, limit, orderStr, nameStr, descriptionStr) {
 async function get(productId) {
   const product = await productRepo.findById(productId);
 
-  // 댓글을 조회하는 경우, updatedAt 필드 감춤
-  // if (product.hasOwnProperty('comments')) {
-  //   product.comments = product.comments.map(({ articleId, updatedAt, ...rest }) => rest);
-  // }
-  // const { updatedAt, imageUrls, comments, ...rest } = product;
-  return product;
+  // 댓글은 조회 요구 필드가 아니지만....userId와 content만 남기고 삭제
+  product.comments = product.comments.map((c) => {
+    return c.userId, c.content;
+  });
+  // likedUsers는 조회 요구 필드가 아니지만....nickname만 남기고 삭제
+  product.likedUsers = product.likedUsers.map((u) => {
+    return u.nickname;
+  });
+
+  const { updatedAt, imageUrls, ...rest } = product; // 조회 항목 선택
+
+  return rest;
+}
+
+async function like(userId, productId) {
+  let product = await productRepo.findById(Number(productId));
+  if (product.likedUsers.find((n) => n.id === userId)) {
+    console.log('Already one of your liked products');
+  } else {
+    console.log('Now, one of your liked products');
+    product = await productRepo.patch(Number(productId), {
+      likedUsers: { connect: { id: userId } }
+    });
+  }
+  return { isLiked: true, ...product };
+}
+
+async function cancelLike(userId, productId) {
+  let product = await productRepo.findById(Number(productId));
+  if (!product.likedUsers.find((n) => n.id === userId)) {
+    console.log('Already not one of your liked products');
+  } else {
+    console.log('Now, not one of your liked products');
+    product = await productRepo.patch(Number(productId), {
+      likedUsers: { disconnect: { id: userId } }
+    });
+  }
+  return { isLiked: false, ...product };
 }
 
 export default {
@@ -66,5 +98,7 @@ export default {
   patch,
   erase,
   getList,
-  get
+  get,
+  like,
+  cancelLike
 };

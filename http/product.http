@@ -21,7 +21,14 @@ GET {{baseUrl}}/products?name=Pro&description=성능
 
 // 상품 상세 조회
 ###
-GET {{baseUrl}}/products/32
+GET {{baseUrl}}/products/2
+
+
+// 인증 필요
+###
+POST {{baseUrl}}/products/2/like
+###
+POST {{baseUrl}}/products/2/like/cancel
 
 ###
 POST {{baseUrl}}/products
@@ -34,6 +41,7 @@ Content-Type: application/json
   "tags": ["전자제품", "스마트폰"]
 }
 
+// 인증, 인가 필요
 ###
 PATCH {{baseUrl}}/products/34
 Content-Type: application/json

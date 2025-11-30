@@ -8,6 +8,7 @@ import {
   ACCESS_TOKEN_MAXAGE,
   REFRESH_TOKEN_MAXAGE
 } from '../lib/constants.js';
+import { yearsToQuarters } from 'date-fns';
 
 async function getList(req, res) {
   const users = await userService.getList();
@@ -69,17 +70,25 @@ async function patchPassword(req, res) {
 }
 
 async function getProducts(req, res) {
-  const { id: userId } = req.user;
-  const products = await userService.getProducts(userId);
+  const products = await userService.getProducts(req.user.id);
   console.log(`User${req.user.id}: user products fetched`);
   res.status(200).json(products);
 }
 
 async function getArticles(req, res) {
-  const { id: userId } = req.user;
-  const articles = await userService.getArticles(userId);
+  const articles = await userService.getArticles(req.user.id);
   console.log(`User${req.user.id}: user articles fetched`);
   res.status(200).json(articles);
+}
+
+async function getLikedProducts(req, res) {
+  const products = await userService.getLikedProducts(req.user.id);
+  res.status(200).send(products);
+}
+
+async function getLikedArticles(req, res) {
+  const articles = await userService.getLikedArticles(req.user.id);
+  res.status(200).send(articles);
 }
 
 //-------------------------------------------------- local functions
@@ -108,5 +117,7 @@ export default {
   patchInfo,
   patchPassword,
   getProducts,
-  getArticles
+  getArticles,
+  getLikedProducts,
+  getLikedArticles
 };

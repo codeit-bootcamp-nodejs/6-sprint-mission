@@ -100,6 +100,10 @@ Content-Type: application/json
 GET {{baseUrl}}/users/myProducts
 ###
 GET {{baseUrl}}/users/myArticles 
+###
+GET {{baseUrl}}/users/myLikedProducts
+###
+GET {{baseUrl}}/users/myLikedArticles
 
 
 

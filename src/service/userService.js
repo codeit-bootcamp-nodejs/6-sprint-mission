@@ -93,7 +93,7 @@ async function patchPassword(userId, oldPassword, newPassword) {
 }
 
 async function getProducts(userId) {
-  const products = userRepo.getProducts(userId);
+  const products = await userRepo.getProducts(userId);
   if (isEmpty(products)) {
     print(`No products registered by user_${userId}`);
     throw new NotFoundError(products, userId);
@@ -102,12 +102,30 @@ async function getProducts(userId) {
 }
 
 async function getArticles(userId) {
-  const articles = userRepo.getArticles(userId);
+  const articles = await userRepo.getArticles(userId);
   if (isEmpty(articles)) {
     print(`No articles registered by user_${userId}`);
     throw new NotFoundError(articles, userId);
   }
   return articles;
+}
+
+async function getLikedProducts(userId) {
+  const user = await userRepo.findById(Number(userId));
+  if (isEmpty(user.likedProducts)) {
+    print(`No products liked by user_${userId}`);
+    throw new NotFoundError(product, userId);
+  }
+  return user.likedProducts;
+}
+
+async function getLikedArticles(userId) {
+  const user = await userRepo.findById(Number(userId));
+  if (isEmpty(user.likedArticles)) {
+    print(`No articles liked by user_${userId}`);
+    throw new NotFoundError(articles, userId);
+  }
+  return user.likedArticles;
 }
 
 //------------------------------------ local functions
@@ -175,5 +193,7 @@ export default {
   getProducts,
   getArticles,
   verifyUserExist,
-  filterPassword
+  filterPassword,
+  getLikedProducts,
+  getLikedArticles
 };
