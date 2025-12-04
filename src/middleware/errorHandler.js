@@ -27,12 +27,16 @@ export function globalErrorHandler(err, req, res, next) {
     switch (err.message) {
       case 'FORBIDDEN':
         return res.status(403).send({ message: '비밀번호가 틀렸습니다' });
-      case 'USER_EXISTS':
+      case 'USER_FOUND':
         return res.status(401).send({ message: '이미 등록된 사용자입니다' });
-      case 'INVALID_REFRESHTOKEN':
-        return res.status(400).send({ message: '유효한 리프레쉬 토큰이 없습니다' });
+      case 'NO_USER_FOUND':
+        return res.status(401).send({ message: '등록되지 않은 사용자입니다' });
+      case 'EXPIRED_TOKENS':
+        return res.status(400).send({ message: '유효한 토큰이 없습니다' });
       case 'UNAUTHORIZED':
         return res.status(401).send({ message: '권한이 없습니다' });
+      case 'NOTHING_TO_CHANGE':
+        return res.status(401).send({ message: '변경할 것이 없습니다' });
       default:
         return res.status(400).send({ message: err.message || '잘못된 요청입니다.' });
     }
@@ -52,11 +56,11 @@ export function globalErrorHandler(err, req, res, next) {
       message: err.message || '존재하지 않습니다.'
     });
   }
-  if (err.code === 'P2002') {
-    return res.status(409).send({
-      message: '이미 이 큐레이션에는 댓글이 존재합니다.'
-    });
-  }
+  // if (err.code === 'P2002') {
+  //   return res.status(409).send({
+  //     message: '이미 이 큐레이션에는 댓글이 존재합니다.'
+  //   });
+  // }
   // Prisma 관련 오류 처리
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
     if (err.code === 'P2002' && err.meta?.target?.includes('curationId')) {

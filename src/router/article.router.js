@@ -1,13 +1,13 @@
 import express from 'express';
-import articleControl from '../controller/articleControl.js';
-import authenticateUser from '../middleware/authenticateUser.js';
-import authorizeUser from '../middleware/authorizeUser.js';
+import articleControl from '../controller/article.control.js';
+import authenticateUser from '../middleware/authenticate.user.js';
+import authorizeUser from '../middleware/authorize.user.js';
 import withTryCatch from '../lib/withTryCatch.js';
 
 const articleRouter = express.Router();
 
 articleRouter.get('/', withTryCatch(articleControl.getList));
-articleRouter.get('/:id', withTryCatch(articleControl.get));
+articleRouter.get('/:id', authenticateUser, withTryCatch(articleControl.get));
 articleRouter.post('/:id/like', authenticateUser, withTryCatch(articleControl.like));
 articleRouter.post('/:id/like/cancel', authenticateUser, withTryCatch(articleControl.cancelLike));
 articleRouter.post('/', authenticateUser, withTryCatch(articleControl.post));

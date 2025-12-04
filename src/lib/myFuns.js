@@ -1,20 +1,23 @@
 export function isEmptyArray(v) {
-  return Array.isArray(v) && v.length === 0;
+  if (Array.isArray(v)) return v.length === 0;
 }
 
 export function isEmptyObject(v) {
-  return v && typeof v === 'object' && !Array.isArray(v) && Object.keys(v).length === 0;
+  if (v === null) return true;
+  if (typeof v === 'object') return Object.keys(v).length === 0;
 }
 
 export function isEmptyString(v) {
-  return typeof v === 'string' && v.length;
+  if (typeof v === 'string') return v.length === 0;
 }
 
 export function isEmpty(v) {
-  return isEmptyArray(v) && isEmptyObject(v) && isEmptyString(v);
+  if (v === undefined) return true;
+  return Boolean(isEmptyObject(v) || isEmptyArray(v) || isEmptyString(v));
 }
 
 export function print(message) {
+  console.log('');
   console.log(message);
   console.log('');
 }

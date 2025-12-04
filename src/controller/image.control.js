@@ -1,15 +1,14 @@
-import imageService from '../service/imageService.js';
-import userService from '../service/userService.js';
+import imageService from '../service/image.service.js';
+import userService from '../service/user.service.js';
 
-// 이미지 목록 imageUrls 조회
+// 이미지 목록 imageUrls 조회, 개발 위해 현재는 전체 상품/게시물 출력.
 // req.originalUrl로 서비스에서 product인지 article인지 구분
-async function getList(req, res, next) {
-  const item = await imageService.getList(req.originalUrl, req.params.id);
-  console.log('');
+async function get(req, res, next) {
+  const item = await imageService.get(req.originalUrl, req.params.id);
   console.log('imageUrls fetched');
-  console.log(item);
+  console.log(item.imageUrls);
   console.log('');
-  res.status(200).send(item);
+  res.status(200).json(item);
 }
 
 // 이미지 등록
@@ -23,21 +22,21 @@ async function post(req, res, next) {
     req.file,
     req.get('host')
   );
-  console.log('Image uploaded (url below). ImgUrls in DB updated.');
-  console.log(item);
-  res.status(201).send(item);
+  console.log('Image uploaded. ImgUrls in DB updated.');
+  console.log(item.imageUrls);
+  console.log('');
+  res.status(201).json(item);
 }
 
 // imageUrls 삭제
-// req.params에 productId 있어야 함
 async function erase(req, res, next) {
   const item = await imageService.erase(req.originalUrl, req.params.id);
   console.log('ImageUrls deleted');
-  res.status(200).send(item.imageUrls);
+  res.status(200).json(item); // json/send?
 }
 
 export default {
-  getList,
+  get,
   post,
   erase
 };

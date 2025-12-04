@@ -1,7 +1,6 @@
 import { assert } from 'superstruct';
 import { CreateComment, PatchComment } from '../struct/structs.js';
-import commentRepo from '../repository/commentRepo.js';
-import authorizeUser from '../middleware/authorizeUser.js';
+import commentRepo from '../repository/comment.repo.js';
 
 async function getList(limit, cursor, typeStr, contentStr) {
   let where = {};
@@ -32,7 +31,6 @@ async function postProduct(content, productId, userId) {
   };
   assert(commentData, CreateComment);
   const comment = await commentRepo.post(commentData);
-  //product.comments = product.comments.map(({ articleId, ...rest }) => rest); // articleId = null 가림
   return comment;
 }
 
@@ -44,16 +42,16 @@ async function postArticle(content, articleId, userId) {
   };
   assert(commentData, CreateComment);
   const comment = await commentRepo.post(commentData);
-  //product.comments = product.comments.map(({ articleId, ...rest }) => rest); // articleId = null 가림
   return comment;
 }
 
 async function patch(commentId, data, userId) {
   const commentData = { ...data, userId };
+  assert(commentData, PatchComment);
   return await commentRepo.patch(Number(commentId), commentData);
 }
 
-async function erase(commentId, userId) {
+async function erase(commentId) {
   await commentRepo.erase(Number(commentId));
 }
 

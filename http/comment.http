@@ -6,43 +6,43 @@
 ###
 GET {{baseUrl}}/comments
 ###
-GET {{baseUrl}}/comments?type=all&cursor=85
+GET {{baseUrl}}/comments?type=all&cursor=10
 ###
 GET {{baseUrl}}/comments?type=product&limit=3&cursor=3
 ###
-GET {{baseUrl}}/comments?type=product&content=소리
+GET {{baseUrl}}/comments?type=article&content=연기
 
 
 
 // 댓글 조회
 ###
-GET {{baseUrl}}/comments/93
+GET {{baseUrl}}/comments/95
 
 
-// 댓글 등록: 토큰 인증
+// 댓글 등록: 인증
 ###
-POST {{baseUrl}}/comments/products/1
+POST {{baseUrl}}/comments/articles/22
 Content-Type: application/json
 
 {
-  "content": "밥이 맛있어요"
+  "content": "마리사 토메이는 이 연기로 아카데미 여우 조연상 받았죠."
 }
 ###
-POST {{baseUrl}}/comments/articles/4
+POST {{baseUrl}}/comments/products/10
 Content-Type: application/json
 
 {
-  "content": "환타지의 정석"
+  "content": "방구석이 영화관 됩니다"
 }
 
-// 댓글 수정과 삭제: 토큰 인증 + 저자 입증
+// 댓글 수정과 삭제: 인증과 인가
 ###
-PATCH {{baseUrl}}/comments/96
+PATCH {{baseUrl}}/comments/98
 Content-Type: application/json
 
 {
-  "content": "광대한 세계관"
+  "content": "방구석을 영화관으로!"
 }
 
 ###
-DELETE {{baseUrl}}/comments/96
+DELETE {{baseUrl}}/comments/97

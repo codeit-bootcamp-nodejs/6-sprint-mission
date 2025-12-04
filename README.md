@@ -29,7 +29,7 @@
 - [x] 상품/게시글을 조회할 때 유저가 '좋아요'를 누른 항목인지 확인할 수 있도록 isLiked와 같은 불린형 필드를 리스폰스객체에 포함시켜 리스폰스 출력
 - [x] 유저가 '좋아요'를 표시한 상품의 목록을 조회하는 기능 구현
 
-## 주요 변경사항 (미션3과 비교)
+### 요구사항에서의 변경사항
 
 - 4층 구조로 구현 (router, controller, service, repository)
 - 토큰 기반 인증과 인가 기능 구현
@@ -42,16 +42,36 @@
 - 좋아요/좋아요취소 기능 구현
 - 사용자/상품/게시물 이미지 업로드/삭제 기능 구현
 
+## PR 머지 후 주된 변경사항
+
+- PR 머지 때 받은 멘토님 코멘트를 거의 모두 수용하여 반영하고, 작동 검토 완료
+
+  - errorHandler가 예상가능한 출력 내도록 에러의 종료 및 인자 수정
+  - 미들웨어 authorizeUser.js에서 comment 관련 인증 시 에러 수정
+  - res.json(객체)과 res.send(단순 메세지)를 구분된 방식으로 일관되게 사용하도록 수정
+  - 컨벤션에 맞게 라우터 경로 명칭 수정
+  - 스키마에서 @relation 항목의 명칭을 일관되도록 수정하고 마이그레이션 완료
+  - 화일명을 kebab-case + 역할 구분자 형식으로 변경 (예. routerService.js --> router.service.js)
+
+- 그 밖의 다른 변화들
+  - 중복되는 APIs 정리 --> 그 결과 imageRepo.js 삭제
+  - 상품/게시물/사용자 상세 조회에서 인증 예외 기능 구현 (src/middleware/authenticate.user.js):
+    인증되지 않으면 상세조회, 인증되면 "isLiked: boolean"이 첫 줄에 추가되어 출력
+  - 사용자/게시물/상품 조회 시 출력되는 필드를 선택하는 함수 포함 (src/lib/selectFields.js)
+
 ## ERD
+
 <img width="1013" height="1073" alt="image" src="https://github.com/user-attachments/assets/b331bb3b-c692-4ebf-ac90-663ad86d5a1a" />
 
 ## 스크린샷
+
 토큰 갱신
 <img width="1939" height="1093" alt="image1" src="https://github.com/user-attachments/assets/13604e4f-0809-4d32-95fd-260ff124db27" />
 사용자2가 좋아요를 누른 게시물 조회
 <img width="2294" height="1289" alt="image" src="https://github.com/user-attachments/assets/42cb0f34-5c34-4f6b-b822-32711de14f69" />
 
 ## 폴더 구조
+
 ## 폴더 구조
 
 ```
@@ -61,7 +81,7 @@
 │   ├── comment.http
 │   ├── image.http
 │   ├── product.http
-│   └──  user.http
+│   └── user.http
 ├── prisma
 │   ├── migrations/
 │   ├── mock.js
@@ -78,6 +98,7 @@
 │   │   ├── constants.js
 │   │   ├── myFuns.js
 │   │   ├── prismaClient.js
+│   │   ├── selectFields.js
 │   │   ├── token.js
 │   │   └── withTryCatch.js
 │   ├── middleware
@@ -91,7 +112,6 @@
 │   ├── repository
 │   │   ├── articleRepo.js
 │   │   ├── commentRepo.js
-│   │   ├── imageRepo.js
 │   │   ├── productRepo.js
 │   │   └── userRepo.js
 │   ├── router
@@ -114,10 +134,7 @@
 └── README.md
 ```
 
-
 ## 멘토에게
 
-- 급히 작성하느라 중복되는 APIs, 불필요한 디테일, 그리고 일관되지 못한 출력 방식 등이 있습니다. 양해 부탁 드립니다.
-- PR merge 후 작업하고자 하는 부분들
+- PR merge 후 작업하고자 했던 부분은 미래의 작업으로 남겨 둘 예정
   - 유저/상품/게시물 등록 시 이미지와 json data를 동시에 함께 등록하는 API
-  - 관계형 필드로 연결된 모델들의 경우는 같은 결과를 관여된 두 모델 모두에서 구할 수 있는 것 같습니다. 예를 들면 M:N 관계인 Product (likedUser 필드)와 User (likedProducts 필드)입니다. prisma.user.findUnique로 likedProducts를 가져올 수도 있고 (쉬운 방법), prisma.products.findMany에서 likedUsers 필드에 대한 조건 검색을 해서 (어려운 방법) 가져올 수도 있을 것 같습니다. 후자가 모르는 방식이라 연습 삼아 먼저 시도했지만 안 되고 시간도 부족해서 전자로 구현했습니다. 전자로 구현하는 방법 알려주세요. prisma.product.findMany({ where: { likedUsers: { is: { id: userId}}})로도 안되고, is 대신 some을 써도 안 되었어요. likedUsers는 user 객체의 배열입니다.

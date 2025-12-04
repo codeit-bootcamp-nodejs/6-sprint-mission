@@ -5,7 +5,7 @@
 // 
 GET {{baseUrl}}/articles?limit=20
 ###
-GET {{baseUrl}}/articles?order=oldest&offset=3
+GET {{baseUrl}}/articles?order=recent&offset=0
 
 // 게시물 목록 조회
 // title 또는 content에 포함된 단어로 검색
@@ -20,21 +20,20 @@ GET {{baseUrl}}/articles?title=사촌&content=연기
 
 
 
-// 게시물 상세 조회
+// 게시물 상세 조회 및 좋아요 기능: 인증 필요
 ###
-GET {{baseUrl}}/articles/12
+GET {{baseUrl}}/articles/21
 
-// 인증 필요
 ###
-POST {{baseUrl}}/articles/12/like
+POST {{baseUrl}}/articles/21/like
 ###
-POST {{baseUrl}}/articles/12/like/cancel
-
+POST {{baseUrl}}/articles/21/like/cancel
 
 
-// 게시물 생성, 조회, 삭제: 토큰 인증된 유저만 가능
+
+// 게시물 생성: 인증 필요
 ###
-POST h{{baseUrl}}/articles
+POST {{baseUrl}}/articles
 Content-Type: application/json
 
 {
@@ -42,16 +41,17 @@ Content-Type: application/json
   "content": "격정의 이태리에서 성에 눈뜨는 영국 처녀의 이야기. 배경은 20세가 초중반 런던 근교와 이태리 플로렌스."
 }
 
+// 게시물 수정과 삭제: 인증과 인가 필요
 ###
-PATCH {{baseUrl}}/articles/27
+PATCH {{baseUrl}}/articles/23
 Content-Type: application/json
 
 {
-  "content": "20세기 초중반 런던 근교에서 나고 자란 조신한 영국 처녀가 격정이 넘치는 이태리를 여행하며 성에 눈뜨는 과정을 코믹하게 묘사한 작품"
+  "content": "헬레나 본 헴 카터와 사이먼 르베이의 열정 충만한 연기가 일품이에요"
 }
 
 ###
-DELETE {{baseUrl}}/articles/28
+DELETE {{baseUrl}}/articles/24
 
 
 

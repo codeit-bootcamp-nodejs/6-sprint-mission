@@ -1,11 +1,11 @@
 import path from 'path';
 import { PUBLIC_IMG_PATH, STATIC_IMG_PATH } from '../lib/constants.js';
-import imageRepo from '../repository/imageRepo.js';
-import userRepo from '../repository/userRepo.js';
-import articleRepo from '../repository/articleRepo.js';
-import productRepo from '../repository/productRepo.js';
+import userRepo from '../repository/user.repo.js';
+import articleRepo from '../repository/article.repo.js';
+import productRepo from '../repository/product.repo.js';
+import { selectArticleProductFields, selectUserFields } from '../lib/selectFields.js';
 
-async function getList(originalUrl, id) {
+async function get(originalUrl, id) {
   let item = {};
   if (originalUrl.includes('users')) {
     item = await userRepo.findById(Number(id));
@@ -14,7 +14,8 @@ async function getList(originalUrl, id) {
   } else {
     item = await articleRepo.findById(Number(id));
   }
-  return item.imageUrls;
+  if (originalUrl.includes('users')) return selectUserFields(item, 'core');
+  else return selectArticleProductFields(item);
 }
 
 async function post(originalUrl, id, protocol, file, host) {
@@ -32,12 +33,12 @@ async function post(originalUrl, id, protocol, file, host) {
   if (originalUrl.includes('articles')) {
     staticPath = path.join(STATIC_IMG_PATH, '/article');
     publicPath = path.join(PUBLIC_IMG_PATH, '/article');
-    item = await imageRepo.getArticle(Number(id));
+    item = await articleRepo.findById(Number(id));
   }
   if (originalUrl.includes('users')) {
     staticPath = path.join(STATIC_IMG_PATH, '/user');
     publicPath = path.join(PUBLIC_IMG_PATH, '/user');
-    item = await imageRepo.getUser(Number(id));
+    item = await userRepo.findById(Number(id));
   }
 
   // if (!fs.existsSync(staticPath)) {
@@ -53,24 +54,30 @@ async function post(originalUrl, id, protocol, file, host) {
   const updatedUrls = [...item.imageUrls, newImageUrl]; // 기존 imageUrls에 이번 것 끝에 넣어줌
 
   if (originalUrl.includes('products'))
-    item = await imageRepo.updateProduct(Number(id), updatedUrls);
+    item = await productRepo.patch(Number(id), { imageUrls: updatedUrls });
   if (originalUrl.includes('articles'))
-    item = await imageRepo.updateArticle(Number(id), updatedUrls);
-  if (originalUrl.includes('users')) item = await imageRepo.updateUser(Number(id), updatedUrls);
+    item = await articleRepo.patch(Number(id), { imageUrls: updatedUrls });
+  if (originalUrl.includes('users'))
+    item = await userRepo.patch(Number(id), { imageUrls: updatedUrls });
 
-  return item.imageUrls;
+  if (originalUrl.includes('users')) return selectUserFields(item, 'core');
+  else return selectArticleProductFields(item);
 }
 
 async function erase(originalUrl, id) {
+  let item = {};
   if (originalUrl.includes('products'))
-    return await productRepo.patch(Number(id), { imageUrls: [] });
+    item = await productRepo.patch(Number(id), { imageUrls: [] });
   if (originalUrl.includes('articles'))
-    return await articleRepo.patch(Number(id), { imageUrls: [] });
-  if (originalUrl.includes('users')) return await userRepo.patch(Number(id), { imageUrls: [] });
+    item = await articleRepo.patch(Number(id), { imageUrls: [] });
+  if (originalUrl.includes('users')) item = await userRepo.patch(Number(id), { imageUrls: [] });
+
+  if (originalUrl.includes('users')) return selectUserFields(item, 'core');
+  else return selectArticleProductFields(item);
 }
 
 export default {
-  getList,
+  get,
   post,
   erase
 };

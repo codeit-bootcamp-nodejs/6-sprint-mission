@@ -1,20 +1,23 @@
 import prisma from '../lib/prismaClient.js';
-import NotFoundError from '../middleware/errors/NotFoundError.js';
 
 async function post(data) {
   return await prisma.product.create({ data });
 }
 
-async function patch(id, data) {
-  return await prisma.product.update({ where: { id: Number(id) }, data: data });
+async function patch(id, productData) {
+  return await prisma.product.update({
+    where: { id },
+    data: productData,
+    include: { comments: true, likedUsers: true }
+  });
 }
 
 async function erase(id) {
-  return await prisma.product.delete({ where: { id: Number(id) } });
+  return await prisma.product.delete({ where: { id } });
 }
 
 async function countById(id) {
-  return await prisma.product.count({ where: { id: Number(id) } });
+  return await prisma.product.count({ where: { id } });
 }
 
 async function getList(where, orderBy, offset, limit) {
@@ -28,8 +31,8 @@ async function getList(where, orderBy, offset, limit) {
 
 async function findById(id) {
   return await prisma.product.findFirstOrThrow({
-    where: { id: Number(id) },
-    include: { comments: true, likedUsers: true } // 관계형 필드도 일단 가져옴
+    where: { id },
+    include: { comments: true, likedUsers: true } // 관계형 필드도 일단 가져온다
   });
 }
 

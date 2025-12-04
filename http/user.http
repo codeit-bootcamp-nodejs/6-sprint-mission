@@ -7,9 +7,9 @@ POST {{baseUrl}}/users/register
 Content-Type: application/json
 
 {
-  "email": "user13@example.com",
-  "nickname": "user13",
-  "password": "password13"
+  "email": "user8@example.com",
+  "nickname": "user8",
+  "password": "password8"
 }
 
 // 등록할 때 사용자 이미지도 함께 등록하도록 변경할 예정
@@ -38,8 +38,8 @@ POST {{baseUrl}}/users/login
 Content-Type: application/json
 
 {
-  "email": "user2@example.com",
-  "password": "password2"
+  "email": "user8@example.com",
+  "password": "password8"
 }
 
 ###
@@ -51,19 +51,19 @@ POST {{baseUrl}}/users/logout
 ###
 POST {{baseUrl}}/users/tokens/refresh
 ###
-GET {{baseUrl}}/users/tokens
+GET {{baseUrl}}/users/tokens/view
 
 
 
 // 토큰 인증이 필요한 User APIs
 ###
-GET {{baseUrl}}/users/myInfo
+GET {{baseUrl}}/users/info
 ###
-PATCH {{baseUrl}}/users/myInfo/edit
+PATCH {{baseUrl}}/users/info/edit
 Content-Type: application/json
 
 { 
-  "nickname": "user3" 
+  "nickname": "Bailey" 
 }
 
 // 나의 정보 수정할 때 이미지도 수정할 수 있도록 변경할 예정
@@ -88,23 +88,19 @@ Content-Type: application/json
 
 
 ###
-PATCH {{baseUrl}}/users/myInfo/password/change
+PATCH {{baseUrl}}/users/info/password/change
 Content-Type: application/json
 
 {
-  "password_now": "password2",
-  "password_new": "password3"
+  "password_now": "password9",
+  "password_new": "password9"
 }
 
 ###
-GET {{baseUrl}}/users/myProducts
+GET {{baseUrl}}/users/products
 ###
-GET {{baseUrl}}/users/myArticles 
+GET {{baseUrl}}/users/articles 
 ###
-GET {{baseUrl}}/users/myLikedProducts
+GET {{baseUrl}}/users/like/products
 ###
-GET {{baseUrl}}/users/myLikedArticles
-
-
-
-
+GET {{baseUrl}}/users/like/articles

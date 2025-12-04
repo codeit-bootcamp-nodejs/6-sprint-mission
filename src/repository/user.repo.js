@@ -12,20 +12,26 @@ async function create(data) {
 }
 
 async function findByEmail(email) {
-  return await prisma.user.findUniqueOrThrow({ where: { email } });
+  return await prisma.user.findUnique({ where: { email } });
 }
 
 async function findById(id) {
   return await prisma.user.findUniqueOrThrow({
     where: { id },
-    include: { comments: true, likedProducts: true, likedArticles: true }
+    include: {
+      products: true,
+      articles: true,
+      comments: true,
+      likedProducts: true,
+      likedArticles: true
+    }
   });
 }
 
-async function patch(id, data) {
+async function patch(id, userData) {
   return prisma.user.update({
     where: { id },
-    data: data
+    data: userData
   });
 }
 

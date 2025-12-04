@@ -1,6 +1,7 @@
 node_modules/
 images/
 images_upload/
+prisma/ERD/
 .env
 .prettierrc
 src/router/index.txt
@@ -10,5 +11,6 @@ src/repository/index.txt
 src/middleware/index.txt
 .vscode/
 hide/
+test_isEmpty.js
 main.js
 

@@ -4,15 +4,16 @@ async function post(data) {
   return await prisma.article.create({ data });
 }
 
-async function patch(id, data) {
+async function patch(id, articleData) {
   return prisma.article.update({
-    where: { id: Number(id) },
-    data: data
+    where: { id },
+    data: articleData,
+    include: { comments: true, likedUsers: true }
   });
 }
 
 async function erase(id) {
-  return prisma.article.delete({ where: { id: Number(id) } });
+  return prisma.article.delete({ where: { id } });
 }
 
 async function getList(where, orderBy, offset, limit) {
@@ -26,7 +27,7 @@ async function getList(where, orderBy, offset, limit) {
 
 async function findById(id) {
   return prisma.article.findUniqueOrThrow({
-    where: { id: Number(id) },
+    where: { id },
     include: { comments: true, likedUsers: true } // 관계형 필드도 일단 가져온다
   });
 }

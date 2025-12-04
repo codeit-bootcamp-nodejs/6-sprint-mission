@@ -14,21 +14,20 @@ GET {{baseUrl}}/products?order=oldest&offset=4
 ###
 GET {{baseUrl}}/products?name=Pro
 ###
-GET {{baseUrl}}/products?description=성능
+GET {{baseUrl}}/products?description=스마트
 ###
 GET {{baseUrl}}/products?name=Pro&description=성능
 
 
-// 상품 상세 조회
+// 상품 상세 조회, 좋아요, 등록 인증 필요
 ###
-GET {{baseUrl}}/products/2
+GET {{baseUrl}}/products/26
 
 
-// 인증 필요
 ###
-POST {{baseUrl}}/products/2/like
+POST {{baseUrl}}/products/26/like
 ###
-POST {{baseUrl}}/products/2/like/cancel
+POST {{baseUrl}}/products/26/like/cancel
 
 ###
 POST {{baseUrl}}/products
@@ -41,9 +40,9 @@ Content-Type: application/json
   "tags": ["전자제품", "스마트폰"]
 }
 
-// 인증, 인가 필요
+// 상품 수정과 삭제: 인증, 인가 필요
 ###
-PATCH {{baseUrl}}/products/34
+PATCH {{baseUrl}}/products/27
 Content-Type: application/json
 
 {
@@ -53,5 +52,5 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{baseUrl}}/products/32
+DELETE {{baseUrl}}/products/28
 

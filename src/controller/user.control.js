@@ -1,6 +1,6 @@
 import { assert } from 'superstruct';
 import { CreateUser } from '../struct/structs.js';
-import userService from '../service/userService.js';
+import userService from '../service/user.service.js';
 import {
   ACCESS_TOKEN_COOKIE_NAME,
   REFRESH_TOKEN_COOKIE_NAME,
@@ -8,7 +8,6 @@ import {
   ACCESS_TOKEN_MAXAGE,
   REFRESH_TOKEN_MAXAGE
 } from '../lib/constants.js';
-import { yearsToQuarters } from 'date-fns';
 
 async function getList(req, res) {
   const users = await userService.getList();
@@ -17,7 +16,6 @@ async function getList(req, res) {
 }
 
 async function register(req, res) {
-  assert(req.body, CreateUser);
   const newUser = await userService.register(req.body);
   console.log(`User_${newUser.id} registered successfully`);
   res.status(201).json(newUser);
@@ -27,26 +25,33 @@ async function login(req, res) {
   const { accessToken, refreshToken } = await userService.login(req, res);
   setTokenCookies(res, accessToken, refreshToken);
   console.log(`User logged-in`);
-  res.status(200).json({ message: 'User logged-in' });
+  res.status(200).send({ message: '사용자가 로그인 하였습니다' });
 }
 
 async function logout(req, res) {
-  await userService.logout(res);
+  userService.logout(res);
   console.log(`User logged-out`);
+  res.status(200).send({ message: '사용자가 로그아웃 하였습니다' });
 }
 
 async function viewTokens(req, res) {
-  console.log('');
-  console.log(`accessToken:  ${req.cookies[ACCESS_TOKEN_COOKIE_NAME]}`);
-  console.log(`refreshToken: ${req.cookies[REFRESH_TOKEN_COOKIE_NAME]}`);
-  console.log('');
+  if (NODE_ENV === 'development') {
+    const { accessToken, refreshToken } = userService.viewTokens(req.cookies);
+    console.log('');
+    console.log(`accessToken:  ${accessToken}`);
+    console.log(`refreshToken: ${refreshToken}`);
+    console.log('');
+    if (!refreshToken) res.status(404).send({ message: '로그인 하세요' });
+  } else {
+    res.status(403).send({ message: '개발자 옵션입니다' });
+  }
 }
 
 async function issueTokens(req, res) {
   const { accessToken, refreshToken } = await userService.issueTokens(req.cookies);
   setTokenCookies(res, accessToken, refreshToken);
   console.log(`Tokens refreshed`);
-  res.status(201).json({ accessToken });
+  res.status(201).send({ accessToken });
 }
 
 async function getInfo(req, res) {
@@ -66,7 +71,7 @@ async function patchPassword(req, res) {
   const { password_now: oldPassword, password_new: newPassword } = req.body;
   const user = await userService.patchPassword(userId, oldPassword, newPassword);
   console.log(`User${req.user.id}: user password changed`);
-  res.status(200).json({ message: 'User password changed' });
+  res.status(200).send({ message: '패스워드가 변경되었습니다' });
 }
 
 async function getProducts(req, res) {
@@ -83,12 +88,12 @@ async function getArticles(req, res) {
 
 async function getLikedProducts(req, res) {
   const products = await userService.getLikedProducts(req.user.id);
-  res.status(200).send(products);
+  res.status(200).json(products);
 }
 
 async function getLikedArticles(req, res) {
   const articles = await userService.getLikedArticles(req.user.id);
-  res.status(200).send(articles);
+  res.status(200).json(articles);
 }
 
 //-------------------------------------------------- local functions

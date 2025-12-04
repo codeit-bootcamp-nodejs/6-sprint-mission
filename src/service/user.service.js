@@ -1,12 +1,14 @@
 import bcrypt from 'bcrypt';
 import BadRequestError from '../middleware/errors/BadRequestError.js';
-import userRepo from '../repository/userRepo.js';
+import userRepo from '../repository/user.repo.js';
 import { ACCESS_TOKEN_COOKIE_NAME, NODE_ENV, REFRESH_TOKEN_COOKIE_NAME } from '../lib/constants.js';
 import { generateTokens, verifyRefreshToken } from '../lib/token.js';
 import NotFoundError from '../middleware/errors/NotFoundError.js';
 import { assert } from 'superstruct';
+import { CreateUser } from '../struct/structs.js';
 import { PatchUser } from '../struct/structs.js';
 import { print, isEmpty } from '../lib/myFuns.js';
+import { selectUserFields } from '../lib/selectFields.js';
 
 async function getList() {
   if (NODE_ENV === 'development') {
@@ -14,17 +16,20 @@ async function getList() {
     if (!users) throw new Error('NOT_FOUND');
     return filterPassword(users);
   } else {
-    return { message: 'Unauthorized' };
+    return { message: '개발자 옵션 입니다' };
   }
 }
 
 async function register(data) {
+  assert(data, CreateUser);
   const { email, nickname, password } = data;
-  const isRegistered = await check_userRegistration(email);
-  if (isRegistered) {
+
+  const { isNew } = await check_userRegistration(email);
+  if (!isNew) {
     console.log('User registered already');
-    throw new BadRequestError('USER_EXISTS');
+    throw new BadRequestError('USER_FOUND');
   }
+
   const newData = {
     email,
     nickname,
@@ -37,8 +42,8 @@ async function register(data) {
 
 async function login(req, res) {
   const { email, password } = req.body;
-  const user = await check_userRegistration(email);
-  if (isEmpty(user)) throw new BadRequestError('USER_EXISTS');
+  const { isNew, user } = await check_userRegistration(email);
+  if (isNew) throw new BadRequestError('NO_USER_FOUND');
 
   if (!check_passwordValidity(password, user.password)) {
     console.log('Invalid password');
@@ -49,9 +54,8 @@ async function login(req, res) {
   return { accessToken, refreshToken };
 }
 
-async function logout(res) {
-  clearTokenCookies(res);
-  res.status(200).send();
+function logout(tokenData) {
+  clearTokenCookies(tokenData);
 }
 
 async function issueTokens(tokenData) {
@@ -62,15 +66,21 @@ async function issueTokens(tokenData) {
   return generateTokens(user.id);
 }
 
+function viewTokens(tokenData) {
+  const accessToken = tokenData[ACCESS_TOKEN_COOKIE_NAME];
+  const refreshToken = tokenData[REFRESH_TOKEN_COOKIE_NAME];
+  return { accessToken, refreshToken };
+}
+
 async function getInfo(userId) {
   const user = await userRepo.findById(userId);
-  return filterPassword(user);
+  return selectUserFields(user, 'all');
 }
 
 async function patchInfo(userId, userData) {
   assert(userData, PatchUser);
   const user = await userRepo.patch(userId, userData);
-  return filterPassword(user);
+  return selectUserFields(user, 'core');
 }
 
 async function patchPassword(userId, oldPassword, newPassword) {
@@ -89,48 +99,68 @@ async function patchPassword(userId, oldPassword, newPassword) {
   const userData = { password: await hashingPassword(newPassword) };
   assert(userData, PatchUser);
   const newUser = await userRepo.patch(userId, userData);
-  return filterPassword(newUser);
+  return selectUserFields(newUser, 'core');
 }
 
+// async function getProducts(userId) {
+//   const products = await userRepo.getProducts(userId);
+//   if (isEmpty(products)) {
+//     print(`No products registered by user_${userId}`);
+//     throw new NotFoundError(products, userId);
+//   }
+//   return selectUserFields(products, 'myProducts');
+// }
+
+// async function getArticles(userId) {
+//   const articles = await userRepo.getArticles(userId);
+//   if (isEmpty(articles)) {
+//     print(`No articles registered by user_${userId}`);
+//     throw new NotFoundError(articles, userId);
+//   }
+//   return selectUserFields(articles, 'myArticles');
+// }
+
 async function getProducts(userId) {
-  const products = await userRepo.getProducts(userId);
-  if (isEmpty(products)) {
+  const user = await userRepo.findById(Number(userId));
+  const selectedInfo = selectUserFields(user, 'myProducts');
+  if (isEmpty(selectedInfo)) {
     print(`No products registered by user_${userId}`);
-    throw new NotFoundError(products, userId);
+    throw new NotFoundError(user, userId);
   }
-  return products;
+  return selectedInfo;
 }
 
 async function getArticles(userId) {
-  const articles = await userRepo.getArticles(userId);
-  if (isEmpty(articles)) {
+  const user = await userRepo.findById(Number(userId));
+  const selectedInfo = selectUserFields(user, 'myArticles');
+  if (isEmpty(selectedInfo)) {
     print(`No articles registered by user_${userId}`);
-    throw new NotFoundError(articles, userId);
+    throw new NotFoundError(user, userId);
   }
-  return articles;
+  return selectedInfo;
 }
 
 async function getLikedProducts(userId) {
   const user = await userRepo.findById(Number(userId));
   if (isEmpty(user.likedProducts)) {
     print(`No products liked by user_${userId}`);
-    throw new NotFoundError(product, userId);
+    throw new NotFoundError(user.likedProducts, userId);
   }
-  return user.likedProducts;
+  return selectUserFields(user, 'likedProducts');
 }
 
 async function getLikedArticles(userId) {
   const user = await userRepo.findById(Number(userId));
   if (isEmpty(user.likedArticles)) {
     print(`No articles liked by user_${userId}`);
-    throw new NotFoundError(articles, userId);
+    throw new NotFoundError(user.likedArticles, userId);
   }
-  return user.likedArticles;
+  return selectUserFields(user, 'likedArticles');
 }
 
 //------------------------------------ local functions
 
-function filterPassword(userData) {
+export function filterPassword(userData) {
   if (Array.isArray(userData)) {
     return userData.map((user) => {
       const { password: _, ...rest } = user;
@@ -149,7 +179,10 @@ async function hashingPassword(textPassword) {
 
 async function check_userRegistration(email) {
   const user = await userRepo.findByEmail(email);
-  return user;
+  if (isEmpty(user)) return { isNew: true };
+  else {
+    return { isNew: false, user };
+  }
 }
 
 async function check_passwordValidity(textPassword, savedPassword) {
@@ -157,17 +190,17 @@ async function check_passwordValidity(textPassword, savedPassword) {
   return isPasswordSame;
 }
 
-function clearTokenCookies(res) {
-  res.clearCookie(ACCESS_TOKEN_COOKIE_NAME);
-  res.clearCookie(REFRESH_TOKEN_COOKIE_NAME, { path: '/users/tokens' });
+function clearTokenCookies(tokenData) {
+  tokenData.clearCookie(ACCESS_TOKEN_COOKIE_NAME);
+  tokenData.clearCookie(REFRESH_TOKEN_COOKIE_NAME, { path: '/users/tokens' });
   // refreshToken은 지정된 path가 있음
 }
 
 function check_refreshTokenValidity(tokenData) {
   const refreshToken = tokenData[REFRESH_TOKEN_COOKIE_NAME];
   if (!refreshToken) {
-    console.log('No valid refreshToken found. Try login.');
-    throw new BadRequestError('NO_VALID_REFRESHTOKEN');
+    console.log('Tokens expired');
+    throw new BadRequestError('EXPIRED_TOKENS');
   }
   return refreshToken;
 }
@@ -187,6 +220,7 @@ export default {
   login,
   logout,
   issueTokens,
+  viewTokens,
   getInfo,
   patchInfo,
   patchPassword,
@@ -195,5 +229,6 @@ export default {
   verifyUserExist,
   filterPassword,
   getLikedProducts,
-  getLikedArticles
+  getLikedArticles,
+  filterPassword
 };

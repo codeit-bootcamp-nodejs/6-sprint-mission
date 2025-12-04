@@ -1,8 +1,8 @@
 import BadRequestError from './errors/BadRequestError.js';
-import userRepo from '../repository/userRepo.js';
-import articleRepo from '../repository/articleRepo.js';
-import productRepo from '../repository/productRepo.js';
-import commentRepo from '../repository/commentRepo.js';
+import userRepo from '../repository/user.repo.js';
+import articleRepo from '../repository/article.repo.js';
+import productRepo from '../repository/product.repo.js';
+import commentRepo from '../repository/comment.repo.js';
 
 async function authorizeUser(req, res, next) {
   try {
@@ -21,6 +21,12 @@ async function authorizeUser(req, res, next) {
       console.log('Something went wrong');
       throw new BadRequestError('BADREQUEST');
     }
+
+    // console.log('');
+    // console.log(`Testing authorizeUser.js...`);
+    // console.log(`ueq.user.id: ${req.user.id}`);
+    // console.log(`item.userId: ${item.userId}`);
+    // console.log('');
 
     if (req.user.id !== item.userId) {
       console.log('');

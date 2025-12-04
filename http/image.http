@@ -1,12 +1,12 @@
 @baseUrl = http://localhost:3000
 
 //------------------------상품 이미지 APIs
-GET {{baseUrl}}/images/products/29
+GET {{baseUrl}}/images/products/30
 ###
 
 // 토큰 인증 + 인가 (상품을 등록한 유저만 가능)
 ###
-POST {{baseUrl}}/images/products/29
+POST {{baseUrl}}/images/products/30
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
@@ -17,7 +17,7 @@ Content-Type: image/png
 --MyBoundary--
 
 ###
-DELETE {{baseUrl}}/images/products/29
+DELETE {{baseUrl}}/images/products/30
 
 
 
@@ -27,10 +27,10 @@ DELETE {{baseUrl}}/images/products/29
 // 사촌 비니 
 
 ###
-GET {{baseUrl}}/images/articles/27
+GET {{baseUrl}}/images/articles/23
 
 ###
-POST {{baseUrl}}/images/articles/21
+POST {{baseUrl}}/images/articles/23
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
@@ -41,25 +41,25 @@ Content-Type: image/png
 --MyBoundary--
 
 ###
-DELETE {{baseUrl}}/images/articles/21
+DELETE {{baseUrl}}/images/articles/23
 
 
 //------------------------ 사용자 이미지 APIs
 
 ###
-GET {{baseUrl}}/images/users/1
+GET {{baseUrl}}/images/users/8
 
 ###
-POST {{baseUrl}}/images/users/2
+POST {{baseUrl}}/images/users/8
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
-Content-Disposition: form-data; name="image"; filename="Frodo2.png"
+Content-Disposition: form-data; name="image"; filename="Toshil.png"
 Content-Type: image/png
 
-< ./images/user/Frodo2.png
+< ./images/user/Toshil.png
 --MyBoundary--
 
 ###
-DELETE {{baseUrl}}/images/users/1
+DELETE {{baseUrl}}/images/users/2
 

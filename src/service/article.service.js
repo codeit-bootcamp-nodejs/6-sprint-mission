@@ -1,9 +1,9 @@
 import { assert } from 'superstruct';
 import { CreateArticle, PatchArticle } from '../struct/structs.js';
-import BadRequestError from '../middleware/errors/BadRequestError.js';
 import NotFoundError from '../middleware/errors/NotFoundError.js';
-import articleRepo from '../repository/articleRepo.js';
+import articleRepo from '../repository/article.repo.js';
 import { isEmpty } from '../lib/myFuns.js';
+import { selectArticleProductFields } from '../lib/selectFields.js';
 
 // 게시물 생성, 수정, 삭제: 토큰 인증된 유저만 가능
 async function post(userId, data) {
@@ -16,13 +16,13 @@ async function post(userId, data) {
 
 async function patch(articleId, articleData) {
   assert(articleData, PatchArticle);
-  const article = await articleRepo.patch(articleId, articleData);
-  if (isEmpty(article)) throw new NotFoundError(article, articleId);
+  const article = await articleRepo.patch(Number(articleId), articleData);
+  if (isEmpty(article)) throw new NotFoundError(article, Number(articleId));
   return article;
 }
 
 async function erase(articleId) {
-  await articleRepo.erase(articleId);
+  await articleRepo.erase(Number(articleId));
 }
 
 // 게시물 목록 조회
@@ -52,45 +52,40 @@ async function getList(offset, limit, orderStr, titleStr, contentStr) {
 // 게시물 상세 조회
 // 조회 필드 요구: id, title, content, createdAt
 // 조회 필드 추가: comments, likedUsers
-async function get(articleId) {
-  const article = await articleRepo.findById(articleId);
-
-  // 댓글은 조회 요구 필드가 아니지만....userId와 content만 남기고 삭제
-  article.comments = article.comments.map((c) => {
-    return c.userId, c.content;
-  });
-  // likedUsers는 조회 요구 필드가 아니지만....nickname만 남기고 삭제
-  article.likedUsers = article.likedUsers.map((u) => {
-    return u.nickname;
-  });
-
-  const { updatedAt, imageUrls, ...rest } = article; // 조회 항목 선택
-  return rest;
+async function get(user, articleId) {
+  let article = await articleRepo.findById(Number(articleId));
+  article = selectArticleProductFields(article);
+  if (!isEmpty(user)) {
+    if (article.likedUsers.includes(user.nickname)) return { isLiked: true, ...article };
+    else return { isLiked: false, ...article };
+  } else return article;
 }
 
 async function like(userId, articleId) {
   let article = await articleRepo.findById(Number(articleId));
-  if (article.likedUsers.find((n) => n.id === userId)) {
-    console.log('Already one of your liked articles');
+  if (article.likedUsers.find((n) => n.id === Number(userId))) {
+    console.log('Already your favorite article');
   } else {
-    console.log('Now, one of your liked articles');
+    console.log('Now, one of your favorite articles');
     article = await articleRepo.patch(Number(articleId), {
-      likedUsers: { connect: { id: userId } }
+      likedUsers: { connect: { id: Number(userId) } }
     });
   }
+  article = selectArticleProductFields(article);
   return { isLiked: true, ...article };
 }
 
 async function cancelLike(userId, articleId) {
   let article = await articleRepo.findById(Number(articleId));
-  if (!article.likedUsers.find((n) => n.id === userId)) {
-    console.log('Already not one of your liked articles');
+  if (!article.likedUsers.find((n) => n.id === Number(userId))) {
+    console.log('Already not your favorite article');
   } else {
-    console.log('Now, not one of your liked articles');
+    console.log('Now, not one of your favorite articles');
     article = await articleRepo.patch(Number(articleId), {
-      likedUsers: { disconnect: { id: userId } }
+      likedUsers: { disconnect: { id: Number(userId) } }
     });
   }
+  article = selectArticleProductFields(article);
   return { isLiked: false, ...article };
 }
 

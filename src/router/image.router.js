@@ -1,14 +1,14 @@
 import express from 'express';
-import authenticateUser from '../middleware/authenticateUser.js';
-import authorizeUser from '../middleware/authorizeUser.js';
-import imageControl from '../controller/imageControl.js';
+import authenticateUser from '../middleware/authenticate.user.js';
+import authorizeUser from '../middleware/authorize.user.js';
+import imageControl from '../controller/image.control.js';
 import withTryCatch from '../lib/withTryCatch.js';
 import upload from '../middleware/multer.js';
 
 const imageRouter = express.Router();
 
 // 사용자
-imageRouter.get('/users/:id', withTryCatch(imageControl.getList));
+imageRouter.get('/users/:id', withTryCatch(imageControl.get));
 imageRouter.post(
   '/users/:id',
   authenticateUser,
@@ -19,7 +19,7 @@ imageRouter.post(
 imageRouter.delete('/users/:id', authenticateUser, authorizeUser, withTryCatch(imageControl.erase));
 
 // 상품
-imageRouter.get('/products/:id', withTryCatch(imageControl.getList));
+imageRouter.get('/products/:id', withTryCatch(imageControl.get));
 imageRouter.post(
   '/products/:id',
   authenticateUser,
@@ -35,7 +35,7 @@ imageRouter.delete(
 );
 
 // 게시글
-imageRouter.get('/articles/:id', withTryCatch(imageControl.getList));
+imageRouter.get('/articles/:id', withTryCatch(imageControl.get));
 imageRouter.post(
   '/articles/:id',
   authenticateUser,

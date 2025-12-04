@@ -28,10 +28,10 @@ async function post(data) {
   return await prisma.comment.create({ data });
 }
 
-async function patch(id, data) {
+async function patch(id, commentData) {
   return await prisma.comment.update({
     where: { id },
-    data
+    data: commentData
   });
 }
 
