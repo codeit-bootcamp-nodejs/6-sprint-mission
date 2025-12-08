@@ -21,10 +21,10 @@ async function countById(id: number) {
   return await prisma.product.count({ where: { id } });
 }
 
-async function getList(where: object, orderBy: object, offset: string, limit: string) {
+async function getList(where: object, orderBy: object, offset: number, limit: number) {
   return await prisma.product.findMany({
-    skip: parseInt(offset) || 0, // offset 방식 페이지네이션: default 0
-    take: parseInt(limit) || 10, // default 10
+    skip: offset, // offset 방식 페이지네이션: default 0
+    take: limit, // default 10
     orderBy,
     where
   });

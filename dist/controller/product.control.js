@@ -12,14 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const product_service_js_1 = __importDefault(require("../service/product.service.js"));
+const product_service_1 = __importDefault(require("../service/product.service"));
 // 상품 등록: 토큰 인증된 유저만 가능
 // 입력 필드: name, description, price, tags
 function post(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { id: userId } = req.user;
-        const data = req.body;
-        const product = yield product_service_js_1.default.post(userId, data);
+        const product = yield product_service_1.default.post(req.user.id, req.body);
         console.log(`Product_${product.id} posted by ${req.user.nickname}`);
         res.status(201).json(product);
     });
@@ -28,8 +26,7 @@ function post(req, res, next) {
 function patch(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const { id } = req.params;
-        const { id: userId } = req.user;
-        const product = yield product_service_js_1.default.patch(id, req.body);
+        const product = yield product_service_1.default.patch(id, req.body);
         console.log(`Product_${id} patched by ${req.user.nickname}`);
         res.status(200).json(product);
     });
@@ -38,7 +35,7 @@ function patch(req, res, next) {
 function erase(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const { id } = req.params;
-        yield product_service_js_1.default.erase(id);
+        yield product_service_1.default.erase(id);
         console.log(`Product_${id} deleted by ${req.user.nickname}`);
         res.status(204).send({ message: '상품이 삭제되었습니다' });
     });
@@ -50,8 +47,12 @@ function erase(req, res, next) {
 // 조건 검색: namd and/or description에 포함된 단어
 function getList(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { offset, limit, order, name, description } = req.query;
-        const products = yield product_service_js_1.default.getList(offset, limit, order, name, description);
+        const offset = req.query.offset ? parseInt(req.query.offset, 10) : 0;
+        const limit = req.query.limit ? parseInt(req.query.limit, 10) : 10;
+        const order = req.query.order || 'recent';
+        const name = req.query.name;
+        const description = req.query.description;
+        const products = yield product_service_1.default.getList(offset, limit, order, name, description);
         console.log('Product list fetched');
         res.status(200).json(products);
     });
@@ -60,8 +61,10 @@ function getList(req, res, next) {
 // 조회 필드: id, name, description, price, tags, createdAt
 function get(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
+        var _a;
         const { id } = req.params;
-        const product = yield product_service_js_1.default.get(req.user, id);
+        const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
+        const product = yield product_service_1.default.get(userId, id);
         console.log(`Product_${id} fetched (in detail)`);
         res.status(200).json(product);
     });
@@ -69,13 +72,13 @@ function get(req, res, next) {
 // 상품: 좋아요/좋아요-취소
 function like(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const product = yield product_service_js_1.default.like(req.user.id, req.params.id);
+        const product = yield product_service_1.default.like(req.user, req.params.id);
         res.status(200).json(product);
     });
 }
 function cancelLike(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const product = yield product_service_js_1.default.cancelLike(req.user.id, req.params.id);
+        const product = yield product_service_1.default.cancelLike(req.user.id, req.params.id);
         res.status(200).json(product);
     });
 }

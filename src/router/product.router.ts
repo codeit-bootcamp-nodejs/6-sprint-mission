@@ -1,8 +1,8 @@
 import express from 'express';
-import authenticateUser from '../middleware/authenticate.user.js';
-import authorizeUser from '../middleware/authorize.user.js';
-import productControl from '../controller/product.control.js';
-import withTryCatch from '../lib/withTryCatch.js';
+import authenticateUser from '../middleware/authenticate.user';
+import authorizeUser from '../middleware/authorize.user';
+import productControl from '../controller/product.control';
+import withTryCatch from '../lib/withTryCatch';
 
 const productRouter = express.Router();
 

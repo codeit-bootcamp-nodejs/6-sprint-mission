@@ -40,8 +40,8 @@ function countById(id) {
 function getList(where, orderBy, offset, limit) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield prismaClient_js_1.default.product.findMany({
-            skip: parseInt(offset) || 0, // offset 방식 페이지네이션: default 0
-            take: parseInt(limit) || 10, // default 10
+            skip: offset, // offset 방식 페이지네이션: default 0
+            take: limit, // default 10
             orderBy,
             where
         });

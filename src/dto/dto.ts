@@ -15,6 +15,7 @@ export interface createProductDTO {
   description: string;
   price: number;
   tags: string[];
+  userId: number;
 }
 
 export interface updateProductDTO {
@@ -22,6 +23,7 @@ export interface updateProductDTO {
   description?: string;
   price?: number;
   tags?: string[];
+  userId?: number;
 }
 
 export interface createArticleDTO {

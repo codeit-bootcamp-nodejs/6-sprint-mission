@@ -11,7 +11,7 @@ const errorHandler_1 = require("./middleware/errorHandler");
 const constants_1 = require("./lib/constants");
 const constants_2 = require("./lib/constants");
 const user_router_1 = __importDefault(require("./router/user.router"));
-// import productRouter from './router/product.router.js';
+const product_router_1 = __importDefault(require("./router/product.router"));
 // import articleRouter from './router/article.router.js';
 // import commentRouter from './router/comment.router.js';
 // import imageRouter from './router/image.router.js';
@@ -23,7 +23,7 @@ app.use(path_1.default.join(constants_1.PUBLIC_IMG_PATH, 'product'), express_1.d
 app.use(path_1.default.join(constants_1.PUBLIC_IMG_PATH, 'article'), express_1.default.static(path_1.default.join(constants_1.STATIC_IMG_PATH, 'article')));
 app.use(path_1.default.join(constants_1.PUBLIC_IMG_PATH, 'user'), express_1.default.static(path_1.default.join(constants_1.STATIC_IMG_PATH, 'user')));
 app.use('/users', user_router_1.default);
-// app.use('/products', productRouter);
+app.use('/products', product_router_1.default);
 // app.use('/articles', articleRouter);
 // app.use('/comments', commentRouter);
 // app.use('/images', imageRouter);

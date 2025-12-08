@@ -42,7 +42,7 @@ Content-Type: application/json
 
 // 상품 수정과 삭제: 인증, 인가 필요
 ###
-PATCH {{baseUrl}}/products/27
+PATCH {{baseUrl}}/products/32
 Content-Type: application/json
 
 {
@@ -52,5 +52,5 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{baseUrl}}/products/28
+DELETE {{baseUrl}}/products/32
 
