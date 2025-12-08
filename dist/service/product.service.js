@@ -28,11 +28,12 @@ const myFuns_js_1 = require("../lib/myFuns.js");
 const product_repo_js_1 = __importDefault(require("../repository/product.repo.js"));
 const structs_js_1 = require("../struct/structs.js");
 const selectFields_js_1 = require("../lib/selectFields.js");
-function post(userId, Data) {
+const NotFoundError_js_1 = __importDefault(require("../middleware/errors/NotFoundError.js"));
+function post(userId, data) {
     return __awaiter(this, void 0, void 0, function* () {
-        const productData = Object.assign(Object.assign({}, Data), { userId: userId });
+        const productData = Object.assign(Object.assign({}, data), { userId });
         (0, superstruct_1.assert)(productData, structs_js_1.CreateProduct);
-        const prismaData = Object.assign(Object.assign({}, Data), { user: { connect: { id: userId } } // userId → user 연결
+        const prismaData = Object.assign(Object.assign({}, data), { user: { connect: { id: userId } } // userId → user 연결
          });
         const product = yield product_repo_js_1.default.post(prismaData);
         //if (isEmpty(product)) throw new Error('NOT_FOUND');
@@ -44,7 +45,7 @@ function patch(productId, productData) {
         (0, superstruct_1.assert)(productData, structs_js_1.PatchProduct);
         const product = yield product_repo_js_1.default.patch(Number(productId), productData);
         if ((0, myFuns_js_1.isEmpty)(product))
-            throw new Error('NOT_FOUND');
+            throw new NotFoundError_js_1.default('product', Number(productId));
         return product;
     });
 }
@@ -71,7 +72,7 @@ function getList(offset, limit, orderStr, nameStr, descriptionStr) {
             where.name = { contains: nameStr };
         if (descriptionStr)
             where.description = { contains: descriptionStr };
-        const products = yield product_repo_js_1.default.getList(where, orderBy, Number(offset), Number(limit));
+        const products = yield product_repo_js_1.default.getList(where, orderBy, offset, limit);
         const productsToShow = products.map((p) => {
             const { id, name, price, createdAt } = p, rest = __rest(p, ["id", "name", "price", "createdAt"]);
             return { id, name, price, createdAt };
@@ -91,16 +92,16 @@ function get(userId, productId) {
         return Object.assign({ isLiked }, product2show);
     });
 }
-function like(user, productId) {
+function like(userId, productId) {
     return __awaiter(this, void 0, void 0, function* () {
         let product = yield product_repo_js_1.default.findById(Number(productId));
-        if (product.likedUsers.some((n) => n.nickname === user.nickname)) {
+        if (product.likedUsers.some((n) => n.id === userId)) {
             console.log('Already your favorite product');
         }
         else {
             console.log('Now, one of your favorite products');
             product = yield product_repo_js_1.default.patch(Number(productId), {
-                likedUsers: { connect: { id: Number(user.id) } }
+                likedUsers: { connect: { id: userId } }
             });
         }
         const product2show = (0, selectFields_js_1.selectProductFields)(product);
@@ -116,7 +117,7 @@ function cancelLike(userId, productId) {
         else {
             console.log('Now, not one of your liked products');
             product = yield product_repo_js_1.default.patch(Number(productId), {
-                likedUsers: { disconnect: { id: Number(userId) } }
+                likedUsers: { disconnect: { id: userId } }
             });
         }
         const product2show = (0, selectFields_js_1.selectProductFields)(product);

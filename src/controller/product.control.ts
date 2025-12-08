@@ -45,16 +45,16 @@ async function getList(req: Request, res: Response, next: NextFunction) {
 // 상품 상세 조회
 // 조회 필드: id, name, description, price, tags, createdAt
 async function get(req: Request, res: Response, next: NextFunction) {
-  const { id } = req.params;
+  const { id: productId } = req.params;
   const userId = req.user?.id;
-  const product = await productService.get(userId, id);
-  console.log(`Product_${id} fetched (in detail)`);
+  const product = await productService.get(userId, productId);
+  console.log(`Product_${productId} fetched (in detail)`);
   res.status(200).json(product);
 }
 
 // 상품: 좋아요/좋아요-취소
 async function like(req: Request, res: Response, next: NextFunction) {
-  const product = await productService.like(req.user!, req.params.id);
+  const product = await productService.like(req.user!.id, req.params.id);
   res.status(200).json(product);
 }
 

@@ -10,7 +10,7 @@ async function authenticateUser(req: Request, res: Response, next: NextFunction)
   try {
     const accessToken = check_accessTokenExist(req.cookies);
     if (!accessToken) {
-      // 로그인 안 한 사용자도 상품/게시물 상세정보 얻을 수 있게 함
+      // 인증 예외: 로그인 안 한 사용자도 상품/게시물 상세정보 얻을 수 있게 함
       if (req.method === 'GET' && typeof req.params.id === 'string') return next();
 
       console.log('Unauthorized');

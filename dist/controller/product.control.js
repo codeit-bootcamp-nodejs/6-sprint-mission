@@ -62,17 +62,17 @@ function getList(req, res, next) {
 function get(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         var _a;
-        const { id } = req.params;
+        const { id: productId } = req.params;
         const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
-        const product = yield product_service_1.default.get(userId, id);
-        console.log(`Product_${id} fetched (in detail)`);
+        const product = yield product_service_1.default.get(userId, productId);
+        console.log(`Product_${productId} fetched (in detail)`);
         res.status(200).json(product);
     });
 }
 // 상품: 좋아요/좋아요-취소
 function like(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const product = yield product_service_1.default.like(req.user, req.params.id);
+        const product = yield product_service_1.default.like(req.user.id, req.params.id);
         res.status(200).json(product);
     });
 }

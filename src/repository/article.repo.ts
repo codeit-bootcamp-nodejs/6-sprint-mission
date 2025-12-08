@@ -17,10 +17,10 @@ async function erase(id: number) {
   return prisma.article.delete({ where: { id } });
 }
 
-async function getList(where: object, orderBy: object, offset: string, limit: string) {
+async function getList(where: object, orderBy: object, offset: number, limit: number) {
   return await prisma.article.findMany({
-    skip: parseInt(offset) || 0,
-    take: parseInt(limit) || 10,
+    skip: offset, // default 0
+    take: limit, // default 10
     orderBy,
     where
   });

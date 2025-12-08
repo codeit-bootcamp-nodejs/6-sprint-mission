@@ -37,10 +37,14 @@ function erase(req, res) {
         res.status(204).send({ message: '게시물이 삭제되었습니다' });
     });
 }
-// 게시물 목록 조회와 상세 조회: 누구나 가능
+// 게시물 목록 조회
 function getList(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { offset, limit, order, title, content } = req.query;
+        const offset = req.query.offset ? parseInt(req.query.offset, 10) : 0;
+        const limit = req.query.limit ? parseInt(req.query.limit, 10) : 10;
+        const order = req.query.order || 'recent';
+        const title = req.query.title;
+        const content = req.query.content;
         const articles = yield article_service_js_1.default.getList(offset, limit, order, title, content);
         console.log('Article list fetched');
         res.status(200).json(articles);
@@ -49,19 +53,22 @@ function getList(req, res) {
 // 게시물 상세 조회
 function get(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const article = yield article_service_js_1.default.get(req.user, req.params.id);
+        var _a;
+        const { id: articleId } = req.params;
+        const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
+        const article = yield article_service_js_1.default.get(userId, articleId);
         console.log('Article fetched (in detail)');
         res.status(200).json(article);
     });
 }
 // 게시물: 좋아요/좋아요-취소
-function like(req, res, next) {
+function like(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const article = yield article_service_js_1.default.like(req.user.id, req.params.id);
         res.status(200).json(article);
     });
 }
-function cancelLike(req, res, next) {
+function cancelLike(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const article = yield article_service_js_1.default.cancelLike(req.user.id, req.params.id);
         res.status(200).json(article);

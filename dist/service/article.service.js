@@ -34,9 +34,10 @@ function post(userId, data) {
     return __awaiter(this, void 0, void 0, function* () {
         const articleData = Object.assign(Object.assign({}, data), { userId });
         (0, superstruct_1.assert)(articleData, structs_js_1.CreateArticle);
-        const article = yield article_repo_js_1.default.post(articleData);
-        if ((0, myFuns_js_1.isEmpty)(article))
-            throw new NotFoundError_js_1.default(article, article.id);
+        const prismaData = Object.assign(Object.assign({}, data), { user: { connect: { id: userId } } // userId → user 연결
+         });
+        const article = yield article_repo_js_1.default.post(prismaData);
+        //if (isEmpty(article)) throw new NotFoundError(article, article.id);
         return article;
     });
 }
@@ -45,7 +46,7 @@ function patch(articleId, articleData) {
         (0, superstruct_1.assert)(articleData, structs_js_1.PatchArticle);
         const article = yield article_repo_js_1.default.patch(Number(articleId), articleData);
         if ((0, myFuns_js_1.isEmpty)(article))
-            throw new NotFoundError_js_1.default(article, Number(articleId));
+            throw new NotFoundError_js_1.default('article', Number(articleId));
         return article;
     });
 }
@@ -60,13 +61,13 @@ function erase(articleId) {
 // 퀘리 조건: title이나 content에 포함된 문자로 검색 조회
 function getList(offset, limit, orderStr, titleStr, contentStr) {
     return __awaiter(this, void 0, void 0, function* () {
-        const orderBy = {};
+        const orderBy = { createdAt: 'desc' };
         if (orderStr === 'oldest') {
             orderBy.createdAt = 'asc';
         }
         else
             orderBy.createdAt = 'desc';
-        const where = {};
+        const where = { title: { contains: '' }, content: { contains: '' } };
         if (titleStr)
             where.title = { contains: titleStr };
         if (contentStr)
@@ -83,50 +84,46 @@ function getList(offset, limit, orderStr, titleStr, contentStr) {
 // 게시물 상세 조회
 // 조회 필드 요구: id, title, content, createdAt
 // 조회 필드 추가: comments, likedUsers
-function get(user, articleId) {
+function get(userId, articleId) {
     return __awaiter(this, void 0, void 0, function* () {
         let article = yield article_repo_js_1.default.findById(Number(articleId));
-        article = (0, selectFields_js_1.selectArticleProductFields)(article);
-        if (!(0, myFuns_js_1.isEmpty)(user)) {
-            if (article.likedUsers.includes(user.nickname))
-                return Object.assign({ isLiked: true }, article);
-            else
-                return Object.assign({ isLiked: false }, article);
-        }
-        else
-            return article;
+        const article2show = (0, selectFields_js_1.selectArticleFields)(article);
+        if (!userId)
+            return article2show;
+        const isLiked = article.likedUsers.some((a) => a.id === userId);
+        return Object.assign({ isLiked }, article2show);
     });
 }
 function like(userId, articleId) {
     return __awaiter(this, void 0, void 0, function* () {
         let article = yield article_repo_js_1.default.findById(Number(articleId));
-        if (article.likedUsers.find((n) => n.id === Number(userId))) {
+        if (article.likedUsers.some((n) => n.id === userId)) {
             console.log('Already your favorite article');
         }
         else {
             console.log('Now, one of your favorite articles');
             article = yield article_repo_js_1.default.patch(Number(articleId), {
-                likedUsers: { connect: { id: Number(userId) } }
+                likedUsers: { connect: { id: userId } }
             });
         }
-        article = (0, selectFields_js_1.selectArticleProductFields)(article);
-        return Object.assign({ isLiked: true }, article);
+        const article2show = (0, selectFields_js_1.selectArticleFields)(article);
+        return Object.assign({ isLiked: true }, article2show);
     });
 }
 function cancelLike(userId, articleId) {
     return __awaiter(this, void 0, void 0, function* () {
         let article = yield article_repo_js_1.default.findById(Number(articleId));
-        if (!article.likedUsers.find((n) => n.id === Number(userId))) {
+        if (!article.likedUsers.some((n) => n.id === userId)) {
             console.log('Already not your favorite article');
         }
         else {
             console.log('Now, not one of your favorite articles');
             article = yield article_repo_js_1.default.patch(Number(articleId), {
-                likedUsers: { disconnect: { id: Number(userId) } }
+                likedUsers: { disconnect: { id: userId } }
             });
         }
-        article = (0, selectFields_js_1.selectArticleProductFields)(article);
-        return Object.assign({ isLiked: false }, article);
+        const article2show = (0, selectFields_js_1.selectArticleFields)(article);
+        return Object.assign({ isLiked: false }, article2show);
     });
 }
 exports.default = {

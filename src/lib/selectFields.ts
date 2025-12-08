@@ -61,8 +61,8 @@ export function selectArticleFields(item: completeArticle) {
     imageUrls,
     userId,
     createdAt,
-    comments: commentsToShow,
-    likedUsers: likedUsersToShow
+    likedUsers: likedUsersToShow,
+    comments: commentsToShow
   };
 }
 
@@ -87,7 +87,8 @@ export function selectUserFields(user: completeUser, fieldStr: string) {
   if (!isEmpty(products)) {
     if (fieldStr === 'myProducts' || fieldStr === 'all') {
       const newProducts = products.map((p) => {
-        return { id: p.id, name: p.name };
+        return `id:${p.id}, ${p.name}`;
+        //return { id: p.id, name: p.name };
       });
       extraFields = { ...extraFields, products: newProducts };
       if (fieldStr === 'myProducts') return { ...coreFields, ...extraFields };
@@ -96,7 +97,8 @@ export function selectUserFields(user: completeUser, fieldStr: string) {
   if (!isEmpty(articles)) {
     if (fieldStr === 'myArticles' || fieldStr === 'all') {
       const newArticles = articles.map((a) => {
-        return { id: a.id, name: a.title };
+        return `id:${a.id}, ${a.title}`;
+        //return { id: a.id, name: a.title };
       });
       extraFields = { ...extraFields, articles: newArticles };
       if (fieldStr === 'myArticles') return { ...coreFields, ...extraFields };
@@ -106,7 +108,8 @@ export function selectUserFields(user: completeUser, fieldStr: string) {
   if (!isEmpty(likedProducts)) {
     if (fieldStr === 'likedProducts' || fieldStr === 'all') {
       const newLikedProducts = likedProducts.map((p) => {
-        return { id: p.id, name: p.name };
+        return `id:${p.id}, ${p.name}`;
+        //return { id: p.id, name: p.name };
       });
       extraFields = { ...extraFields, likedProducts: newLikedProducts };
       if (fieldStr === 'likedProducts') return { ...coreFields, ...extraFields };
@@ -116,7 +119,8 @@ export function selectUserFields(user: completeUser, fieldStr: string) {
   if (isEmpty(likedArticles)) {
     if (fieldStr === 'likedArticles' || fieldStr === 'all') {
       const newLikedArticles = likedArticles.map((a) => {
-        return { id: a.id, name: a.title };
+        return `id:${a.id}, ${a.title}`;
+        //return { id: a.id, name: a.title };
       });
       extraFields = { ...extraFields, likedArticles: newLikedArticles };
       if (fieldStr === 'likedArticles') return { ...coreFields, ...extraFields };
@@ -125,10 +129,12 @@ export function selectUserFields(user: completeUser, fieldStr: string) {
   if (!isEmpty(comments)) {
     if (fieldStr === 'comments' || fieldStr === 'all') {
       const newComments = comments.map((c) => {
-        return { id: c.id, name: c.content };
+        return `id:${c.id}, ${c.content}`;
+        //return { id: c.id, name: c.content };
       });
       extraFields = { ...extraFields, comments: newComments };
-      return { ...coreFields, ...extraFields };
+      if (fieldStr === 'comments') return { ...coreFields, ...extraFields };
     }
   }
+  return { ...coreFields, ...extraFields };
 }

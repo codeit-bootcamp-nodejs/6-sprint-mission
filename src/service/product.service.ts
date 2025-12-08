@@ -4,13 +4,14 @@ import productRepo from '../repository/product.repo.js';
 import { CreateProduct, PatchProduct } from '../struct/structs.js';
 import { selectProductFields } from '../lib/selectFields.js';
 import { createProductDTO, updateProductDTO, updateUserDTO } from '../dto/dto.js';
-import { Prisma, User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import NotFoundError from '../middleware/errors/NotFoundError.js';
 
-async function post(userId: number, Data: createProductDTO) {
-  const productData = { ...Data, userId: userId };
+async function post(userId: number, data: createProductDTO) {
+  const productData = { ...data, userId };
   assert(productData, CreateProduct);
   const prismaData: Prisma.ProductCreateInput = {
-    ...Data, // name, description, price, tags, imageUrls 등
+    ...data, // name, description, price, tags, imageUrls 등
     user: { connect: { id: userId } } // userId → user 연결
   };
   const product = await productRepo.post(prismaData);
@@ -24,7 +25,7 @@ async function patch(productId: string, productData: updateProductDTO) {
     Number(productId),
     productData as Prisma.ProductUpdateInput
   );
-  if (isEmpty(product)) throw new Error('NOT_FOUND');
+  if (isEmpty(product)) throw new NotFoundError('product', Number(productId));
   return product;
 }
 
@@ -53,7 +54,7 @@ async function getList(
   if (nameStr) where.name = { contains: nameStr };
   if (descriptionStr) where.description = { contains: descriptionStr };
 
-  const products = await productRepo.getList(where, orderBy, Number(offset), Number(limit));
+  const products = await productRepo.getList(where, orderBy, offset, limit);
   const productsToShow = products.map((p) => {
     const { id, name, price, createdAt, ...rest } = p;
     return { id, name, price, createdAt };
@@ -72,14 +73,14 @@ async function get(userId: number | undefined, productId: string) {
   return { isLiked, ...product2show };
 }
 
-async function like(user: User, productId: string) {
+async function like(userId: number, productId: string) {
   let product = await productRepo.findById(Number(productId));
-  if (product.likedUsers.some((n) => n.nickname === user.nickname)) {
+  if (product.likedUsers.some((n) => n.id === userId)) {
     console.log('Already your favorite product');
   } else {
     console.log('Now, one of your favorite products');
     product = await productRepo.patch(Number(productId), {
-      likedUsers: { connect: { id: Number(user.id) } }
+      likedUsers: { connect: { id: userId } }
     });
   }
   const product2show = selectProductFields(product);
@@ -93,7 +94,7 @@ async function cancelLike(userId: number, productId: string) {
   } else {
     console.log('Now, not one of your liked products');
     product = await productRepo.patch(Number(productId), {
-      likedUsers: { disconnect: { id: Number(userId) } }
+      likedUsers: { disconnect: { id: userId } }
     });
   }
   const product2show = selectProductFields(product);

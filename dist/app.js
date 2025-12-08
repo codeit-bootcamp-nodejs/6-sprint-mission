@@ -12,7 +12,7 @@ const constants_1 = require("./lib/constants");
 const constants_2 = require("./lib/constants");
 const user_router_1 = __importDefault(require("./router/user.router"));
 const product_router_1 = __importDefault(require("./router/product.router"));
-// import articleRouter from './router/article.router.js';
+const article_router_1 = __importDefault(require("./router/article.router"));
 // import commentRouter from './router/comment.router.js';
 // import imageRouter from './router/image.router.js';
 const app = (0, express_1.default)();
@@ -24,7 +24,7 @@ app.use(path_1.default.join(constants_1.PUBLIC_IMG_PATH, 'article'), express_1.d
 app.use(path_1.default.join(constants_1.PUBLIC_IMG_PATH, 'user'), express_1.default.static(path_1.default.join(constants_1.STATIC_IMG_PATH, 'user')));
 app.use('/users', user_router_1.default);
 app.use('/products', product_router_1.default);
-// app.use('/articles', articleRouter);
+app.use('/articles', article_router_1.default);
 // app.use('/comments', commentRouter);
 // app.use('/images', imageRouter);
 app.use(errorHandler_1.defaultNotFoundHandler);

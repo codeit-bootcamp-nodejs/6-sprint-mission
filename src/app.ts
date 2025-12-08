@@ -7,7 +7,7 @@ import { PUBLIC_IMG_PATH, STATIC_IMG_PATH } from './lib/constants';
 import { PORT } from './lib/constants';
 import userRouter from './router/user.router';
 import productRouter from './router/product.router';
-// import articleRouter from './router/article.router.js';
+import articleRouter from './router/article.router';
 // import commentRouter from './router/comment.router.js';
 // import imageRouter from './router/image.router.js';
 
@@ -29,7 +29,7 @@ app.use(path.join(PUBLIC_IMG_PATH, 'user'), express.static(path.join(STATIC_IMG_
 
 app.use('/users', userRouter);
 app.use('/products', productRouter);
-// app.use('/articles', articleRouter);
+app.use('/articles', articleRouter);
 // app.use('/comments', commentRouter);
 // app.use('/images', imageRouter);
 
