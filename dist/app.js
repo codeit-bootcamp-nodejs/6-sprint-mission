@@ -1,0 +1,34 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const cors_1 = __importDefault(require("cors"));
+const path_1 = __importDefault(require("path"));
+const errorHandler_1 = require("./middleware/errorHandler");
+const constants_1 = require("./lib/constants");
+const constants_2 = require("./lib/constants");
+const user_router_1 = __importDefault(require("./router/user.router"));
+// import productRouter from './router/product.router.js';
+// import articleRouter from './router/article.router.js';
+// import commentRouter from './router/comment.router.js';
+// import imageRouter from './router/image.router.js';
+const app = (0, express_1.default)();
+app.use((0, cors_1.default)());
+app.use((0, cookie_parser_1.default)());
+app.use(express_1.default.json());
+app.use(path_1.default.join(constants_1.PUBLIC_IMG_PATH, 'product'), express_1.default.static(path_1.default.join(constants_1.STATIC_IMG_PATH, 'product')));
+app.use(path_1.default.join(constants_1.PUBLIC_IMG_PATH, 'article'), express_1.default.static(path_1.default.join(constants_1.STATIC_IMG_PATH, 'article')));
+app.use(path_1.default.join(constants_1.PUBLIC_IMG_PATH, 'user'), express_1.default.static(path_1.default.join(constants_1.STATIC_IMG_PATH, 'user')));
+app.use('/users', user_router_1.default);
+// app.use('/products', productRouter);
+// app.use('/articles', articleRouter);
+// app.use('/comments', commentRouter);
+// app.use('/images', imageRouter);
+app.use(errorHandler_1.defaultNotFoundHandler);
+app.use(errorHandler_1.globalErrorHandler);
+app.listen(constants_2.PORT, () => {
+    console.log(`Server is running on http://localhost:${constants_2.PORT}`);
+});
