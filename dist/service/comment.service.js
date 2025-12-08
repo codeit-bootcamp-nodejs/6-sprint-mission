@@ -18,16 +18,16 @@ const comment_repo_js_1 = __importDefault(require("../repository/comment.repo.js
 function getList(limit, cursor, typeStr, contentStr) {
     return __awaiter(this, void 0, void 0, function* () {
         let where = {};
-        if (typeStr === 'product')
-            where = { articleId: null };
-        if (typeStr === 'article')
-            where = { productId: null };
         if (contentStr)
-            where.content = { contains: contentStr };
+            where = { content: { contains: contentStr } };
+        if (typeStr === 'product')
+            where = Object.assign(Object.assign({}, where), { articleId: null });
+        if (typeStr === 'article')
+            where = Object.assign(Object.assign({}, where), { productId: null });
         // nextCursor 계산에 반영해야 할 부분
         // 남은 item 수 보다 nextCurwor가 더 큰 경우 - 쉬운 문제
         // product, article 댓글이 마구 섞여 있을 때, type을 밝히는 경우 comments.id로 하면 문제가 됨 - 어려운 문제
-        const comments = yield comment_repo_js_1.default.getList(where, typeStr, Number(limit), Number(cursor));
+        const comments = yield comment_repo_js_1.default.getList(where, typeStr, limit, cursor);
         const nextCursor = comments.length > 0 ? comments[comments.length - 1].id : null;
         return { comments, nextCursor };
     });
@@ -47,10 +47,15 @@ function postProduct(content, productId, userId) {
         const commentData = {
             content,
             productId: Number(productId),
-            userId: Number(userId)
+            userId
         };
         (0, superstruct_1.assert)(commentData, structs_js_1.CreateComment);
-        const comment = yield comment_repo_js_1.default.post(commentData);
+        const prismaData = {
+            content,
+            product: { connect: { id: Number(productId) } }, // userId → user 연결
+            user: { connect: { id: userId } } // userId → user 연결
+        };
+        const comment = yield comment_repo_js_1.default.post(prismaData);
         return comment;
     });
 }
@@ -59,10 +64,15 @@ function postArticle(content, articleId, userId) {
         const commentData = {
             content,
             articleId: Number(articleId),
-            userId: Number(userId)
+            userId
+        };
+        const prismaData = {
+            content,
+            article: { connect: { id: Number(articleId) } }, // userId → user 연결
+            user: { connect: { id: userId } } // userId → user 연결
         };
         (0, superstruct_1.assert)(commentData, structs_js_1.CreateComment);
-        const comment = yield comment_repo_js_1.default.post(commentData);
+        const comment = yield comment_repo_js_1.default.post(prismaData);
         return comment;
     });
 }

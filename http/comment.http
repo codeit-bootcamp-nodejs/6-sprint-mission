@@ -6,7 +6,7 @@
 ###
 GET {{baseUrl}}/comments
 ###
-GET {{baseUrl}}/comments?type=all&cursor=10
+GET {{baseUrl}}/comments?type=all&cursor=90
 ###
 GET {{baseUrl}}/comments?type=product&limit=3&cursor=3
 ###
@@ -16,7 +16,7 @@ GET {{baseUrl}}/comments?type=article&content=연기
 
 // 댓글 조회
 ###
-GET {{baseUrl}}/comments/95
+GET {{baseUrl}}/comments/5
 
 
 // 댓글 등록: 인증
@@ -28,7 +28,7 @@ Content-Type: application/json
   "content": "마리사 토메이는 이 연기로 아카데미 여우 조연상 받았죠."
 }
 ###
-POST {{baseUrl}}/comments/products/10
+POST {{baseUrl}}/comments/products/4
 Content-Type: application/json
 
 {
@@ -37,7 +37,7 @@ Content-Type: application/json
 
 // 댓글 수정과 삭제: 인증과 인가
 ###
-PATCH {{baseUrl}}/comments/98
+PATCH {{baseUrl}}/comments/4
 Content-Type: application/json
 
 {
@@ -45,4 +45,4 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{baseUrl}}/comments/97
+DELETE {{baseUrl}}/comments/4

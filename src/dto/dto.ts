@@ -39,7 +39,6 @@ export interface updateArticleDTO {
 }
 
 interface BaseComment {
-  id: string;
   content: string;
   userId: number;
 }
@@ -54,4 +53,11 @@ interface ProductComment extends BaseComment {
   productId: number;
 }
 
-export type Comment = ArticleComment | ProductComment;
+export type createCommentDTO = ArticleComment | ProductComment;
+
+export interface updateCommentDTO {
+  content?: string;
+  userId?: number;
+  productId?: number;
+  articleId?: number;
+}

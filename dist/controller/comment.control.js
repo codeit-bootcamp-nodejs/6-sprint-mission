@@ -19,7 +19,10 @@ const comment_service_js_1 = __importDefault(require("../service/comment.service
 // 조건 검색: content에 포함된 단어
 function getList(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { limit, cursor = 0, type = 'all', content } = req.query;
+        const limit = req.query.limit ? parseInt(req.query.limit, 10) : 10;
+        const cursor = parseInt(req.query.cursor, 10);
+        const type = req.query.type || 'all';
+        const content = req.query.content;
         console.log(`Fetching ${type} comment list...`);
         console.log(`cursor, now:   ${cursor}`);
         const { comments, nextCursor } = yield comment_service_js_1.default.getList(limit, cursor, type, content);
