@@ -1,4 +1,4 @@
-import prisma from '../lib/prismaClient.js';
+import prisma from '../lib/prismaClient';
 import { Prisma } from '@prisma/client';
 
 async function getList(where: object, type: string, limit: number, cursor: number | undefined) {

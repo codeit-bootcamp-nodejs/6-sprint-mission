@@ -12,10 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const token_js_1 = require("../lib/token.js");
-const constants_js_1 = require("../lib/constants.js");
-const user_service_js_1 = __importDefault(require("../service/user.service.js"));
-const BadRequestError_js_1 = __importDefault(require("./errors/BadRequestError.js"));
+const token_1 = require("../lib/token");
+const constants_1 = require("../lib/constants");
+const user_service_1 = __importDefault(require("../service/user.service"));
+const BadRequestError_1 = __importDefault(require("./errors/BadRequestError"));
 function authenticateUser(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -25,17 +25,17 @@ function authenticateUser(req, res, next) {
                 if (req.method === 'GET' && typeof req.params.id === 'string')
                     return next();
                 console.log('Unauthorized');
-                throw new BadRequestError_js_1.default('UNAUTHORIZED');
+                throw new BadRequestError_1.default('UNAUTHORIZED');
             }
-            const { userId } = (0, token_js_1.verifyAccessToken)(accessToken);
+            const { userId } = (0, token_1.verifyAccessToken)(accessToken);
             if (!userId) {
                 console.log('No user found under the authorized token');
-                throw new BadRequestError_js_1.default('NO_USER_FOUND');
+                throw new BadRequestError_1.default('NO_USER_FOUND');
             }
-            const user = yield user_service_js_1.default.verifyUserExist(userId);
+            const user = yield user_service_1.default.verifyUserExist(userId);
             if (!user) {
                 console.log('No user foundwith the given ID by accessToken');
-                throw new BadRequestError_js_1.default('NO_USER_FOUND');
+                throw new BadRequestError_1.default('NO_USER_FOUND');
             }
             req.user = user;
             next();
@@ -46,7 +46,7 @@ function authenticateUser(req, res, next) {
     });
 }
 function check_accessTokenExist(cookieData) {
-    const accessToken = cookieData[constants_js_1.ACCESS_TOKEN_COOKIE_NAME];
+    const accessToken = cookieData[constants_1.ACCESS_TOKEN_COOKIE_NAME];
     // if (!accessToken) {
     //   print('No accessToken found');
     //   throw new NotFoundError('NO_ACCESSTOKEN_FOUND');

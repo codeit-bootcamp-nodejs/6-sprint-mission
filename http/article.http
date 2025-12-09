@@ -22,10 +22,10 @@ GET {{baseUrl}}/articles?title=사촌&content=연기
 
 // 게시물 상세 조회 및 좋아요 기능: 인증 필요
 ###
-GET {{baseUrl}}/articles/21
+GET {{baseUrl}}/articles/22
 
 ###
-POST {{baseUrl}}/articles/21/like
+POST {{baseUrl}}/articles/22/like
 ###
 POST {{baseUrl}}/articles/21/like/cancel
 

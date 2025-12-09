@@ -1,5 +1,5 @@
-import { completeUser, completeProduct, completeArticle } from '../dto/interfaceType.js';
-import { isEmpty } from './myFuns.js';
+import { completeUser, completeProduct, completeArticle } from '../dto/interfaceType';
+import { isEmpty } from './myFuns';
 
 export function selectProductFields(item: completeProduct) {
   const {
@@ -43,15 +43,16 @@ export function selectProductFields(item: completeProduct) {
 export function selectArticleFields(item: completeArticle) {
   const { id, title, content, imageUrls, userId, createdAt, likedUsers = [], comments = [] } = item;
 
+  let commentsToShow;
+  if (!isEmpty(comments)) {
+    const safeComments = Array.isArray(comments) ? comments : [comments];
+    commentsToShow = safeComments.map((c) => c.content);
+  }
+
   let likedUsersToShow;
   if (!isEmpty(likedUsers)) {
     const safeLikedUsers = Array.isArray(likedUsers) ? likedUsers : [likedUsers];
     likedUsersToShow = safeLikedUsers.map((u) => u.nickname);
-  }
-  let commentsToShow;
-  if (!isEmpty(comments)) {
-    const safeComments = Array.isArray(comments) ? comments : [comments];
-    const commentsToShow = safeComments.map((c) => c.content);
   }
 
   return {
@@ -80,10 +81,9 @@ export function selectUserFields(user: completeUser, fieldStr: string) {
     comments = []
   } = user;
   const coreFields = { id, email, nickname, imageUrls, createdAt };
-
-  //let extraFields: Record<string, any> = {};
-  let extraFields = {};
   if (fieldStr === 'core') return coreFields;
+
+  let extraFields = {};
   if (!isEmpty(products)) {
     if (fieldStr === 'myProducts' || fieldStr === 'all') {
       const newProducts = products.map((p) => {
@@ -116,7 +116,7 @@ export function selectUserFields(user: completeUser, fieldStr: string) {
     }
   }
 
-  if (isEmpty(likedArticles)) {
+  if (!isEmpty(likedArticles)) {
     if (fieldStr === 'likedArticles' || fieldStr === 'all') {
       const newLikedArticles = likedArticles.map((a) => {
         return `id:${a.id}, ${a.title}`;

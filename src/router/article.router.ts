@@ -1,8 +1,8 @@
 import express from 'express';
-import articleControl from '../controller/article.control.js';
-import authenticateUser from '../middleware/authenticate.user.js';
-import authorizeUser from '../middleware/authorize.user.js';
-import withTryCatch from '../lib/withTryCatch.js';
+import articleControl from '../controller/article.control';
+import authenticateUser from '../middleware/authenticate.user';
+import authorizeUser from '../middleware/authorize.user';
+import withTryCatch from '../lib/withTryCatch';
 
 const articleRouter = express.Router();
 

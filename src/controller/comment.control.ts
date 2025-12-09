@@ -1,4 +1,4 @@
-import commentService from '../service/comment.service.js';
+import commentService from '../service/comment.service';
 import { Request, Response, NextFunction } from 'express';
 
 // 모든 댓글 목록 조회

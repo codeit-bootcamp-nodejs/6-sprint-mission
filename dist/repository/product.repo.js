@@ -12,15 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const prismaClient_js_1 = __importDefault(require("../lib/prismaClient.js"));
+const prismaClient_1 = __importDefault(require("../lib/prismaClient"));
 function post(data) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_js_1.default.product.create({ data });
+        return yield prismaClient_1.default.product.create({ data });
     });
 }
 function patch(id, productData) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_js_1.default.product.update({
+        return yield prismaClient_1.default.product.update({
             where: { id },
             data: productData,
             include: { comments: true, likedUsers: true }
@@ -29,17 +29,17 @@ function patch(id, productData) {
 }
 function erase(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_js_1.default.product.delete({ where: { id } });
+        return yield prismaClient_1.default.product.delete({ where: { id } });
     });
 }
 function countById(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_js_1.default.product.count({ where: { id } });
+        return yield prismaClient_1.default.product.count({ where: { id } });
     });
 }
 function getList(where, orderBy, offset, limit) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_js_1.default.product.findMany({
+        return yield prismaClient_1.default.product.findMany({
             skip: offset, // offset 방식 페이지네이션: default 0
             take: limit, // default 10
             orderBy,
@@ -49,7 +49,7 @@ function getList(where, orderBy, offset, limit) {
 }
 function findById(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_js_1.default.product.findFirstOrThrow({
+        return yield prismaClient_1.default.product.findFirstOrThrow({
             where: { id },
             include: { comments: true, likedUsers: true } // 관계형 필드도 일단 가져온다
         });

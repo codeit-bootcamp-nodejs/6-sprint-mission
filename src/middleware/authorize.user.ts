@@ -1,8 +1,8 @@
-import BadRequestError from './errors/BadRequestError.js';
-import userRepo from '../repository/user.repo.js';
-import articleRepo from '../repository/article.repo.js';
-import productRepo from '../repository/product.repo.js';
-import commentRepo from '../repository/comment.repo.js';
+import BadRequestError from './errors/BadRequestError';
+import userRepo from '../repository/user.repo';
+import articleRepo from '../repository/article.repo';
+import productRepo from '../repository/product.repo';
+import commentRepo from '../repository/comment.repo';
 import { Request, Response, NextFunction } from 'express';
 import { User, Product, Article, Comment } from '@prisma/client';
 

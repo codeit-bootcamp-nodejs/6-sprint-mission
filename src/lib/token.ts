@@ -4,7 +4,7 @@ import {
   JWT_REFRESH_TOKEN_SECRET,
   ACCESS_TOKEN_EXPIRESIN,
   REFRESH_TOKEN_EXPIRESIN
-} from './constants.js';
+} from './constants';
 
 export interface tokenPayload extends JwtPayload {
   id: number;

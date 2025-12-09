@@ -27,10 +27,10 @@ DELETE {{baseUrl}}/images/products/30
 // 사촌 비니 
 
 ###
-GET {{baseUrl}}/images/articles/23
+GET {{baseUrl}}/images/articles/21
 
 ###
-POST {{baseUrl}}/images/articles/23
+POST {{baseUrl}}/images/articles/21
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
@@ -41,23 +41,23 @@ Content-Type: image/png
 --MyBoundary--
 
 ###
-DELETE {{baseUrl}}/images/articles/23
+DELETE {{baseUrl}}/images/articles/21
 
 
 //------------------------ 사용자 이미지 APIs
 
 ###
-GET {{baseUrl}}/images/users/8
+GET {{baseUrl}}/images/users/9
 
 ###
-POST {{baseUrl}}/images/users/8
+POST {{baseUrl}}/images/users/9
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
-Content-Disposition: form-data; name="image"; filename="Toshil.png"
+Content-Disposition: form-data; name="image"; filename="Soonie.png"
 Content-Type: image/png
 
-< ./images/user/Toshil.png
+< ./images/user/Soonie.png
 --MyBoundary--
 
 ###

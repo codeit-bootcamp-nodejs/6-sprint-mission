@@ -1,7 +1,7 @@
 import multer from 'multer';
 import path from 'path';
-import { STATIC_IMG_PATH } from '../lib/constants.js';
-import BadRequestError from './errors/BadRequestError.js';
+import { STATIC_IMG_PATH } from '../lib/constants';
+import BadRequestError from './errors/BadRequestError';
 
 const ALLOWED_MIME_TYPES = ['image/png', 'image/jpeg', 'image/jpg'];
 const FILE_SIZE_LIMIT = 5 * 1024 * 1024;

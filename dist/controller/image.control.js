@@ -12,12 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const image_service_js_1 = __importDefault(require("../service/image.service.js"));
+const image_service_1 = __importDefault(require("../service/image.service"));
+const NotFoundError_1 = __importDefault(require("../middleware/errors/NotFoundError"));
+const BadRequestError_1 = __importDefault(require("../middleware/errors/BadRequestError"));
 // 이미지 목록 imageUrls 조회, 개발 위해 현재는 전체 상품/게시물 출력.
 // req.originalUrl로 서비스에서 product인지 article인지 구분
 function get(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const item = yield image_service_js_1.default.get(req.originalUrl, req.params.id);
+        const item = yield image_service_1.default.get(req.originalUrl, req.params.id);
         console.log('imageUrls fetched');
         console.log(item.imageUrls);
         console.log('');
@@ -29,7 +31,11 @@ function get(req, res, next) {
 // 상품 이미지 Url을 기존 imageUrls 배열에 추가 (없다면 생성)
 function post(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const item = yield image_service_js_1.default.post(req.originalUrl, req.params.id, req.protocol, req.file, req.get('host'));
+        if (!req.file)
+            throw new BadRequestError_1.default('IMAGE_FILE_NOT_FOUND');
+        const item = yield image_service_1.default.post(req.originalUrl, req.params.id, req.protocol, req.file, req.get('host'));
+        if (!item)
+            throw new NotFoundError_1.default('User/Product/Article', Number(req.params.id));
         console.log('Image uploaded. ImgUrls in DB updated.');
         console.log(item.imageUrls);
         console.log('');
@@ -39,7 +45,7 @@ function post(req, res, next) {
 // imageUrls 삭제
 function erase(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const item = yield image_service_js_1.default.erase(req.originalUrl, req.params.id);
+        const item = yield image_service_1.default.erase(req.originalUrl, req.params.id);
         console.log('ImageUrls deleted');
         res.status(200).json(item); // json/send?
     });

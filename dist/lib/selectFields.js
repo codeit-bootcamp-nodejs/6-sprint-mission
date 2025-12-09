@@ -3,16 +3,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.selectProductFields = selectProductFields;
 exports.selectArticleFields = selectArticleFields;
 exports.selectUserFields = selectUserFields;
-const myFuns_js_1 = require("./myFuns.js");
+const myFuns_1 = require("./myFuns");
 function selectProductFields(item) {
     const { id, name, description, price, tags, imageUrls, userId, createdAt, likedUsers = [], comments = [] } = item;
     let commentsToShow;
-    if (!(0, myFuns_js_1.isEmpty)(comments)) {
+    if (!(0, myFuns_1.isEmpty)(comments)) {
         const safeComments = Array.isArray(comments) ? comments : [comments];
         commentsToShow = safeComments.map((c) => c.content);
     }
     let likedUsersToShow;
-    if (!(0, myFuns_js_1.isEmpty)(likedUsers)) {
+    if (!(0, myFuns_1.isEmpty)(likedUsers)) {
         const safeLikedUsers = Array.isArray(likedUsers) ? likedUsers : [likedUsers];
         likedUsersToShow = safeLikedUsers.map((u) => u.nickname);
     }
@@ -32,12 +32,12 @@ function selectProductFields(item) {
 function selectArticleFields(item) {
     const { id, title, content, imageUrls, userId, createdAt, likedUsers = [], comments = [] } = item;
     let likedUsersToShow;
-    if (!(0, myFuns_js_1.isEmpty)(likedUsers)) {
+    if (!(0, myFuns_1.isEmpty)(likedUsers)) {
         const safeLikedUsers = Array.isArray(likedUsers) ? likedUsers : [likedUsers];
         likedUsersToShow = safeLikedUsers.map((u) => u.nickname);
     }
     let commentsToShow;
-    if (!(0, myFuns_js_1.isEmpty)(comments)) {
+    if (!(0, myFuns_1.isEmpty)(comments)) {
         const safeComments = Array.isArray(comments) ? comments : [comments];
         const commentsToShow = safeComments.map((c) => c.content);
     }
@@ -59,7 +59,7 @@ function selectUserFields(user, fieldStr) {
     let extraFields = {};
     if (fieldStr === 'core')
         return coreFields;
-    if (!(0, myFuns_js_1.isEmpty)(products)) {
+    if (!(0, myFuns_1.isEmpty)(products)) {
         if (fieldStr === 'myProducts' || fieldStr === 'all') {
             const newProducts = products.map((p) => {
                 return `id:${p.id}, ${p.name}`;
@@ -70,7 +70,7 @@ function selectUserFields(user, fieldStr) {
                 return Object.assign(Object.assign({}, coreFields), extraFields);
         }
     }
-    if (!(0, myFuns_js_1.isEmpty)(articles)) {
+    if (!(0, myFuns_1.isEmpty)(articles)) {
         if (fieldStr === 'myArticles' || fieldStr === 'all') {
             const newArticles = articles.map((a) => {
                 return `id:${a.id}, ${a.title}`;
@@ -81,7 +81,7 @@ function selectUserFields(user, fieldStr) {
                 return Object.assign(Object.assign({}, coreFields), extraFields);
         }
     }
-    if (!(0, myFuns_js_1.isEmpty)(likedProducts)) {
+    if (!(0, myFuns_1.isEmpty)(likedProducts)) {
         if (fieldStr === 'likedProducts' || fieldStr === 'all') {
             const newLikedProducts = likedProducts.map((p) => {
                 return `id:${p.id}, ${p.name}`;
@@ -92,7 +92,7 @@ function selectUserFields(user, fieldStr) {
                 return Object.assign(Object.assign({}, coreFields), extraFields);
         }
     }
-    if ((0, myFuns_js_1.isEmpty)(likedArticles)) {
+    if ((0, myFuns_1.isEmpty)(likedArticles)) {
         if (fieldStr === 'likedArticles' || fieldStr === 'all') {
             const newLikedArticles = likedArticles.map((a) => {
                 return `id:${a.id}, ${a.title}`;
@@ -103,7 +103,7 @@ function selectUserFields(user, fieldStr) {
                 return Object.assign(Object.assign({}, coreFields), extraFields);
         }
     }
-    if (!(0, myFuns_js_1.isEmpty)(comments)) {
+    if (!(0, myFuns_1.isEmpty)(comments)) {
         if (fieldStr === 'comments' || fieldStr === 'all') {
             const newComments = comments.map((c) => {
                 return `id:${c.id}, ${c.content}`;

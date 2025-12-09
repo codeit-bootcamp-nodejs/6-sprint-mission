@@ -1,18 +1,17 @@
 import bcrypt from 'bcrypt';
-import BadRequestError from '../middleware/errors/BadRequestError.js';
-import userRepo from '../repository/user.repo.js';
-import { ACCESS_TOKEN_COOKIE_NAME, NODE_ENV, REFRESH_TOKEN_COOKIE_NAME } from '../lib/constants.js';
-import { generateTokens, verifyRefreshToken } from '../lib/token.js';
-import NotFoundError from '../middleware/errors/NotFoundError.js';
+import BadRequestError from '../middleware/errors/BadRequestError';
+import userRepo from '../repository/user.repo';
+import { ACCESS_TOKEN_COOKIE_NAME, NODE_ENV, REFRESH_TOKEN_COOKIE_NAME } from '../lib/constants';
+import { generateTokens, verifyRefreshToken } from '../lib/token';
+import NotFoundError from '../middleware/errors/NotFoundError';
 import { assert } from 'superstruct';
-import { CreateUser } from '../struct/structs.js';
-import { PatchUser } from '../struct/structs.js';
-import { print, isEmpty } from '../lib/myFuns.js';
-import { selectUserFields } from '../lib/selectFields.js';
+import { CreateUser, PatchUser } from '../struct/structs';
+import { print, isEmpty } from '../lib/myFuns';
+import { selectUserFields } from '../lib/selectFields';
 import { Request, Response } from 'express';
-import { createUserDTO } from '../dto/dto.js';
-import { completeUser } from '../dto/interfaceType.js';
+import { createUserDTO } from '../dto/dto';
 import { User } from '@prisma/client';
+import { completeUser } from '../dto/interfaceType';
 
 async function getList() {
   if (NODE_ENV === 'development') {
@@ -77,13 +76,13 @@ function viewTokens(tokenData: Record<string, string | undefined>) {
 }
 
 async function getInfo(userId: number) {
-  const user = await userRepo.findById(userId);
+  const user = (await userRepo.findById(userId)) as completeUser;
   return selectUserFields(user, 'all');
 }
 
 async function patchInfo(userId: number, userData: object) {
   assert(userData, PatchUser);
-  const user = (await userRepo.patch(userId, userData)) as User;
+  const user = await userRepo.patch(userId, userData);
   return selectUserFields(user, 'core');
 }
 

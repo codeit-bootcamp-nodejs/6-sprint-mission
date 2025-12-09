@@ -38,8 +38,8 @@ POST {{baseUrl}}/users/login
 Content-Type: application/json
 
 {
-  "email": "user1@example.com",
-  "password": "password1"
+  "email": "user9@example.com",
+  "password": "password9"
 }
 
 ###
@@ -63,7 +63,7 @@ PATCH {{baseUrl}}/users/info/edit
 Content-Type: application/json
 
 { 
-  "nickname": "Toshil" 
+  "nickname": "Soonie" 
 }
 
 // 나의 정보 수정할 때 이미지도 수정할 수 있도록 변경할 예정

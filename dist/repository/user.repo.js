@@ -12,10 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const prismaClient_js_1 = __importDefault(require("../lib/prismaClient.js"));
+const prismaClient_1 = __importDefault(require("../lib/prismaClient"));
 function getList() {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_js_1.default.user.findMany({
+        return yield prismaClient_1.default.user.findMany({
             orderBy: { createdAt: 'desc' },
             select: { id: true, email: true, nickname: true, createdAt: true }
         });
@@ -23,17 +23,17 @@ function getList() {
 }
 function create(data) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_js_1.default.user.create({ data });
+        return yield prismaClient_1.default.user.create({ data });
     });
 }
 function findByEmail(email) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_js_1.default.user.findUnique({ where: { email } });
+        return yield prismaClient_1.default.user.findUnique({ where: { email } });
     });
 }
 function findById(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_js_1.default.user.findUniqueOrThrow({
+        return yield prismaClient_1.default.user.findUniqueOrThrow({
             where: { id },
             include: {
                 products: true,
@@ -47,7 +47,7 @@ function findById(id) {
 }
 function patch(id, userData) {
     return __awaiter(this, void 0, void 0, function* () {
-        return prismaClient_js_1.default.user.update({
+        return prismaClient_1.default.user.update({
             where: { id },
             data: userData
         });
@@ -55,14 +55,14 @@ function patch(id, userData) {
 }
 function getProducts(userId) {
     return __awaiter(this, void 0, void 0, function* () {
-        return prismaClient_js_1.default.product.findMany({
+        return prismaClient_1.default.product.findMany({
             where: { userId }
         });
     });
 }
 function getArticles(userId) {
     return __awaiter(this, void 0, void 0, function* () {
-        return prismaClient_js_1.default.article.findMany({
+        return prismaClient_1.default.article.findMany({
             where: { userId }
         });
     });

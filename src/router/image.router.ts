@@ -1,9 +1,9 @@
 import express from 'express';
-import authenticateUser from '../middleware/authenticate.user.js';
-import authorizeUser from '../middleware/authorize.user.js';
-import imageControl from '../controller/image.control.js';
-import withTryCatch from '../lib/withTryCatch.js';
-import upload from '../middleware/multer.js';
+import authenticateUser from '../middleware/authenticate.user';
+import authorizeUser from '../middleware/authorize.user';
+import imageControl from '../controller/image.control';
+import withTryCatch from '../lib/withTryCatch';
+import upload from '../middleware/multer';
 
 const imageRouter = express.Router();
 

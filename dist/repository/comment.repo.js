@@ -12,10 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const prismaClient_js_1 = __importDefault(require("../lib/prismaClient.js"));
+const prismaClient_1 = __importDefault(require("../lib/prismaClient"));
 function getList(where, type, limit, cursor) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_js_1.default.comment.findMany({
+        return yield prismaClient_1.default.comment.findMany({
             skip: cursor ? 1 : 0, // 첫 검색 0, 이후 1
             take: limit, // default 10
             cursor: cursor ? { id: cursor } : undefined, // 첫 검색 undefined, 이후 전 검색의 최종 id
@@ -34,19 +34,19 @@ function getList(where, type, limit, cursor) {
 }
 function findById(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_js_1.default.comment.findUniqueOrThrow({
+        return yield prismaClient_1.default.comment.findUniqueOrThrow({
             where: { id }
         });
     });
 }
 function post(data) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_js_1.default.comment.create({ data });
+        return yield prismaClient_1.default.comment.create({ data });
     });
 }
 function patch(id, commentData) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_js_1.default.comment.update({
+        return yield prismaClient_1.default.comment.update({
             where: { id },
             data: commentData
         });
@@ -54,7 +54,7 @@ function patch(id, commentData) {
 }
 function erase(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_js_1.default.comment.delete({ where: { id } });
+        return yield prismaClient_1.default.comment.delete({ where: { id } });
     });
 }
 exports.default = {

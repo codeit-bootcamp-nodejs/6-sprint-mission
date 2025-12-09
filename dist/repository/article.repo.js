@@ -12,15 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const prismaClient_js_1 = __importDefault(require("../lib/prismaClient.js"));
+const prismaClient_1 = __importDefault(require("../lib/prismaClient"));
 function post(data) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_js_1.default.article.create({ data });
+        return yield prismaClient_1.default.article.create({ data });
     });
 }
 function patch(id, articleData) {
     return __awaiter(this, void 0, void 0, function* () {
-        return prismaClient_js_1.default.article.update({
+        return prismaClient_1.default.article.update({
             where: { id },
             data: articleData,
             include: { comments: true, likedUsers: true }
@@ -29,12 +29,12 @@ function patch(id, articleData) {
 }
 function erase(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        return prismaClient_js_1.default.article.delete({ where: { id } });
+        return prismaClient_1.default.article.delete({ where: { id } });
     });
 }
 function getList(where, orderBy, offset, limit) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_js_1.default.article.findMany({
+        return yield prismaClient_1.default.article.findMany({
             skip: offset, // default 0
             take: limit, // default 10
             orderBy,
@@ -44,7 +44,7 @@ function getList(where, orderBy, offset, limit) {
 }
 function findById(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        return prismaClient_js_1.default.article.findUniqueOrThrow({
+        return prismaClient_1.default.article.findUniqueOrThrow({
             where: { id },
             include: { comments: true, likedUsers: true } // 관계형 필드도 일단 가져온다
         });

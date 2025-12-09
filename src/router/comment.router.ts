@@ -1,8 +1,8 @@
 import express from 'express';
-import commentControl from '../controller/comment.control.js';
-import withTryCatch from '../lib/withTryCatch.js';
-import authenticateUser from '../middleware/authenticate.user.js';
-import authorizeUser from '../middleware/authorize.user.js';
+import commentControl from '../controller/comment.control';
+import withTryCatch from '../lib/withTryCatch';
+import authenticateUser from '../middleware/authenticate.user';
+import authorizeUser from '../middleware/authorize.user';
 
 const commentRouter = express.Router();
 

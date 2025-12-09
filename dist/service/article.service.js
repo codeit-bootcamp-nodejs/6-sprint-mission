@@ -24,35 +24,35 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const superstruct_1 = require("superstruct");
-const structs_js_1 = require("../struct/structs.js");
-const NotFoundError_js_1 = __importDefault(require("../middleware/errors/NotFoundError.js"));
-const article_repo_js_1 = __importDefault(require("../repository/article.repo.js"));
-const myFuns_js_1 = require("../lib/myFuns.js");
-const selectFields_js_1 = require("../lib/selectFields.js");
+const structs_1 = require("../struct/structs");
+const NotFoundError_1 = __importDefault(require("../middleware/errors/NotFoundError"));
+const article_repo_1 = __importDefault(require("../repository/article.repo"));
+const myFuns_1 = require("../lib/myFuns");
+const selectFields_1 = require("../lib/selectFields");
 // 게시물 생성, 수정, 삭제: 토큰 인증된 유저만 가능
 function post(userId, data) {
     return __awaiter(this, void 0, void 0, function* () {
         const articleData = Object.assign(Object.assign({}, data), { userId });
-        (0, superstruct_1.assert)(articleData, structs_js_1.CreateArticle);
+        (0, superstruct_1.assert)(articleData, structs_1.CreateArticle);
         const prismaData = Object.assign(Object.assign({}, data), { user: { connect: { id: userId } } // userId → user 연결
          });
-        const article = yield article_repo_js_1.default.post(prismaData);
+        const article = yield article_repo_1.default.post(prismaData);
         //if (isEmpty(article)) throw new NotFoundError(article, article.id);
         return article;
     });
 }
 function patch(articleId, articleData) {
     return __awaiter(this, void 0, void 0, function* () {
-        (0, superstruct_1.assert)(articleData, structs_js_1.PatchArticle);
-        const article = yield article_repo_js_1.default.patch(Number(articleId), articleData);
-        if ((0, myFuns_js_1.isEmpty)(article))
-            throw new NotFoundError_js_1.default('article', Number(articleId));
+        (0, superstruct_1.assert)(articleData, structs_1.PatchArticle);
+        const article = yield article_repo_1.default.patch(Number(articleId), articleData);
+        if ((0, myFuns_1.isEmpty)(article))
+            throw new NotFoundError_1.default('article', Number(articleId));
         return article;
     });
 }
 function erase(articleId) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield article_repo_js_1.default.erase(Number(articleId));
+        yield article_repo_1.default.erase(Number(articleId));
     });
 }
 // 게시물 목록 조회
@@ -72,7 +72,7 @@ function getList(offset, limit, orderStr, titleStr, contentStr) {
             where.title = { contains: titleStr };
         if (contentStr)
             where.content = { contains: contentStr };
-        const articles = yield article_repo_js_1.default.getList(where, orderBy, offset, limit);
+        const articles = yield article_repo_1.default.getList(where, orderBy, offset, limit);
         const articlesToShow = articles.map((a) => {
             // 보여줄 필드 선택
             const { id, title, content, createdAt } = a, rest = __rest(a, ["id", "title", "content", "createdAt"]);
@@ -86,8 +86,8 @@ function getList(offset, limit, orderStr, titleStr, contentStr) {
 // 조회 필드 추가: comments, likedUsers
 function get(userId, articleId) {
     return __awaiter(this, void 0, void 0, function* () {
-        let article = yield article_repo_js_1.default.findById(Number(articleId));
-        const article2show = (0, selectFields_js_1.selectArticleFields)(article);
+        let article = yield article_repo_1.default.findById(Number(articleId));
+        const article2show = (0, selectFields_1.selectArticleFields)(article);
         if (!userId)
             return article2show;
         const isLiked = article.likedUsers.some((a) => a.id === userId);
@@ -96,33 +96,33 @@ function get(userId, articleId) {
 }
 function like(userId, articleId) {
     return __awaiter(this, void 0, void 0, function* () {
-        let article = yield article_repo_js_1.default.findById(Number(articleId));
+        let article = yield article_repo_1.default.findById(Number(articleId));
         if (article.likedUsers.some((n) => n.id === userId)) {
             console.log('Already your favorite article');
         }
         else {
             console.log('Now, one of your favorite articles');
-            article = yield article_repo_js_1.default.patch(Number(articleId), {
+            article = yield article_repo_1.default.patch(Number(articleId), {
                 likedUsers: { connect: { id: userId } }
             });
         }
-        const article2show = (0, selectFields_js_1.selectArticleFields)(article);
+        const article2show = (0, selectFields_1.selectArticleFields)(article);
         return Object.assign({ isLiked: true }, article2show);
     });
 }
 function cancelLike(userId, articleId) {
     return __awaiter(this, void 0, void 0, function* () {
-        let article = yield article_repo_js_1.default.findById(Number(articleId));
+        let article = yield article_repo_1.default.findById(Number(articleId));
         if (!article.likedUsers.some((n) => n.id === userId)) {
             console.log('Already not your favorite article');
         }
         else {
             console.log('Now, not one of your favorite articles');
-            article = yield article_repo_js_1.default.patch(Number(articleId), {
+            article = yield article_repo_1.default.patch(Number(articleId), {
                 likedUsers: { disconnect: { id: userId } }
             });
         }
-        const article2show = (0, selectFields_js_1.selectArticleFields)(article);
+        const article2show = (0, selectFields_1.selectArticleFields)(article);
         return Object.assign({ isLiked: false }, article2show);
     });
 }

@@ -8,6 +8,7 @@ export interface updateUserDTO {
   email?: string;
   nickname?: string;
   password?: string;
+  imageUrls?: string;
 }
 
 export interface createProductDTO {
@@ -23,6 +24,7 @@ export interface updateProductDTO {
   description?: string;
   price?: number;
   tags?: string[];
+  imageUrls?: string;
   userId?: number;
 }
 
@@ -35,6 +37,7 @@ export interface createArticleDTO {
 export interface updateArticleDTO {
   title?: string;
   content?: string;
+  imageUrls?: string;
   userId?: number;
 }
 

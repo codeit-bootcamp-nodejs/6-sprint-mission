@@ -5,8 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.globalErrorHandler = exports.defaultNotFoundHandler = void 0;
 const superstruct_1 = require("superstruct");
-const BadRequestError_js_1 = __importDefault(require("./errors/BadRequestError.js"));
-const NotFoundError_js_1 = __importDefault(require("./errors/NotFoundError.js"));
+const BadRequestError_1 = __importDefault(require("./errors/BadRequestError"));
+const NotFoundError_1 = __importDefault(require("./errors/NotFoundError"));
 const client_1 = require("@prisma/client");
 const defaultNotFoundHandler = function (req, res, next) {
     return res.status(404).send({ message: '요청하신 페이지를 찾을 수 없습니다.' });
@@ -24,7 +24,7 @@ const globalErrorHandler = function (err, req, res, next) {
         return res.status(400).send({ message: '잘못된 요청입니다.' });
     }
     // 서비스 계층에서 던진 BadRequestError 처리
-    if (err instanceof BadRequestError_js_1.default) {
+    if (err instanceof BadRequestError_1.default) {
         switch (err.message) {
             case 'FORBIDDEN':
                 return res.status(403).send({ message: '비밀번호가 틀렸습니다' });
@@ -50,7 +50,7 @@ const globalErrorHandler = function (err, req, res, next) {
         });
     }
     // NotFoundError (서비스 계층에서 던진 404)
-    if (err instanceof NotFoundError_js_1.default || err.message === 'NOT_FOUND') {
+    if (err instanceof NotFoundError_1.default || err.message === 'NOT_FOUND') {
         return res.status(404).send({
             message: err.message || '존재하지 않습니다.'
         });

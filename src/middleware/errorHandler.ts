@@ -1,6 +1,6 @@
 import { StructError } from 'superstruct';
-import BadRequestError from './errors/BadRequestError.js';
-import NotFoundError from './errors/NotFoundError.js';
+import BadRequestError from './errors/BadRequestError';
+import NotFoundError from './errors/NotFoundError';
 import { Prisma } from '@prisma/client';
 import { ErrorRequestHandler, RequestHandler } from 'express';
 

@@ -1,8 +1,8 @@
 import { assert, number } from 'superstruct';
-import { CreateComment, PatchComment } from '../struct/structs.js';
-import commentRepo from '../repository/comment.repo.js';
+import { CreateComment, PatchComment } from '../struct/structs';
+import commentRepo from '../repository/comment.repo';
 import { Prisma } from '@prisma/client';
-import { updateCommentDTO } from '../dto/dto.js';
+import { updateCommentDTO } from '../dto/dto';
 
 async function getList(
   limit: number,

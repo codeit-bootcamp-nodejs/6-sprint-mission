@@ -1,4 +1,4 @@
-import articleService from '../service/article.service.js';
+import articleService from '../service/article.service';
 import { Request, Response } from 'express';
 
 // 게시물 등록, 수정, 삭제: 토큰 인증된 유저만 가능

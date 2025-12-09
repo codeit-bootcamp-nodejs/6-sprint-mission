@@ -24,34 +24,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const superstruct_1 = require("superstruct");
-const myFuns_js_1 = require("../lib/myFuns.js");
-const product_repo_js_1 = __importDefault(require("../repository/product.repo.js"));
-const structs_js_1 = require("../struct/structs.js");
-const selectFields_js_1 = require("../lib/selectFields.js");
-const NotFoundError_js_1 = __importDefault(require("../middleware/errors/NotFoundError.js"));
+const myFuns_1 = require("../lib/myFuns");
+const product_repo_1 = __importDefault(require("../repository/product.repo"));
+const structs_1 = require("../struct/structs");
+const selectFields_1 = require("../lib/selectFields");
+const NotFoundError_1 = __importDefault(require("../middleware/errors/NotFoundError"));
 function post(userId, data) {
     return __awaiter(this, void 0, void 0, function* () {
         const productData = Object.assign(Object.assign({}, data), { userId });
-        (0, superstruct_1.assert)(productData, structs_js_1.CreateProduct);
+        (0, superstruct_1.assert)(productData, structs_1.CreateProduct);
         const prismaData = Object.assign(Object.assign({}, data), { user: { connect: { id: userId } } // userId → user 연결
          });
-        const product = yield product_repo_js_1.default.post(prismaData);
+        const product = yield product_repo_1.default.post(prismaData);
         //if (isEmpty(product)) throw new Error('NOT_FOUND');
         return product;
     });
 }
 function patch(productId, productData) {
     return __awaiter(this, void 0, void 0, function* () {
-        (0, superstruct_1.assert)(productData, structs_js_1.PatchProduct);
-        const product = yield product_repo_js_1.default.patch(Number(productId), productData);
-        if ((0, myFuns_js_1.isEmpty)(product))
-            throw new NotFoundError_js_1.default('product', Number(productId));
+        (0, superstruct_1.assert)(productData, structs_1.PatchProduct);
+        const product = yield product_repo_1.default.patch(Number(productId), productData);
+        if ((0, myFuns_1.isEmpty)(product))
+            throw new NotFoundError_1.default('product', Number(productId));
         return product;
     });
 }
 function erase(productId) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield product_repo_js_1.default.erase(Number(productId));
+        yield product_repo_1.default.erase(Number(productId));
     });
 }
 // 상품 목록 조회
@@ -72,7 +72,7 @@ function getList(offset, limit, orderStr, nameStr, descriptionStr) {
             where.name = { contains: nameStr };
         if (descriptionStr)
             where.description = { contains: descriptionStr };
-        const products = yield product_repo_js_1.default.getList(where, orderBy, offset, limit);
+        const products = yield product_repo_1.default.getList(where, orderBy, offset, limit);
         const productsToShow = products.map((p) => {
             const { id, name, price, createdAt } = p, rest = __rest(p, ["id", "name", "price", "createdAt"]);
             return { id, name, price, createdAt };
@@ -84,8 +84,8 @@ function getList(offset, limit, orderStr, nameStr, descriptionStr) {
 // 조회 필드: id, name, description, price, tags, createdAt
 function get(userId, productId) {
     return __awaiter(this, void 0, void 0, function* () {
-        let product = yield product_repo_js_1.default.findById(Number(productId));
-        const product2show = (0, selectFields_js_1.selectProductFields)(product);
+        let product = yield product_repo_1.default.findById(Number(productId));
+        const product2show = (0, selectFields_1.selectProductFields)(product);
         if (!userId)
             return product2show;
         const isLiked = product.likedUsers.some((u) => u.id === userId);
@@ -94,33 +94,33 @@ function get(userId, productId) {
 }
 function like(userId, productId) {
     return __awaiter(this, void 0, void 0, function* () {
-        let product = yield product_repo_js_1.default.findById(Number(productId));
+        let product = yield product_repo_1.default.findById(Number(productId));
         if (product.likedUsers.some((n) => n.id === userId)) {
             console.log('Already your favorite product');
         }
         else {
             console.log('Now, one of your favorite products');
-            product = yield product_repo_js_1.default.patch(Number(productId), {
+            product = yield product_repo_1.default.patch(Number(productId), {
                 likedUsers: { connect: { id: userId } }
             });
         }
-        const product2show = (0, selectFields_js_1.selectProductFields)(product);
+        const product2show = (0, selectFields_1.selectProductFields)(product);
         return Object.assign({ isLiked: true }, product2show);
     });
 }
 function cancelLike(userId, productId) {
     return __awaiter(this, void 0, void 0, function* () {
-        let product = yield product_repo_js_1.default.findById(Number(productId));
+        let product = yield product_repo_1.default.findById(Number(productId));
         if (!product.likedUsers.some((n) => n.id === userId)) {
             console.log('Already not one of your liked products');
         }
         else {
             console.log('Now, not one of your liked products');
-            product = yield product_repo_js_1.default.patch(Number(productId), {
+            product = yield product_repo_1.default.patch(Number(productId), {
                 likedUsers: { disconnect: { id: userId } }
             });
         }
-        const product2show = (0, selectFields_js_1.selectProductFields)(product);
+        const product2show = (0, selectFields_1.selectProductFields)(product);
         return Object.assign({ isLiked: false }, product2show);
     });
 }

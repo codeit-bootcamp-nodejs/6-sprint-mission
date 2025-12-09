@@ -13,27 +13,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
-const constants_js_1 = require("../lib/constants.js");
-const user_repo_js_1 = __importDefault(require("../repository/user.repo.js"));
-const article_repo_js_1 = __importDefault(require("../repository/article.repo.js"));
-const product_repo_js_1 = __importDefault(require("../repository/product.repo.js"));
-const selectFields_js_1 = require("../lib/selectFields.js");
+const constants_1 = require("../lib/constants");
+const user_repo_1 = __importDefault(require("../repository/user.repo"));
+const article_repo_1 = __importDefault(require("../repository/article.repo"));
+const product_repo_1 = __importDefault(require("../repository/product.repo"));
+const selectFields_1 = require("../lib/selectFields");
 function get(originalUrl, id) {
     return __awaiter(this, void 0, void 0, function* () {
         let item = {};
         if (originalUrl.includes('users')) {
-            item = yield user_repo_js_1.default.findById(Number(id));
+            item = yield user_repo_1.default.findById(Number(id));
+            return (0, selectFields_1.selectUserFields)(item, 'core');
         }
         else if (originalUrl.includes('products')) {
-            item = yield product_repo_js_1.default.findById(Number(id));
+            item = yield product_repo_1.default.findById(Number(id));
+            return (0, selectFields_1.selectProductFields)(item);
         }
         else {
-            item = yield article_repo_js_1.default.findById(Number(id));
+            item = yield article_repo_1.default.findById(Number(id));
+            return (0, selectFields_1.selectArticleFields)(item);
         }
-        if (originalUrl.includes('users'))
-            return (0, selectFields_js_1.selectUserFields)(item, 'core');
-        else
-            return (0, selectFields_js_1.selectArticleProductFields)(item);
     });
 }
 function post(originalUrl, id, protocol, file, host) {
@@ -43,55 +42,60 @@ function post(originalUrl, id, protocol, file, host) {
         let publicPath = '';
         let item = {};
         if (originalUrl.includes('products')) {
-            staticPath = path_1.default.join(constants_js_1.STATIC_IMG_PATH, '/product'); // 이미지 저장 폴더 설정: 현재는 localhost
-            publicPath = path_1.default.join(constants_js_1.PUBLIC_IMG_PATH, '/product');
-            item = yield product_repo_js_1.default.findById(Number(id)); // DB에서 imageUrls 배열 가져옴
+            staticPath = path_1.default.join(constants_1.STATIC_IMG_PATH, '/product'); // 이미지 저장 폴더 설정: 현재는 localhost
+            publicPath = path_1.default.join(constants_1.PUBLIC_IMG_PATH, '/product'); // 위 폴더를 가리키는 public용 라우터 폴더
+            item = (yield product_repo_1.default.findById(Number(id)));
         }
         if (originalUrl.includes('articles')) {
-            staticPath = path_1.default.join(constants_js_1.STATIC_IMG_PATH, '/article');
-            publicPath = path_1.default.join(constants_js_1.PUBLIC_IMG_PATH, '/article');
-            item = yield article_repo_js_1.default.findById(Number(id));
+            staticPath = path_1.default.join(constants_1.STATIC_IMG_PATH, '/article');
+            publicPath = path_1.default.join(constants_1.PUBLIC_IMG_PATH, '/article');
+            item = (yield article_repo_1.default.findById(Number(id)));
         }
         if (originalUrl.includes('users')) {
-            staticPath = path_1.default.join(constants_js_1.STATIC_IMG_PATH, '/user');
-            publicPath = path_1.default.join(constants_js_1.PUBLIC_IMG_PATH, '/user');
-            item = yield user_repo_js_1.default.findById(Number(id));
+            staticPath = path_1.default.join(constants_1.STATIC_IMG_PATH, '/user');
+            publicPath = path_1.default.join(constants_1.PUBLIC_IMG_PATH, '/user');
+            item = (yield user_repo_1.default.findById(Number(id)));
         }
-        // if (!fs.existsSync(staticPath)) {
-        //   fs.mkdirSync(staticPath, { recursive: true }); //이미지 저장 폴더 없으면 생성
-        //   console.log('이미지 소스 폴더 생성');
-        // }
-        //path.posix.join() : 여러개의 문자열 인자를 받아 하나의 경로 문자열로 만듬(운영체제에 관계없이 일관된 경로형식 유지)
         const newImageUrl = file
             ? `${protocol}://${host}${path_1.default.posix.join(publicPath, file.filename)}`
             : null;
-        console.log(item.imageUrls);
-        const updatedUrls = [...item.imageUrls, newImageUrl]; // 기존 imageUrls에 이번 것 끝에 넣어줌
-        if (originalUrl.includes('products'))
-            item = yield product_repo_js_1.default.patch(Number(id), { imageUrls: updatedUrls });
-        if (originalUrl.includes('articles'))
-            item = yield article_repo_js_1.default.patch(Number(id), { imageUrls: updatedUrls });
-        if (originalUrl.includes('users'))
-            item = yield user_repo_js_1.default.patch(Number(id), { imageUrls: updatedUrls });
-        if (originalUrl.includes('users'))
-            return (0, selectFields_js_1.selectUserFields)(item, 'core');
-        else
-            return (0, selectFields_js_1.selectArticleProductFields)(item);
+        let updatedUrls = [];
+        if ('imageUrls' in item) {
+            updatedUrls = [...item.imageUrls, newImageUrl]; // 기존 imageUrls에 이번 것 끝에 넣어줌
+        }
+        else {
+            updatedUrls = [newImageUrl];
+        }
+        const imageData = { imageUrls: updatedUrls };
+        if (originalUrl.includes('products')) {
+            item = yield product_repo_1.default.patch(Number(id), imageData);
+            return (0, selectFields_1.selectProductFields)(item);
+        }
+        if (originalUrl.includes('articles')) {
+            item = yield article_repo_1.default.patch(Number(id), imageData);
+            return (0, selectFields_1.selectArticleFields)(item);
+        }
+        if (originalUrl.includes('users')) {
+            item = yield user_repo_1.default.patch(Number(id), imageData);
+            return (0, selectFields_1.selectUserFields)(item, 'core');
+        }
     });
 }
 function erase(originalUrl, id) {
     return __awaiter(this, void 0, void 0, function* () {
         let item = {};
-        if (originalUrl.includes('products'))
-            item = yield product_repo_js_1.default.patch(Number(id), { imageUrls: [] });
-        if (originalUrl.includes('articles'))
-            item = yield article_repo_js_1.default.patch(Number(id), { imageUrls: [] });
-        if (originalUrl.includes('users'))
-            item = yield user_repo_js_1.default.patch(Number(id), { imageUrls: [] });
-        if (originalUrl.includes('users'))
-            return (0, selectFields_js_1.selectUserFields)(item, 'core');
-        else
-            return (0, selectFields_js_1.selectArticleProductFields)(item);
+        if (originalUrl.includes('products')) {
+            item = yield product_repo_1.default.patch(Number(id), { imageUrls: [] });
+            return (0, selectFields_1.selectProductFields)(item);
+        }
+        if (originalUrl.includes('articles')) {
+            item = yield article_repo_1.default.patch(Number(id), { imageUrls: [] });
+            return (0, selectFields_1.selectArticleFields)(item);
+        }
+        if (originalUrl.includes('users')) {
+            item = yield user_repo_1.default.patch(Number(id), { imageUrls: [] });
+            return (0, selectFields_1.selectUserFields)(item, 'core');
+        }
     });
 }
 exports.default = {

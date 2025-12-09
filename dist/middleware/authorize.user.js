@@ -12,32 +12,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const BadRequestError_js_1 = __importDefault(require("./errors/BadRequestError.js"));
-const user_repo_js_1 = __importDefault(require("../repository/user.repo.js"));
-const article_repo_js_1 = __importDefault(require("../repository/article.repo.js"));
-const product_repo_js_1 = __importDefault(require("../repository/product.repo.js"));
-const comment_repo_js_1 = __importDefault(require("../repository/comment.repo.js"));
+const BadRequestError_1 = __importDefault(require("./errors/BadRequestError"));
+const user_repo_1 = __importDefault(require("../repository/user.repo"));
+const article_repo_1 = __importDefault(require("../repository/article.repo"));
+const product_repo_1 = __importDefault(require("../repository/product.repo"));
+const comment_repo_1 = __importDefault(require("../repository/comment.repo"));
 function authorizeUser(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             let item;
             if (req.originalUrl.includes('users')) {
-                const userItem = (yield user_repo_js_1.default.findById(Number(req.params.id)));
+                const userItem = (yield user_repo_1.default.findById(Number(req.params.id)));
                 item = Object.assign(Object.assign({}, userItem), { userId: userItem.id });
             }
             else if (req.originalUrl.includes('products')) {
-                item = (yield product_repo_js_1.default.findById(Number(req.params.id)));
+                item = (yield product_repo_1.default.findById(Number(req.params.id)));
             }
             else if (req.originalUrl.includes('articles')) {
-                item = (yield article_repo_js_1.default.findById(Number(req.params.id)));
+                item = (yield article_repo_1.default.findById(Number(req.params.id)));
             }
             else if (req.originalUrl.includes('comments')) {
-                item = (yield comment_repo_js_1.default.findById(Number(req.params.id)));
+                item = (yield comment_repo_1.default.findById(Number(req.params.id)));
             }
             else {
                 console.log('');
                 console.log('Something went wrong');
-                throw new BadRequestError_js_1.default('BADREQUEST');
+                throw new BadRequestError_1.default('BADREQUEST');
             }
             // console.log('');
             // console.log(`Testing authorizeUser.js...`);
@@ -47,7 +47,7 @@ function authorizeUser(req, res, next) {
             if (req.user.id !== item.userId) {
                 console.log('');
                 console.log('Unauthorized');
-                throw new BadRequestError_js_1.default('UNAUTHORIZED');
+                throw new BadRequestError_1.default('UNAUTHORIZED');
             }
             next();
         }

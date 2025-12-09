@@ -21,11 +21,11 @@ GET {{baseUrl}}/products?name=Pro&description=성능
 
 // 상품 상세 조회, 좋아요, 등록 인증 필요
 ###
-GET {{baseUrl}}/products/1
+GET {{baseUrl}}/products/30
 
 
 ###
-POST {{baseUrl}}/products/1/like
+POST {{baseUrl}}/products/30/like
 ###
 POST {{baseUrl}}/products/1/like/cancel
 

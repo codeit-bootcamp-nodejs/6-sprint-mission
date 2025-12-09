@@ -1,11 +1,11 @@
 import { assert } from 'superstruct';
-import { isEmpty } from '../lib/myFuns.js';
-import productRepo from '../repository/product.repo.js';
-import { CreateProduct, PatchProduct } from '../struct/structs.js';
-import { selectProductFields } from '../lib/selectFields.js';
-import { createProductDTO, updateProductDTO, updateUserDTO } from '../dto/dto.js';
+import { isEmpty } from '../lib/myFuns';
+import productRepo from '../repository/product.repo';
+import { CreateProduct, PatchProduct } from '../struct/structs';
+import { selectProductFields } from '../lib/selectFields';
+import { createProductDTO, updateProductDTO, updateUserDTO } from '../dto/dto';
 import { Prisma } from '@prisma/client';
-import NotFoundError from '../middleware/errors/NotFoundError.js';
+import NotFoundError from '../middleware/errors/NotFoundError';
 
 async function post(userId: number, data: createProductDTO) {
   const productData = { ...data, userId };
