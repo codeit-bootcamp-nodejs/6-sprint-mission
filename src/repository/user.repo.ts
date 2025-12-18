@@ -1,5 +1,5 @@
 import prisma from '../lib/prismaClient';
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 
 async function getList() {
   return await prisma.user.findMany({
@@ -16,7 +16,19 @@ async function findByEmail(email: string) {
   return await prisma.user.findUnique({ where: { email } });
 }
 
-async function findById(id: number) {
+async function findById(
+  id: number
+): Promise<
+  Prisma.UserGetPayload<{
+    include: {
+      products: true;
+      articles: true;
+      comments: true;
+      likedProducts: true;
+      likedArticles: true;
+    };
+  }>
+> {
   return await prisma.user.findUniqueOrThrow({
     where: { id },
     include: {

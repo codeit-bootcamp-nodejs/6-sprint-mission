@@ -2,24 +2,19 @@ import { assert } from 'superstruct';
 import { isEmpty } from '../lib/myFuns';
 import productRepo from '../repository/product.repo';
 import { CreateProduct, PatchProduct } from '../struct/structs';
-import { selectProductFields } from '../lib/selectFields';
-import { createProductDTO, updateProductDTO, updateUserDTO } from '../dto/dto';
-import { Prisma } from '@prisma/client';
+import { selectFields } from '../lib/selectFields';
+import { CreateProductDto, UpdateProductDto } from '../dto/dto';
+import { Prisma, Product } from '@prisma/client';
 import NotFoundError from '../middleware/errors/NotFoundError';
 
-async function post(userId: number, data: createProductDTO) {
+async function post(userId: number, data: CreateProductDto) {
   const productData = { ...data, userId };
   assert(productData, CreateProduct);
-  const prismaData: Prisma.ProductCreateInput = {
-    ...data, // name, description, price, tags, imageUrls 등
-    user: { connect: { id: userId } } // userId → user 연결
-  };
-  const product = await productRepo.post(prismaData);
-  //if (isEmpty(product)) throw new Error('NOT_FOUND');
+  const product = await productRepo.post(productData as Product);
   return product;
 }
 
-async function patch(productId: string, productData: updateProductDTO) {
+async function patch(productId: string, productData: UpdateProductDto) {
   assert(productData, PatchProduct);
   const product = await productRepo.patch(
     Number(productId),
@@ -67,7 +62,7 @@ async function getList(
 // 조회 필드: id, name, description, price, tags, createdAt
 async function get(userId: number | undefined, productId: string) {
   let product = await productRepo.findById(Number(productId));
-  const product2show = selectProductFields(product);
+  const product2show = selectFields(product);
   if (!userId) return product2show;
   const isLiked = product.likedUsers.some((u) => u.id === userId);
   return { isLiked, ...product2show };
@@ -83,7 +78,7 @@ async function like(userId: number, productId: string) {
       likedUsers: { connect: { id: userId } }
     });
   }
-  const product2show = selectProductFields(product);
+  const product2show = selectFields(product);
   return { isLiked: true, ...product2show };
 }
 
@@ -97,7 +92,7 @@ async function cancelLike(userId: number, productId: string) {
       likedUsers: { disconnect: { id: userId } }
     });
   }
-  const product2show = selectProductFields(product);
+  const product2show = selectFields(product);
   return { isLiked: false, ...product2show };
 }
 

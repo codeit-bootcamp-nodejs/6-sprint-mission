@@ -15,7 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const prismaClient_1 = __importDefault(require("../lib/prismaClient"));
 function post(data) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_1.default.product.create({ data });
+        return yield prismaClient_1.default.product.create({
+            data
+            // user: { connect: { id: userId } }
+        });
     });
 }
 function patch(id, productData) {

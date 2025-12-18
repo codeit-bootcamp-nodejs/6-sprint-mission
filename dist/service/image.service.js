@@ -27,11 +27,11 @@ function get(originalUrl, id) {
         }
         else if (originalUrl.includes('products')) {
             item = yield product_repo_1.default.findById(Number(id));
-            return (0, selectFields_1.selectProductFields)(item);
+            return (0, selectFields_1.selectFields)(item);
         }
         else {
             item = yield article_repo_1.default.findById(Number(id));
-            return (0, selectFields_1.selectArticleFields)(item);
+            return (0, selectFields_1.selectFields)(item);
         }
     });
 }
@@ -69,11 +69,11 @@ function post(originalUrl, id, protocol, file, host) {
         const imageData = { imageUrls: updatedUrls };
         if (originalUrl.includes('products')) {
             item = yield product_repo_1.default.patch(Number(id), imageData);
-            return (0, selectFields_1.selectProductFields)(item);
+            return (0, selectFields_1.selectFields)(item);
         }
         if (originalUrl.includes('articles')) {
             item = yield article_repo_1.default.patch(Number(id), imageData);
-            return (0, selectFields_1.selectArticleFields)(item);
+            return (0, selectFields_1.selectFields)(item);
         }
         if (originalUrl.includes('users')) {
             item = yield user_repo_1.default.patch(Number(id), imageData);
@@ -86,11 +86,11 @@ function erase(originalUrl, id) {
         let item = {};
         if (originalUrl.includes('products')) {
             item = yield product_repo_1.default.patch(Number(id), { imageUrls: [] });
-            return (0, selectFields_1.selectProductFields)(item);
+            return (0, selectFields_1.selectFields)(item);
         }
         if (originalUrl.includes('articles')) {
             item = yield article_repo_1.default.patch(Number(id), { imageUrls: [] });
-            return (0, selectFields_1.selectArticleFields)(item);
+            return (0, selectFields_1.selectFields)(item);
         }
         if (originalUrl.includes('users')) {
             item = yield user_repo_1.default.patch(Number(id), { imageUrls: [] });

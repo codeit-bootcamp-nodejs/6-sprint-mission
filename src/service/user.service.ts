@@ -9,9 +9,8 @@ import { CreateUser, PatchUser } from '../struct/structs';
 import { print, isEmpty } from '../lib/myFuns';
 import { selectUserFields } from '../lib/selectFields';
 import { Request, Response } from 'express';
-import { createUserDTO } from '../dto/dto';
+import { CreateUserDto } from '../dto/dto';
 import { User } from '@prisma/client';
-import { completeUser } from '../dto/interfaceType';
 
 async function getList() {
   if (NODE_ENV === 'development') {
@@ -23,7 +22,7 @@ async function getList() {
   }
 }
 
-async function register(data: createUserDTO) {
+async function register(data: CreateUserDto) {
   assert(data, CreateUser);
   const { email, nickname, password } = data;
 
@@ -76,7 +75,7 @@ function viewTokens(tokenData: Record<string, string | undefined>) {
 }
 
 async function getInfo(userId: number) {
-  const user = (await userRepo.findById(userId)) as completeUser;
+  const user = await userRepo.findById(userId);
   return selectUserFields(user, 'all');
 }
 

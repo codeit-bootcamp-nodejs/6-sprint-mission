@@ -104,7 +104,7 @@ function getInfo(userId) {
 function patchInfo(userId, userData) {
     return __awaiter(this, void 0, void 0, function* () {
         (0, superstruct_1.assert)(userData, structs_1.PatchUser);
-        const user = (yield user_repo_1.default.patch(userId, userData));
+        const user = yield user_repo_1.default.patch(userId, userData);
         return (0, selectFields_1.selectUserFields)(user, 'core');
     });
 }

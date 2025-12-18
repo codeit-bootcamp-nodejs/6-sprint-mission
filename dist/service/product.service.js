@@ -33,10 +33,7 @@ function post(userId, data) {
     return __awaiter(this, void 0, void 0, function* () {
         const productData = Object.assign(Object.assign({}, data), { userId });
         (0, superstruct_1.assert)(productData, structs_1.CreateProduct);
-        const prismaData = Object.assign(Object.assign({}, data), { user: { connect: { id: userId } } // userId → user 연결
-         });
-        const product = yield product_repo_1.default.post(prismaData);
-        //if (isEmpty(product)) throw new Error('NOT_FOUND');
+        const product = yield product_repo_1.default.post(productData);
         return product;
     });
 }
@@ -85,7 +82,7 @@ function getList(offset, limit, orderStr, nameStr, descriptionStr) {
 function get(userId, productId) {
     return __awaiter(this, void 0, void 0, function* () {
         let product = yield product_repo_1.default.findById(Number(productId));
-        const product2show = (0, selectFields_1.selectProductFields)(product);
+        const product2show = (0, selectFields_1.selectFields)(product);
         if (!userId)
             return product2show;
         const isLiked = product.likedUsers.some((u) => u.id === userId);
@@ -104,7 +101,7 @@ function like(userId, productId) {
                 likedUsers: { connect: { id: userId } }
             });
         }
-        const product2show = (0, selectFields_1.selectProductFields)(product);
+        const product2show = (0, selectFields_1.selectFields)(product);
         return Object.assign({ isLiked: true }, product2show);
     });
 }
@@ -120,7 +117,7 @@ function cancelLike(userId, productId) {
                 likedUsers: { disconnect: { id: userId } }
             });
         }
-        const product2show = (0, selectFields_1.selectProductFields)(product);
+        const product2show = (0, selectFields_1.selectFields)(product);
         return Object.assign({ isLiked: false }, product2show);
     });
 }

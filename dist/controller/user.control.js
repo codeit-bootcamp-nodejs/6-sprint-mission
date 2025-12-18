@@ -94,26 +94,28 @@ function patchPassword(req, res) {
 function getProducts(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const products = yield user_service_1.default.getProducts(req.user.id);
-        console.log(`User${req.user.id}: user products fetched`);
+        console.log(`User${req.user.id}: products posted by the user`);
         res.status(200).json(products);
     });
 }
 function getArticles(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const articles = yield user_service_1.default.getArticles(req.user.id);
-        console.log(`User${req.user.id}: user articles fetched`);
+        console.log(`User${req.user.id}: articles posted by the user`);
         res.status(200).json(articles);
     });
 }
 function getLikedProducts(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const products = yield user_service_1.default.getLikedProducts(req.user.id);
+        console.log(`User${req.user.id}: favorite products`);
         res.status(200).json(products);
     });
 }
 function getLikedArticles(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const articles = yield user_service_1.default.getLikedArticles(req.user.id);
+        console.log(`User${req.user.id}: favorite articles`);
         res.status(200).json(articles);
     });
 }

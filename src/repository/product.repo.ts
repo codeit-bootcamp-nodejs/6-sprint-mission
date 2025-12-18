@@ -1,8 +1,11 @@
 import prisma from '../lib/prismaClient';
-import { Prisma } from '@prisma/client';
+import { Prisma, Product } from '@prisma/client';
 
-async function post(data: Prisma.ProductCreateInput) {
-  return await prisma.product.create({ data });
+async function post(data: Product) {
+  return await prisma.product.create({
+    data
+    // user: { connect: { id: userId } }
+  });
 }
 
 async function patch(id: number, productData: Prisma.ProductUpdateInput) {
@@ -30,7 +33,9 @@ async function getList(where: object, orderBy: object, offset: number, limit: nu
   });
 }
 
-async function findById(id: number) {
+async function findById(
+  id: number
+): Promise<Prisma.ProductGetPayload<{ include: { comments: true; likedUsers: true } }>> {
   return await prisma.product.findFirstOrThrow({
     where: { id },
     include: { comments: true, likedUsers: true } // 관계형 필드도 일단 가져온다

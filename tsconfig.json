@@ -22,6 +22,5 @@
     /* Completeness */
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
-  "include": ["src/**/*", "src-done"],
-  "exclude": ["./src-done/*"]
+  "include": ["src/**/*"]
 }

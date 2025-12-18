@@ -34,10 +34,7 @@ function post(userId, data) {
     return __awaiter(this, void 0, void 0, function* () {
         const articleData = Object.assign(Object.assign({}, data), { userId });
         (0, superstruct_1.assert)(articleData, structs_1.CreateArticle);
-        const prismaData = Object.assign(Object.assign({}, data), { user: { connect: { id: userId } } // userId → user 연결
-         });
-        const article = yield article_repo_1.default.post(prismaData);
-        //if (isEmpty(article)) throw new NotFoundError(article, article.id);
+        const article = yield article_repo_1.default.post(articleData);
         return article;
     });
 }
@@ -87,7 +84,7 @@ function getList(offset, limit, orderStr, titleStr, contentStr) {
 function get(userId, articleId) {
     return __awaiter(this, void 0, void 0, function* () {
         let article = yield article_repo_1.default.findById(Number(articleId));
-        const article2show = (0, selectFields_1.selectArticleFields)(article);
+        const article2show = (0, selectFields_1.selectFields)(article);
         if (!userId)
             return article2show;
         const isLiked = article.likedUsers.some((a) => a.id === userId);
@@ -96,33 +93,35 @@ function get(userId, articleId) {
 }
 function like(userId, articleId) {
     return __awaiter(this, void 0, void 0, function* () {
-        let article = yield article_repo_1.default.findById(Number(articleId));
+        const article = yield article_repo_1.default.findById(Number(articleId));
+        let updatedArticle;
         if (article.likedUsers.some((n) => n.id === userId)) {
             console.log('Already your favorite article');
         }
         else {
             console.log('Now, one of your favorite articles');
-            article = yield article_repo_1.default.patch(Number(articleId), {
+            updatedArticle = yield article_repo_1.default.patch(Number(articleId), {
                 likedUsers: { connect: { id: userId } }
             });
         }
-        const article2show = (0, selectFields_1.selectArticleFields)(article);
+        const article2show = (0, selectFields_1.selectFields)(updatedArticle !== null && updatedArticle !== void 0 ? updatedArticle : article);
         return Object.assign({ isLiked: true }, article2show);
     });
 }
 function cancelLike(userId, articleId) {
     return __awaiter(this, void 0, void 0, function* () {
         let article = yield article_repo_1.default.findById(Number(articleId));
+        let updateArticle;
         if (!article.likedUsers.some((n) => n.id === userId)) {
             console.log('Already not your favorite article');
         }
         else {
             console.log('Now, not one of your favorite articles');
-            article = yield article_repo_1.default.patch(Number(articleId), {
+            updateArticle = yield article_repo_1.default.patch(Number(articleId), {
                 likedUsers: { disconnect: { id: userId } }
             });
         }
-        const article2show = (0, selectFields_1.selectArticleFields)(article);
+        const article2show = (0, selectFields_1.selectFields)(updateArticle !== null && updateArticle !== void 0 ? updateArticle : article);
         return Object.assign({ isLiked: false }, article2show);
     });
 }

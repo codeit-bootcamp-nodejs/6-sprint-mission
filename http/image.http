@@ -1,12 +1,12 @@
 @baseUrl = http://localhost:3000
 
 //------------------------상품 이미지 APIs
-GET {{baseUrl}}/images/products/30
+GET {{baseUrl}}/images/products/29
 ###
 
 // 토큰 인증 + 인가 (상품을 등록한 유저만 가능)
 ###
-POST {{baseUrl}}/images/products/30
+POST {{baseUrl}}/images/products/29
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
@@ -27,10 +27,10 @@ DELETE {{baseUrl}}/images/products/30
 // 사촌 비니 
 
 ###
-GET {{baseUrl}}/images/articles/21
+GET {{baseUrl}}/images/articles/23
 
 ###
-POST {{baseUrl}}/images/articles/21
+POST {{baseUrl}}/images/articles/23
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary

@@ -9,7 +9,7 @@ export const defaultNotFoundHandler: RequestHandler = function (req, res, next) 
 };
 
 export const globalErrorHandler: ErrorRequestHandler = function (err, req, res, next) {
-  console.error(err); // 개발용 로그
+  //console.error(err); // 개발용 로그
 
   // Superstruct 에러 처리
   if (err instanceof StructError) {

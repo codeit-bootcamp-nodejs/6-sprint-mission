@@ -36,6 +36,6 @@
     "dev": "nodemon --watch src --exec ts-node src/app.ts"
   },
   "prisma": {
-    "seed": "node prisma/seed.js"
+    "seed": "ts-node prisma/seed.ts"
   }
 }

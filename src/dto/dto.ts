@@ -1,17 +1,17 @@
-export interface createUserDTO {
+export interface CreateUserDto {
   email: string;
   nickname: string;
   password: string;
 }
 
-export interface updateUserDTO {
+export interface UpdateUserDto {
   email?: string;
   nickname?: string;
   password?: string;
-  imageUrls?: string;
+  imageUrls?: string[];
 }
 
-export interface createProductDTO {
+export interface CreateProductDto {
   name: string;
   description: string;
   price: number;
@@ -19,25 +19,25 @@ export interface createProductDTO {
   userId: number;
 }
 
-export interface updateProductDTO {
+export interface UpdateProductDto {
   name?: string;
   description?: string;
   price?: number;
   tags?: string[];
-  imageUrls?: string;
+  imageUrls?: string[];
   userId?: number;
 }
 
-export interface createArticleDTO {
+export interface CreateArticleDto {
   title: string;
   content: string;
   userId: number;
 }
 
-export interface updateArticleDTO {
+export interface UpdateArticleDto {
   title?: string;
   content?: string;
-  imageUrls?: string;
+  imageUrls?: string[];
   userId?: number;
 }
 
@@ -56,9 +56,9 @@ interface ProductComment extends BaseComment {
   productId: number;
 }
 
-export type createCommentDTO = ArticleComment | ProductComment;
+export type CreateCommentDTO = ArticleComment | ProductComment;
 
-export interface updateCommentDTO {
+export interface UpdateCommentDto {
   content?: string;
   userId?: number;
   productId?: number;

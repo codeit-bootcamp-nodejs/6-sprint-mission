@@ -1,5 +1,3 @@
-import { assert } from 'superstruct';
-import { CreateUser } from '../struct/structs';
 import { Request, Response } from 'express';
 import userService from '../service/user.service';
 import { User } from '@prisma/client';
@@ -78,23 +76,25 @@ async function patchPassword(req: Request, res: Response) {
 
 async function getProducts(req: Request, res: Response) {
   const products = await userService.getProducts(req.user!.id);
-  console.log(`User${req.user!.id}: user products fetched`);
+  console.log(`User${req.user!.id}: products posted by the user`);
   res.status(200).json(products);
 }
 
 async function getArticles(req: Request, res: Response) {
   const articles = await userService.getArticles(req.user!.id);
-  console.log(`User${req.user!.id}: user articles fetched`);
+  console.log(`User${req.user!.id}: articles posted by the user`);
   res.status(200).json(articles);
 }
 
 async function getLikedProducts(req: Request, res: Response) {
   const products = await userService.getLikedProducts(req.user!.id);
+  console.log(`User${req.user!.id}: favorite products`);
   res.status(200).json(products);
 }
 
 async function getLikedArticles(req: Request, res: Response) {
   const articles = await userService.getLikedArticles(req.user!.id);
+  console.log(`User${req.user!.id}: favorite articles`);
   res.status(200).json(articles);
 }
 

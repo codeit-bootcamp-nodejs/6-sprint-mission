@@ -1,7 +1,7 @@
 import prisma from '../lib/prismaClient';
-import { Prisma } from '@prisma/client';
+import { Article, Prisma } from '@prisma/client';
 
-async function post(data: Prisma.ArticleCreateInput) {
+async function post(data: Article) {
   return await prisma.article.create({ data });
 }
 
@@ -26,7 +26,9 @@ async function getList(where: object, orderBy: object, offset: number, limit: nu
   });
 }
 
-async function findById(id: number) {
+async function findById(
+  id: number
+): Promise<Prisma.ArticleGetPayload<{ include: { comments: true; likedUsers: true } }>> {
   return prisma.article.findUniqueOrThrow({
     where: { id },
     include: { comments: true, likedUsers: true } // 관계형 필드도 일단 가져온다

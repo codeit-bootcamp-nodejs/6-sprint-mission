@@ -1,73 +1,27 @@
-import { completeUser, completeProduct, completeArticle } from '../dto/interfaceType';
+import { CompleteUser, CompleteProduct, CompleteArticle } from '../dto/interfaceType';
 import { isEmpty } from './myFuns';
 
-export function selectProductFields(item: completeProduct) {
-  const {
-    id,
-    name,
-    description,
-    price,
-    tags,
-    imageUrls,
-    userId,
-    createdAt,
-    likedUsers = [],
-    comments = []
-  } = item;
+type CommonFields = {
+  id: number;
+  userId: number;
+  createdAt: Date;
+  imageUrls?: string[];
+  comments?: { content: string }[];
+  likedUsers?: { nickname: string }[];
+};
 
-  let commentsToShow;
-  if (!isEmpty(comments)) {
-    const safeComments = Array.isArray(comments) ? comments : [comments];
-    commentsToShow = safeComments.map((c) => c.content);
-  }
-  let likedUsersToShow;
-  if (!isEmpty(likedUsers)) {
-    const safeLikedUsers = Array.isArray(likedUsers) ? likedUsers : [likedUsers];
-    likedUsersToShow = safeLikedUsers.map((u) => u.nickname);
-  }
+export function selectFields<T extends CommonFields>(item: T) {
+  const result: any = { ...item };
+  if (item.comments) result.comments = item.comments.map((c) => c.content);
+  if (item.likedUsers) result.likedUsers = item.likedUsers.map((u) => u.nickname);
 
-  return {
-    id,
-    name,
-    description,
-    price,
-    tags,
-    imageUrls,
-    userId,
-    createdAt,
-    comments: commentsToShow,
-    likedUsers: likedUsersToShow
+  return result as Omit<T, 'comments' | 'likedUsers'> & {
+    comments?: string[];
+    likedUsers?: string[];
   };
 }
 
-export function selectArticleFields(item: completeArticle) {
-  const { id, title, content, imageUrls, userId, createdAt, likedUsers = [], comments = [] } = item;
-
-  let commentsToShow;
-  if (!isEmpty(comments)) {
-    const safeComments = Array.isArray(comments) ? comments : [comments];
-    commentsToShow = safeComments.map((c) => c.content);
-  }
-
-  let likedUsersToShow;
-  if (!isEmpty(likedUsers)) {
-    const safeLikedUsers = Array.isArray(likedUsers) ? likedUsers : [likedUsers];
-    likedUsersToShow = safeLikedUsers.map((u) => u.nickname);
-  }
-
-  return {
-    id,
-    title,
-    content,
-    imageUrls,
-    userId,
-    createdAt,
-    likedUsers: likedUsersToShow,
-    comments: commentsToShow
-  };
-}
-
-export function selectUserFields(user: completeUser, fieldStr: string) {
+export function selectUserFields(user: CompleteUser, fieldStr: string) {
   let {
     id,
     email,

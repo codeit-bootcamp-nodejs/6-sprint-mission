@@ -3,21 +3,21 @@ import { PUBLIC_IMG_PATH, STATIC_IMG_PATH } from '../lib/constants';
 import userRepo from '../repository/user.repo';
 import articleRepo from '../repository/article.repo';
 import productRepo from '../repository/product.repo';
-import { selectProductFields, selectArticleFields, selectUserFields } from '../lib/selectFields';
-import { completeArticle, completeProduct, completeUser } from '../dto/interfaceType';
+import { selectFields, selectUserFields } from '../lib/selectFields';
+import { CompleteArticle, CompleteProduct, CompleteUser } from '../dto/interfaceType';
 import { Prisma, Article, Product, User } from '@prisma/client';
 
 async function get(originalUrl: string, id: string) {
   let item = {};
   if (originalUrl.includes('users')) {
     item = await userRepo.findById(Number(id));
-    return selectUserFields(item as completeUser, 'core');
+    return selectUserFields(item as CompleteUser, 'core');
   } else if (originalUrl.includes('products')) {
     item = await productRepo.findById(Number(id));
-    return selectProductFields(item as completeProduct);
+    return selectFields(item as CompleteProduct);
   } else {
     item = await articleRepo.findById(Number(id));
-    return selectArticleFields(item as completeArticle);
+    return selectFields(item as CompleteArticle);
   }
 }
 
@@ -64,11 +64,11 @@ async function post(
 
   if (originalUrl.includes('products')) {
     item = await productRepo.patch(Number(id), imageData as Prisma.ProductUpdateInput);
-    return selectProductFields(item as Product);
+    return selectFields(item as Product);
   }
   if (originalUrl.includes('articles')) {
     item = await articleRepo.patch(Number(id), imageData as Prisma.ArticleUpdateInput);
-    return selectArticleFields(item as Article);
+    return selectFields(item as Article);
   }
   if (originalUrl.includes('users')) {
     item = await userRepo.patch(Number(id), imageData as Prisma.UserUpdateInput);
@@ -80,11 +80,11 @@ async function erase(originalUrl: string, id: string) {
   let item = {};
   if (originalUrl.includes('products')) {
     item = await productRepo.patch(Number(id), { imageUrls: [] });
-    return selectProductFields(item as Product);
+    return selectFields(item as Product);
   }
   if (originalUrl.includes('articles')) {
     item = await articleRepo.patch(Number(id), { imageUrls: [] });
-    return selectArticleFields(item as Article);
+    return selectFields(item as Article);
   }
   if (originalUrl.includes('users')) {
     item = await userRepo.patch(Number(id), { imageUrls: [] });

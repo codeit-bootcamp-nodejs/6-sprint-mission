@@ -2,7 +2,7 @@ import { assert, number } from 'superstruct';
 import { CreateComment, PatchComment } from '../struct/structs';
 import commentRepo from '../repository/comment.repo';
 import { Prisma } from '@prisma/client';
-import { updateCommentDTO } from '../dto/dto';
+import { UpdateCommentDto } from '../dto/dto';
 
 async function getList(
   limit: number,
@@ -64,7 +64,7 @@ async function postArticle(content: string, articleId: string, userId: number) {
   return comment;
 }
 
-async function patch(commentId: string, data: updateCommentDTO, userId: number) {
+async function patch(commentId: string, data: UpdateCommentDto, userId: number) {
   const commentData = { ...data, userId };
   assert(commentData, PatchComment);
   return await commentRepo.patch(Number(commentId), commentData);

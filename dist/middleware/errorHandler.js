@@ -13,7 +13,7 @@ const defaultNotFoundHandler = function (req, res, next) {
 };
 exports.defaultNotFoundHandler = defaultNotFoundHandler;
 const globalErrorHandler = function (err, req, res, next) {
-    console.error(err); // 개발용 로그
+    //console.error(err); // 개발용 로그
     // Superstruct 에러 처리
     if (err instanceof superstruct_1.StructError) {
         const failures = typeof err.failures === 'function' ? err.failures() : [];

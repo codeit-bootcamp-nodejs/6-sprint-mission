@@ -1,6 +1,6 @@
 import { User, Product, Article, Comment } from '@prisma/client';
 
-export interface completeUser extends User {
+export interface CompleteUser extends User {
   products?: Product[];
   articles?: Article[];
   comments?: Comment[];
@@ -8,12 +8,12 @@ export interface completeUser extends User {
   likedArticles?: Article[];
 }
 
-export interface completeProduct extends Product {
+export interface CompleteProduct extends Product {
   likedUsers?: User[];
   comments?: Comment[];
 }
 
-export interface completeArticle extends Article {
+export interface CompleteArticle extends Article {
   likedUsers?: User[];
   comments?: Comment[];
 }

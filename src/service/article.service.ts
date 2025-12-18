@@ -3,24 +3,19 @@ import { CreateArticle, PatchArticle } from '../struct/structs';
 import NotFoundError from '../middleware/errors/NotFoundError';
 import articleRepo from '../repository/article.repo';
 import { isEmpty } from '../lib/myFuns';
-import { selectArticleFields } from '../lib/selectFields';
-import { createArticleDTO, updateArticleDTO } from '../dto/dto';
-import { Prisma } from '@prisma/client';
+import { selectFields } from '../lib/selectFields';
+import { CreateArticleDto, UpdateArticleDto } from '../dto/dto';
+import { Article, Prisma } from '@prisma/client';
 
 // 게시물 생성, 수정, 삭제: 토큰 인증된 유저만 가능
-async function post(userId: number, data: createArticleDTO) {
+async function post(userId: number, data: CreateArticleDto) {
   const articleData = { ...data, userId };
   assert(articleData, CreateArticle);
-  const prismaData: Prisma.ArticleCreateInput = {
-    ...data, // title, content, imageUrls 등
-    user: { connect: { id: userId } } // userId → user 연결
-  };
-  const article = await articleRepo.post(prismaData);
-  //if (isEmpty(article)) throw new NotFoundError(article, article.id);
+  const article = await articleRepo.post(articleData as Article);
   return article;
 }
 
-async function patch(articleId: string, articleData: updateArticleDTO) {
+async function patch(articleId: string, articleData: UpdateArticleDto) {
   assert(articleData, PatchArticle);
   const article = await articleRepo.patch(
     Number(articleId),
@@ -69,7 +64,7 @@ async function getList(
 // 조회 필드 추가: comments, likedUsers
 async function get(userId: number | undefined, articleId: string) {
   let article = await articleRepo.findById(Number(articleId));
-  const article2show = selectArticleFields(article);
+  const article2show = selectFields(article);
   if (!userId) return article2show;
   const isLiked = article.likedUsers.some((a) => a.id === userId);
   return { isLiked, ...article2show };
@@ -86,7 +81,7 @@ async function like(userId: number, articleId: string) {
       likedUsers: { connect: { id: userId } }
     });
   }
-  const article2show = selectArticleFields(updatedArticle ?? article);
+  const article2show = selectFields(updatedArticle ?? article);
   return { isLiked: true, ...article2show };
 }
 
@@ -101,7 +96,7 @@ async function cancelLike(userId: number, articleId: string) {
       likedUsers: { disconnect: { id: userId } }
     });
   }
-  const article2show = selectArticleFields(updateArticle ?? article);
+  const article2show = selectFields(updateArticle ?? article);
   return { isLiked: false, ...article2show };
 }
 

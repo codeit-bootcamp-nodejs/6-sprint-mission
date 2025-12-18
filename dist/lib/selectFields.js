@@ -1,64 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.selectProductFields = selectProductFields;
-exports.selectArticleFields = selectArticleFields;
+exports.selectFields = selectFields;
 exports.selectUserFields = selectUserFields;
 const myFuns_1 = require("./myFuns");
-function selectProductFields(item) {
-    const { id, name, description, price, tags, imageUrls, userId, createdAt, likedUsers = [], comments = [] } = item;
-    let commentsToShow;
-    if (!(0, myFuns_1.isEmpty)(comments)) {
-        const safeComments = Array.isArray(comments) ? comments : [comments];
-        commentsToShow = safeComments.map((c) => c.content);
-    }
-    let likedUsersToShow;
-    if (!(0, myFuns_1.isEmpty)(likedUsers)) {
-        const safeLikedUsers = Array.isArray(likedUsers) ? likedUsers : [likedUsers];
-        likedUsersToShow = safeLikedUsers.map((u) => u.nickname);
-    }
-    return {
-        id,
-        name,
-        description,
-        price,
-        tags,
-        imageUrls,
-        userId,
-        createdAt,
-        comments: commentsToShow,
-        likedUsers: likedUsersToShow
-    };
-}
-function selectArticleFields(item) {
-    const { id, title, content, imageUrls, userId, createdAt, likedUsers = [], comments = [] } = item;
-    let likedUsersToShow;
-    if (!(0, myFuns_1.isEmpty)(likedUsers)) {
-        const safeLikedUsers = Array.isArray(likedUsers) ? likedUsers : [likedUsers];
-        likedUsersToShow = safeLikedUsers.map((u) => u.nickname);
-    }
-    let commentsToShow;
-    if (!(0, myFuns_1.isEmpty)(comments)) {
-        const safeComments = Array.isArray(comments) ? comments : [comments];
-        const commentsToShow = safeComments.map((c) => c.content);
-    }
-    return {
-        id,
-        title,
-        content,
-        imageUrls,
-        userId,
-        createdAt,
-        likedUsers: likedUsersToShow,
-        comments: commentsToShow
-    };
+function selectFields(item) {
+    const result = Object.assign({}, item);
+    if (item.comments)
+        result.comments = item.comments.map((c) => c.content);
+    if (item.likedUsers)
+        result.likedUsers = item.likedUsers.map((u) => u.nickname);
+    return result;
 }
 function selectUserFields(user, fieldStr) {
     let { id, email, nickname, createdAt, imageUrls, products = [], articles = [], likedArticles = [], likedProducts = [], comments = [] } = user;
     const coreFields = { id, email, nickname, imageUrls, createdAt };
-    //let extraFields: Record<string, any> = {};
-    let extraFields = {};
     if (fieldStr === 'core')
         return coreFields;
+    let extraFields = {};
     if (!(0, myFuns_1.isEmpty)(products)) {
         if (fieldStr === 'myProducts' || fieldStr === 'all') {
             const newProducts = products.map((p) => {
@@ -92,7 +50,7 @@ function selectUserFields(user, fieldStr) {
                 return Object.assign(Object.assign({}, coreFields), extraFields);
         }
     }
-    if ((0, myFuns_1.isEmpty)(likedArticles)) {
+    if (!(0, myFuns_1.isEmpty)(likedArticles)) {
         if (fieldStr === 'likedArticles' || fieldStr === 'all') {
             const newLikedArticles = likedArticles.map((a) => {
                 return `id:${a.id}, ${a.title}`;
