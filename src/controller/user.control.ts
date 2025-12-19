@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import userService from '../service/user.service';
+import { SafeCompleteUser } from '../dto/interfaceType';
 import { User } from '@prisma/client';
 import {
   ACCESS_TOKEN_COOKIE_NAME,
@@ -10,7 +11,7 @@ import {
 } from '../lib/constants';
 
 async function getList(req: Request, res: Response) {
-  const users = (await userService.getList()) as User[];
+  const users = (await userService.getList()) as SafeCompleteUser[];
   if (users.length > 1) console.log('User list fetched');
   res.status(200).json(users);
 }

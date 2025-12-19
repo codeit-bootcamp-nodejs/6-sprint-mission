@@ -10,19 +10,20 @@ import { print, isEmpty } from '../lib/myFuns';
 import { selectUserFields } from '../lib/selectFields';
 import { Request, Response } from 'express';
 import { CreateUserDto } from '../dto/dto';
-import { User } from '@prisma/client';
+import { User, Product } from '@prisma/client';
+import { CompleteUser, SafeCompleteUser } from '../dto/interfaceType';
 
-async function getList() {
+async function getList(): Promise<SafeCompleteUser[] | object> {
   if (NODE_ENV === 'development') {
     const users = await userRepo.getList();
     if (!users) throw new Error('NOT_FOUND');
-    return users;
+    return filterPassword(users);
   } else {
     return { message: '개발자 옵션 입니다' };
   }
 }
 
-async function register(data: CreateUserDto) {
+async function register(data: CreateUserDto): Promise<SafeCompleteUser | SafeCompleteUser[]> {
   assert(data, CreateUser);
   const { email, nickname, password } = data;
 
@@ -74,18 +75,25 @@ function viewTokens(tokenData: Record<string, string | undefined>) {
   return { accessToken, refreshToken };
 }
 
-async function getInfo(userId: number) {
+async function getInfo(userId: number): Promise<Omit<SafeCompleteUser, 'updatedAt'>> {
   const user = await userRepo.findById(userId);
   return selectUserFields(user, 'all');
 }
 
-async function patchInfo(userId: number, userData: object) {
+async function patchInfo(
+  userId: number,
+  userData: object
+): Promise<Omit<SafeCompleteUser, 'updatedAt'>> {
   assert(userData, PatchUser);
   const user = await userRepo.patch(userId, userData);
   return selectUserFields(user, 'core');
 }
 
-async function patchPassword(userId: number, oldPassword: string, newPassword: string) {
+async function patchPassword(
+  userId: number,
+  oldPassword: string,
+  newPassword: string
+): Promise<Omit<SafeCompleteUser, 'updatedAt'>> {
   const user = await userRepo.findById(userId);
   if (!(await check_passwordValidity(oldPassword, user.password))) {
     print('Invalid current password');
@@ -104,7 +112,7 @@ async function patchPassword(userId: number, oldPassword: string, newPassword: s
   return selectUserFields(newUser, 'core');
 }
 
-async function getProducts(userId: number) {
+async function getProducts(userId: number): Promise<Omit<SafeCompleteUser, 'updatedAt'>> {
   const user = await userRepo.findById(userId);
   const selectedInfo = selectUserFields(user, 'myProducts');
   if (isEmpty(selectedInfo)) {
@@ -114,7 +122,7 @@ async function getProducts(userId: number) {
   return selectedInfo;
 }
 
-async function getArticles(userId: number) {
+async function getArticles(userId: number): Promise<Omit<SafeCompleteUser, 'updatedAt'>> {
   const user = await userRepo.findById(userId);
   const selectedInfo = selectUserFields(user, 'myArticles');
   if (isEmpty(selectedInfo)) {
@@ -124,7 +132,7 @@ async function getArticles(userId: number) {
   return selectedInfo;
 }
 
-async function getLikedProducts(userId: number) {
+async function getLikedProducts(userId: number): Promise<Omit<SafeCompleteUser, 'updatedAt'>> {
   const user = await userRepo.findById(userId);
   if (isEmpty(user.likedProducts)) {
     print(`No products liked by user_${userId}`);
@@ -133,7 +141,7 @@ async function getLikedProducts(userId: number) {
   return selectUserFields(user, 'likedProducts');
 }
 
-async function getLikedArticles(userId: number) {
+async function getLikedArticles(userId: number): Promise<Omit<SafeCompleteUser, 'updatedAt'>> {
   const user = await userRepo.findById(userId);
   if (isEmpty(user.likedArticles)) {
     print(`No articles liked by user_${userId}`);
@@ -144,7 +152,7 @@ async function getLikedArticles(userId: number) {
 
 //------------------------------------ local functions
 
-export function filterPassword(userData: User | User[]) {
+export function filterPassword(userData: User | User[]): SafeCompleteUser | SafeCompleteUser[] {
   if (Array.isArray(userData)) {
     return userData.map((user) => {
       const { password: _, ...rest } = user;
@@ -156,7 +164,7 @@ export function filterPassword(userData: User | User[]) {
   }
 }
 
-async function hashingPassword(textPassword: string) {
+async function hashingPassword(textPassword: string): Promise<string> {
   const salt = await bcrypt.genSalt(10);
   return await bcrypt.hash(textPassword, salt);
 }
@@ -171,18 +179,21 @@ async function check_userRegistration(
   }
 }
 
-async function check_passwordValidity(textPassword: string, savedPassword: string) {
+async function check_passwordValidity(
+  textPassword: string,
+  savedPassword: string
+): Promise<Boolean> {
   const isPasswordSame = await bcrypt.compare(textPassword, savedPassword);
   return isPasswordSame;
 }
 
-function clearTokenCookies(tokenData: Response) {
+function clearTokenCookies(tokenData: Response): void {
   tokenData.clearCookie(ACCESS_TOKEN_COOKIE_NAME);
   tokenData.clearCookie(REFRESH_TOKEN_COOKIE_NAME, { path: '/users/tokens' });
   // refreshToken은 지정된 path가 있음
 }
 
-function check_refreshTokenValidity(tokenData: Record<string, string | undefined>) {
+function check_refreshTokenValidity(tokenData: Record<string, string | undefined>): string {
   const refreshToken = tokenData[REFRESH_TOKEN_COOKIE_NAME];
   if (!refreshToken) {
     console.log('Tokens expired');
@@ -191,7 +202,7 @@ function check_refreshTokenValidity(tokenData: Record<string, string | undefined
   return refreshToken;
 }
 
-async function verifyUserExist(userId: number) {
+async function verifyUserExist(userId: number): Promise<User> {
   const user = await userRepo.findById(userId);
   if (!user) {
     console.log('No user found. Resgister again.');

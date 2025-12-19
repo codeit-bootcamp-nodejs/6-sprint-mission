@@ -1,4 +1,4 @@
-import { assert, number } from 'superstruct';
+import { assert } from 'superstruct';
 import { CreateComment, PatchComment } from '../struct/structs';
 import commentRepo from '../repository/comment.repo';
 import { Prisma } from '@prisma/client';
@@ -12,15 +12,19 @@ async function getList(
 ) {
   let where = {};
   if (contentStr) where = { content: { contains: contentStr } };
-  if (typeStr === 'product') where = { ...where, articleId: null };
-  if (typeStr === 'article') where = { ...where, productId: null };
 
   // nextCursor 계산에 반영해야 할 부분
   // 남은 item 수 보다 nextCurwor가 더 큰 경우 - 쉬운 문제
   // product, article 댓글이 마구 섞여 있을 때, type을 밝히는 경우 comments.id로 하면 문제가 됨 - 어려운 문제
-  const comments = await commentRepo.getList(where, typeStr, limit, cursor);
+  const comments = await commentRepo.getList(where, limit, cursor);
+  const newComments = comments.map((c) => {
+    if (typeStr === 'product') c.articleId = null;
+    if (typeStr === 'article') c.productId = null;
+    return c;
+  });
+
   const nextCursor = comments.length > 0 ? comments[comments.length - 1].id : null;
-  return { comments, nextCursor };
+  return { newComments, nextCursor };
 }
 
 async function get(commentId: string) {

@@ -53,13 +53,8 @@ async function get(req: Request, res: Response, next: NextFunction) {
 }
 
 // 상품: 좋아요/좋아요-취소
-async function like(req: Request, res: Response, next: NextFunction) {
-  const product = await productService.like(req.user!.id, req.params.id);
-  res.status(200).json(product);
-}
-
-async function cancelLike(req: Request, res: Response, next: NextFunction) {
-  const product = await productService.cancelLike(req.user!.id, req.params.id);
+async function likeToggle(req: Request, res: Response, next: NextFunction) {
+  const product = await productService.likeToggle(req.user!.id, req.params.id);
   res.status(200).json(product);
 }
 
@@ -69,6 +64,5 @@ export default {
   erase,
   getList,
   get,
-  like,
-  cancelLike
+  likeToggle
 };

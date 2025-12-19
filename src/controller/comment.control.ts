@@ -13,7 +13,12 @@ async function getList(req: Request, res: Response, next: NextFunction) {
 
   console.log(`Fetching ${type} comment list...`);
   console.log(`cursor, now:   ${cursor}`);
-  const { comments, nextCursor } = await commentService.getList(limit, cursor, type, content);
+  const { newComments: comments, nextCursor } = await commentService.getList(
+    limit,
+    cursor,
+    type,
+    content
+  );
   console.log(`cursor, next:  ${nextCursor}`);
   console.log('');
   res.status(200).json(comments);

@@ -8,6 +8,9 @@ export interface CompleteUser extends User {
   likedArticles?: Article[];
 }
 
+export type SafeUser = Omit<User, 'password'>;
+export type SafeCompleteUser = Omit<CompleteUser, 'password'>;
+
 export interface CompleteProduct extends Product {
   likedUsers?: User[];
   comments?: Comment[];

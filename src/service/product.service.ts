@@ -1,25 +1,22 @@
 import { assert } from 'superstruct';
-import { isEmpty } from '../lib/myFuns';
+import { isEmpty, includedOk } from '../lib/myFuns';
 import productRepo from '../repository/product.repo';
 import { CreateProduct, PatchProduct } from '../struct/structs';
 import { selectFields } from '../lib/selectFields';
 import { CreateProductDto, UpdateProductDto } from '../dto/dto';
-import { Prisma, Product } from '@prisma/client';
+import { Product } from '@prisma/client';
 import NotFoundError from '../middleware/errors/NotFoundError';
 
-async function post(userId: number, data: CreateProductDto) {
+async function post(userId: number, data: CreateProductDto): Promise<Product> {
   const productData = { ...data, userId };
   assert(productData, CreateProduct);
-  const product = await productRepo.post(productData as Product);
+  const product = await productRepo.post(productData);
   return product;
 }
 
 async function patch(productId: string, productData: UpdateProductDto) {
   assert(productData, PatchProduct);
-  const product = await productRepo.patch(
-    Number(productId),
-    productData as Prisma.ProductUpdateInput
-  );
+  const product = await productRepo.patch(Number(productId), productData);
   if (isEmpty(product)) throw new NotFoundError('product', Number(productId));
   return product;
 }
@@ -64,36 +61,28 @@ async function get(userId: number | undefined, productId: string) {
   let product = await productRepo.findById(Number(productId));
   const product2show = selectFields(product);
   if (!userId) return product2show;
-  const isLiked = product.likedUsers.some((u) => u.id === userId);
+  const isLiked = includedOk(product.likedUsers, 'id', userId);
   return { isLiked, ...product2show };
 }
 
-async function like(userId: number, productId: string) {
-  let product = await productRepo.findById(Number(productId));
-  if (product.likedUsers.some((n) => n.id === userId)) {
-    console.log('Already your favorite product');
-  } else {
-    console.log('Now, one of your favorite products');
-    product = await productRepo.patch(Number(productId), {
-      likedUsers: { connect: { id: userId } }
-    });
-  }
-  const product2show = selectFields(product);
-  return { isLiked: true, ...product2show };
-}
+// 좋아요와 좋아요취소 토글
+async function likeToggle(userId: number, productId: string) {
+  const product = await productRepo.findById(Number(productId));
 
-async function cancelLike(userId: number, productId: string) {
-  let product = await productRepo.findById(Number(productId));
-  if (!product.likedUsers.some((n) => n.id === userId)) {
-    console.log('Already not one of your liked products');
-  } else {
-    console.log('Now, not one of your liked products');
-    product = await productRepo.patch(Number(productId), {
-      likedUsers: { disconnect: { id: userId } }
-    });
-  }
-  const product2show = selectFields(product);
-  return { isLiked: false, ...product2show };
+  const isLiked = includedOk(product.likedUsers, 'id', userId);
+
+  const updated = isLiked
+    ? await productRepo.cancelLike(Number(productId), userId)
+    : await productRepo.like(Number(productId), userId);
+
+  console.log(isLiked ? 'Now, not your favorite product' : 'Now, your favorite product');
+
+  const product2show = selectFields(updated);
+
+  return {
+    isLiked: !isLiked,
+    ...product2show
+  };
 }
 
 export default {
@@ -102,6 +91,5 @@ export default {
   erase,
   getList,
   get,
-  like,
-  cancelLike
+  likeToggle
 };

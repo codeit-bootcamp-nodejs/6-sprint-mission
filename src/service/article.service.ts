@@ -2,16 +2,16 @@ import { assert } from 'superstruct';
 import { CreateArticle, PatchArticle } from '../struct/structs';
 import NotFoundError from '../middleware/errors/NotFoundError';
 import articleRepo from '../repository/article.repo';
-import { isEmpty } from '../lib/myFuns';
+import { isEmpty, includedOk } from '../lib/myFuns';
 import { selectFields } from '../lib/selectFields';
 import { CreateArticleDto, UpdateArticleDto } from '../dto/dto';
 import { Article, Prisma } from '@prisma/client';
 
 // 게시물 생성, 수정, 삭제: 토큰 인증된 유저만 가능
-async function post(userId: number, data: CreateArticleDto) {
+async function post(userId: number, data: CreateArticleDto): Promise<Article> {
   const articleData = { ...data, userId };
   assert(articleData, CreateArticle);
-  const article = await articleRepo.post(articleData as Article);
+  const article = await articleRepo.post(articleData);
   return article;
 }
 
@@ -70,34 +70,24 @@ async function get(userId: number | undefined, articleId: string) {
   return { isLiked, ...article2show };
 }
 
-async function like(userId: number, articleId: string) {
+// 좋아요와 좋아요취소 토글
+async function likeToggle(userId: number, articleId: string) {
   const article = await articleRepo.findById(Number(articleId));
-  let updatedArticle;
-  if (article.likedUsers.some((n) => n.id === userId)) {
-    console.log('Already your favorite article');
-  } else {
-    console.log('Now, one of your favorite articles');
-    updatedArticle = await articleRepo.patch(Number(articleId), {
-      likedUsers: { connect: { id: userId } }
-    });
-  }
-  const article2show = selectFields(updatedArticle ?? article);
-  return { isLiked: true, ...article2show };
-}
 
-async function cancelLike(userId: number, articleId: string) {
-  let article = await articleRepo.findById(Number(articleId));
-  let updateArticle;
-  if (!article.likedUsers.some((n) => n.id === userId)) {
-    console.log('Already not your favorite article');
-  } else {
-    console.log('Now, not one of your favorite articles');
-    updateArticle = await articleRepo.patch(Number(articleId), {
-      likedUsers: { disconnect: { id: userId } }
-    });
-  }
-  const article2show = selectFields(updateArticle ?? article);
-  return { isLiked: false, ...article2show };
+  const isLiked = includedOk(article.likedUsers, 'id', userId);
+
+  const updated = isLiked
+    ? await articleRepo.cancelLike(Number(articleId), userId)
+    : await articleRepo.like(Number(articleId), userId);
+
+  console.log(isLiked ? 'Now, not your favorite article' : 'Now, your favorite article');
+
+  const article2show = selectFields(updated);
+
+  return {
+    isLiked: !isLiked,
+    ...article2show
+  };
 }
 
 export default {
@@ -106,6 +96,5 @@ export default {
   erase,
   getList,
   get,
-  like,
-  cancelLike
+  likeToggle
 };

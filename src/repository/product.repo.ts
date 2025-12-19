@@ -1,14 +1,19 @@
+import { CreateProductDto, UpdateProductDto } from '../dto/dto';
+import { CompleteProduct } from '../dto/interfaceType';
 import prisma from '../lib/prismaClient';
 import { Prisma, Product } from '@prisma/client';
 
-async function post(data: Product) {
+async function post(data: CreateProductDto): Promise<Product> {
   return await prisma.product.create({
     data
     // user: { connect: { id: userId } }
   });
 }
 
-async function patch(id: number, productData: Prisma.ProductUpdateInput) {
+async function patch(
+  id: number,
+  productData: Prisma.ProductUpdateInput
+): Promise<Prisma.ProductGetPayload<{ include: { comments: true; likedUsers: true } }>> {
   return await prisma.product.update({
     where: { id },
     data: productData,
@@ -16,15 +21,42 @@ async function patch(id: number, productData: Prisma.ProductUpdateInput) {
   });
 }
 
-async function erase(id: number) {
-  return await prisma.product.delete({ where: { id } });
+async function like(
+  productId: number,
+  userId: number
+): Promise<Prisma.ProductGetPayload<{ include: { likedUsers: true } }>> {
+  return await prisma.product.update({
+    where: { id: productId },
+    data: { likedUsers: { connect: { id: userId } } },
+    include: { likedUsers: true }
+  });
 }
 
-async function countById(id: number) {
+async function cancelLike(
+  productId: number,
+  userId: number
+): Promise<Prisma.ProductGetPayload<{ include: { likedUsers: true } }>> {
+  return await prisma.product.update({
+    where: { id: productId },
+    data: { likedUsers: { disconnect: { id: userId } } },
+    include: { likedUsers: true }
+  });
+}
+
+async function erase(id: number): Promise<void> {
+  await prisma.product.delete({ where: { id } });
+}
+
+async function countById(id: number): Promise<Number> {
   return await prisma.product.count({ where: { id } });
 }
 
-async function getList(where: object, orderBy: object, offset: number, limit: number) {
+async function getList(
+  where: object,
+  orderBy: object,
+  offset: number,
+  limit: number
+): Promise<Product[]> {
   return await prisma.product.findMany({
     skip: offset, // offset 방식 페이지네이션: default 0
     take: limit, // default 10
@@ -45,6 +77,8 @@ async function findById(
 export default {
   post,
   patch,
+  like,
+  cancelLike,
   erase,
   findById,
   countById,

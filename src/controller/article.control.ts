@@ -45,13 +45,8 @@ async function get(req: Request, res: Response) {
 }
 
 // 게시물: 좋아요/좋아요-취소
-async function like(req: Request, res: Response) {
-  const article = await articleService.like(req.user!.id, req.params.id);
-  res.status(200).json(article);
-}
-
-async function cancelLike(req: Request, res: Response) {
-  const article = await articleService.cancelLike(req.user!.id, req.params.id);
+async function likeToggle(req: Request, res: Response) {
+  const article = await articleService.likeToggle(req.user!.id, req.params.id);
   res.status(200).json(article);
 }
 
@@ -61,6 +56,5 @@ export default {
   erase,
   getList,
   get,
-  like,
-  cancelLike
+  likeToggle
 };
