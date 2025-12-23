@@ -21,18 +21,18 @@ GET {{baseUrl}}/comments/24
 
 // 댓글 등록: 인증
 ###
-POST {{baseUrl}}/comments/articles/23
+POST {{baseUrl}}/comments/articles/21
 Content-Type: application/json
 
 {
-  "content": "너무 웃겨요."
+  "content": "바넷사 레드그레이브즈의 감초 연기가 일품"
 }
 ###
-POST {{baseUrl}}/comments/products/4
+POST {{baseUrl}}/comments/products/29
 Content-Type: application/json
 
 {
-  "content": "방구석이 영화관 됩니다"
+  "content": "여자손에 맞는 크기"
 }
 
 // 댓글 수정과 삭제: 인증과 인가
@@ -41,8 +41,8 @@ PATCH {{baseUrl}}/comments/94
 Content-Type: application/json
 
 {
-  "content": "뉴욕과 남부의 갈등이랄까..."
+  "content": "너무 웃겨요!"
 }
 
 ###
-DELETE {{baseUrl}}/comments/95
+DELETE {{baseUrl}}/comments/99

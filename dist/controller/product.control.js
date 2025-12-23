@@ -70,15 +70,9 @@ function get(req, res, next) {
     });
 }
 // 상품: 좋아요/좋아요-취소
-function like(req, res, next) {
+function likeToggle(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const product = yield product_service_1.default.like(req.user.id, req.params.id);
-        res.status(200).json(product);
-    });
-}
-function cancelLike(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const product = yield product_service_1.default.cancelLike(req.user.id, req.params.id);
+        const product = yield product_service_1.default.likeToggle(req.user.id, req.params.id);
         res.status(200).json(product);
     });
 }
@@ -88,6 +82,5 @@ exports.default = {
     erase,
     getList,
     get,
-    like,
-    cancelLike
+    likeToggle
 };

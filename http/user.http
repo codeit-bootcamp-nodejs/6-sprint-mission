@@ -7,9 +7,9 @@ POST {{baseUrl}}/users/register
 Content-Type: application/json
 
 {
-  "email": "user8@example.com",
-  "nickname": "user8",
-  "password": "password8"
+  "email": "user10@example.com",
+  "nickname": "user10",
+  "password": "password10"
 }
 
 // 등록할 때 사용자 이미지도 함께 등록하도록 변경할 예정
@@ -38,8 +38,8 @@ POST {{baseUrl}}/users/login
 Content-Type: application/json
 
 {
-  "email": "user1@example.com",
-  "password": "password1"
+  "email": "user5@example.com",
+  "password": "password5"
 }
 
 ###
@@ -63,7 +63,8 @@ PATCH {{baseUrl}}/users/info/edit
 Content-Type: application/json
 
 { 
-  "nickname": "user1" 
+  "nickname": "user4" ,
+  "email": "user4@example.com"
 }
 
 // 나의 정보 수정할 때 이미지도 수정할 수 있도록 변경할 예정
@@ -92,8 +93,8 @@ PATCH {{baseUrl}}/users/info/password/change
 Content-Type: application/json
 
 {
-  "password_now": "password11",
-  "password_new": "password1"
+  "password_now": "password44",
+  "password_new": "password4"
 }
 
 ###

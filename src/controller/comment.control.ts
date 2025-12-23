@@ -5,7 +5,7 @@ import { Request, Response, NextFunction } from 'express';
 // 페이지네이션: cursor 기반 (default: limit=10)
 // 조회순: id 오름순으로 고정
 // 조건 검색: content에 포함된 단어
-async function getList(req: Request, res: Response, next: NextFunction) {
+async function getList(req: Request, res: Response, next: NextFunction): Promise<void> {
   const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 10;
   const cursor = parseInt(req.query.cursor as string, 10);
   const type = (req.query.type as string) || 'all';
@@ -13,7 +13,7 @@ async function getList(req: Request, res: Response, next: NextFunction) {
 
   console.log(`Fetching ${type} comment list...`);
   console.log(`cursor, now:   ${cursor}`);
-  const { newComments: comments, nextCursor } = await commentService.getList(
+  const { comments: comments, nextCursor } = await commentService.getList(
     limit,
     cursor,
     type,
@@ -25,7 +25,7 @@ async function getList(req: Request, res: Response, next: NextFunction) {
 }
 
 // 1개 댓글 조회
-async function get(req: Request, res: Response, next: NextFunction) {
+async function get(req: Request, res: Response, next: NextFunction): Promise<void> {
   const comment = await commentService.get(req.params.id);
   console.log('Comments fetched');
   res.status(200).json(comment);
@@ -35,40 +35,49 @@ async function get(req: Request, res: Response, next: NextFunction) {
 // req.params에 commentId 있어야 함
 // 입력 필드: content
 // req.params에 productId 있어야 함
-async function postProduct(req: Request, res: Response, next: NextFunction) {
+
+async function post(req: Request, res: Response, next: NextFunction): Promise<void> {
   const { content } = req.body;
-  const { id: productId } = req.params;
-  const { id: userId } = req.user!;
-  const comment = await commentService.postProduct(content, productId, userId);
+  const { id } = req.params;
+  const { id: userId } = req.user;
+  const comment = await commentService.post(req.url, content, id, userId);
   console.log('Comment created');
   res.status(200).json(comment);
 }
+// async function postProduct(req: Request, res: Response, next: NextFunction): Promise<void> {
+//   const { content } = req.body;
+//   const { id: productId } = req.params;
+//   const { id: userId } = req.user;
+//   const comment = await commentService.postProduct(content, productId, userId);
+//   console.log('Comment created');
+//   res.status(200).json(comment);
+// }
 
 // 게시물 댓글 등록
 // req.params에 commentId 있어야 함
 // 입력 필드: content
 // req.params에 articleId 있어야 함
-async function postArticle(req: Request, res: Response, next: NextFunction) {
-  const { content } = req.body;
-  const { id: articleId } = req.params;
-  const { id: userId } = req.user!;
-  const comment = await commentService.postArticle(content, articleId, userId);
-  console.log('Comment created');
-  res.status(200).json(comment);
-}
+// async function postArticle(req: Request, res: Response, next: NextFunction): Promise<void> {
+//   const { content } = req.body;
+//   const { id: articleId } = req.params;
+//   const { id: userId } = req.user;
+//   const comment = await commentService.postArticle(content, articleId, userId);
+//   console.log('Comment created');
+//   res.status(200).json(comment);
+// }
 
 // 1개 댓글 수정
 // req.params에 commentId 있어야 함
 // 입력 필드: content
-async function patch(req: Request, res: Response, next: NextFunction) {
-  const comment = await commentService.patch(req.params.id, req.body, req.user!.id);
+async function patch(req: Request, res: Response, next: NextFunction): Promise<void> {
+  const comment = await commentService.patch(req.params.id, req.body, req.user.id);
   console.log('Comments edited.');
   res.status(201).json(comment);
 }
 
 // 1개 댓글 삭제
 // req.params에 commentId 있어야 함
-async function erase(req: Request, res: Response, next: NextFunction) {
+async function erase(req: Request, res: Response, next: NextFunction): Promise<void> {
   await commentService.erase(req.params.id);
   console.log('Comment deleted.');
   res.status(204).send('Comment deleted.');
@@ -77,8 +86,9 @@ async function erase(req: Request, res: Response, next: NextFunction) {
 export default {
   getList,
   get,
-  postProduct,
-  postArticle,
+  post,
+  // postProduct,
+  // postArticle,
   patch,
   erase
 };

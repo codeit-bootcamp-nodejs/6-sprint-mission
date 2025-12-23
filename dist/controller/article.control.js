@@ -62,15 +62,9 @@ function get(req, res) {
     });
 }
 // 게시물: 좋아요/좋아요-취소
-function like(req, res) {
+function likeToggle(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const article = yield article_service_1.default.like(req.user.id, req.params.id);
-        res.status(200).json(article);
-    });
-}
-function cancelLike(req, res) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const article = yield article_service_1.default.cancelLike(req.user.id, req.params.id);
+        const article = yield article_service_1.default.likeToggle(req.user.id, req.params.id);
         res.status(200).json(article);
     });
 }
@@ -80,6 +74,5 @@ exports.default = {
     erase,
     getList,
     get,
-    like,
-    cancelLike
+    likeToggle
 };

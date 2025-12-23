@@ -12,5 +12,5 @@ src/middleware/index.txt
 .vscode/
 hide/
 test_isEmpty.js
-main.js
+src/main.ts
 

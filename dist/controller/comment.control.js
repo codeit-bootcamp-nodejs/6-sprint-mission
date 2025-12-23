@@ -25,7 +25,7 @@ function getList(req, res, next) {
         const content = req.query.content;
         console.log(`Fetching ${type} comment list...`);
         console.log(`cursor, now:   ${cursor}`);
-        const { comments, nextCursor } = yield comment_service_1.default.getList(limit, cursor, type, content);
+        const { comments: comments, nextCursor } = yield comment_service_1.default.getList(limit, cursor, type, content);
         console.log(`cursor, next:  ${nextCursor}`);
         console.log('');
         res.status(200).json(comments);
@@ -43,30 +43,36 @@ function get(req, res, next) {
 // req.params에 commentId 있어야 함
 // 입력 필드: content
 // req.params에 productId 있어야 함
-function postProduct(req, res, next) {
+function post(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const { content } = req.body;
-        const { id: productId } = req.params;
+        const { id } = req.params;
         const { id: userId } = req.user;
-        const comment = yield comment_service_1.default.postProduct(content, productId, userId);
+        const comment = yield comment_service_1.default.post(req.url, content, id, userId);
         console.log('Comment created');
         res.status(200).json(comment);
     });
 }
+// async function postProduct(req: Request, res: Response, next: NextFunction): Promise<void> {
+//   const { content } = req.body;
+//   const { id: productId } = req.params;
+//   const { id: userId } = req.user!;
+//   const comment = await commentService.postProduct(content, productId, userId);
+//   console.log('Comment created');
+//   res.status(200).json(comment);
+// }
 // 게시물 댓글 등록
 // req.params에 commentId 있어야 함
 // 입력 필드: content
 // req.params에 articleId 있어야 함
-function postArticle(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const { content } = req.body;
-        const { id: articleId } = req.params;
-        const { id: userId } = req.user;
-        const comment = yield comment_service_1.default.postArticle(content, articleId, userId);
-        console.log('Comment created');
-        res.status(200).json(comment);
-    });
-}
+// async function postArticle(req: Request, res: Response, next: NextFunction): Promise<void> {
+//   const { content } = req.body;
+//   const { id: articleId } = req.params;
+//   const { id: userId } = req.user!;
+//   const comment = await commentService.postArticle(content, articleId, userId);
+//   console.log('Comment created');
+//   res.status(200).json(comment);
+// }
 // 1개 댓글 수정
 // req.params에 commentId 있어야 함
 // 입력 필드: content
@@ -89,8 +95,9 @@ function erase(req, res, next) {
 exports.default = {
     getList,
     get,
-    postProduct,
-    postArticle,
+    post,
+    // postProduct,
+    // postArticle,
     patch,
     erase
 };

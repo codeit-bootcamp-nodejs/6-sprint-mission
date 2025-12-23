@@ -21,10 +21,10 @@ GET {{baseUrl}}/products?name=Pro&description=기능
 
 // 상품 상세 조회, 좋아요, 등록 인증 필요
 ###
-GET {{baseUrl}}/products/1
+GET {{baseUrl}}/products/29
 
 ###
-POST {{baseUrl}}/products/1/like/toggle
+POST {{baseUrl}}/products/29/like/toggle
 
 
 ###

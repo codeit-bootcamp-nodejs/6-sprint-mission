@@ -1,3 +1,4 @@
+import { CreateCommentDto } from '../dto/dto';
 import prisma from '../lib/prismaClient';
 import { Prisma, Comment } from '@prisma/client';
 
@@ -21,7 +22,7 @@ async function findById(id: number): Promise<Comment> {
   });
 }
 
-async function post(data: Prisma.CommentCreateInput): Promise<Comment> {
+async function post(data: CreateCommentDto): Promise<Comment> {
   return await prisma.comment.create({ data });
 }
 

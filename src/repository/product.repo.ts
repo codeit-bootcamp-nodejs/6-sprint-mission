@@ -1,13 +1,9 @@
-import { CreateProductDto, UpdateProductDto } from '../dto/dto';
-import { CompleteProduct } from '../dto/interfaceType';
+import { CreateProductDto } from '../dto/dto';
 import prisma from '../lib/prismaClient';
 import { Prisma, Product } from '@prisma/client';
 
 async function post(data: CreateProductDto): Promise<Product> {
-  return await prisma.product.create({
-    data
-    // user: { connect: { id: userId } }
-  });
+  return await prisma.product.create({ data });
 }
 
 async function patch(

@@ -91,38 +91,17 @@ function get(userId, articleId) {
         return Object.assign({ isLiked }, article2show);
     });
 }
-function like(userId, articleId) {
+// 좋아요와 좋아요취소 토글
+function likeToggle(userId, articleId) {
     return __awaiter(this, void 0, void 0, function* () {
         const article = yield article_repo_1.default.findById(Number(articleId));
-        let updatedArticle;
-        if (article.likedUsers.some((n) => n.id === userId)) {
-            console.log('Already your favorite article');
-        }
-        else {
-            console.log('Now, one of your favorite articles');
-            updatedArticle = yield article_repo_1.default.patch(Number(articleId), {
-                likedUsers: { connect: { id: userId } }
-            });
-        }
-        const article2show = (0, selectFields_1.selectFields)(updatedArticle !== null && updatedArticle !== void 0 ? updatedArticle : article);
-        return Object.assign({ isLiked: true }, article2show);
-    });
-}
-function cancelLike(userId, articleId) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let article = yield article_repo_1.default.findById(Number(articleId));
-        let updateArticle;
-        if (!article.likedUsers.some((n) => n.id === userId)) {
-            console.log('Already not your favorite article');
-        }
-        else {
-            console.log('Now, not one of your favorite articles');
-            updateArticle = yield article_repo_1.default.patch(Number(articleId), {
-                likedUsers: { disconnect: { id: userId } }
-            });
-        }
-        const article2show = (0, selectFields_1.selectFields)(updateArticle !== null && updateArticle !== void 0 ? updateArticle : article);
-        return Object.assign({ isLiked: false }, article2show);
+        const isLiked = (0, myFuns_1.includedOk)(article.likedUsers, 'id', userId);
+        const updated = isLiked
+            ? yield article_repo_1.default.cancelLike(Number(articleId), userId)
+            : yield article_repo_1.default.like(Number(articleId), userId);
+        console.log(isLiked ? 'Now, not your favorite article' : 'Now, your favorite article');
+        const article2show = (0, selectFields_1.selectFields)(updated);
+        return Object.assign({ isLiked: !isLiked }, article2show);
     });
 }
 exports.default = {
@@ -131,6 +110,5 @@ exports.default = {
     erase,
     getList,
     get,
-    like,
-    cancelLike
+    likeToggle
 };

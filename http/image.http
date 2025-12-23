@@ -27,37 +27,37 @@ DELETE {{baseUrl}}/images/products/30
 // 사촌 비니 
 
 ###
-GET {{baseUrl}}/images/articles/23
+GET {{baseUrl}}/images/articles/16
 
 ###
-POST {{baseUrl}}/images/articles/23
+POST {{baseUrl}}/images/articles/16
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
-Content-Disposition: form-data; name="image"; filename="aRoomWithaView.png"
+Content-Disposition: form-data; name="image"; filename="lalaLand.png"
 Content-Type: image/png
 
-< ./images/article/aRoomWithaView.png
+< ./images/article/lalaLand.png
 --MyBoundary--
 
 ###
-DELETE {{baseUrl}}/images/articles/21
+DELETE {{baseUrl}}/images/articles/16
 
 
 //------------------------ 사용자 이미지 APIs
 
 ###
-GET {{baseUrl}}/images/users/9
+GET {{baseUrl}}/images/users/5
 
 ###
-POST {{baseUrl}}/images/users/9
+POST {{baseUrl}}/images/users/5
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
-Content-Disposition: form-data; name="image"; filename="Soonie.png"
+Content-Disposition: form-data; name="image"; filename="EmmaStone.png"
 Content-Type: image/png
 
-< ./images/user/Soonie.png
+< ./images/user/EmmaStone.png
 --MyBoundary--
 
 ###

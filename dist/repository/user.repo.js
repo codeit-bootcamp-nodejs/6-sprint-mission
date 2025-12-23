@@ -16,8 +16,7 @@ const prismaClient_1 = __importDefault(require("../lib/prismaClient"));
 function getList() {
     return __awaiter(this, void 0, void 0, function* () {
         return yield prismaClient_1.default.user.findMany({
-            orderBy: { createdAt: 'desc' },
-            select: { id: true, email: true, nickname: true, createdAt: true }
+            orderBy: { createdAt: 'desc' }
         });
     });
 }

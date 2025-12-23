@@ -15,10 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const prismaClient_1 = __importDefault(require("../lib/prismaClient"));
 function post(data) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_1.default.product.create({
-            data
-            // user: { connect: { id: userId } }
-        });
+        return yield prismaClient_1.default.product.create({ data });
     });
 }
 function patch(id, productData) {
@@ -30,9 +27,27 @@ function patch(id, productData) {
         });
     });
 }
+function like(productId, userId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prismaClient_1.default.product.update({
+            where: { id: productId },
+            data: { likedUsers: { connect: { id: userId } } },
+            include: { likedUsers: true }
+        });
+    });
+}
+function cancelLike(productId, userId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prismaClient_1.default.product.update({
+            where: { id: productId },
+            data: { likedUsers: { disconnect: { id: userId } } },
+            include: { likedUsers: true }
+        });
+    });
+}
 function erase(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_1.default.product.delete({ where: { id } });
+        yield prismaClient_1.default.product.delete({ where: { id } });
     });
 }
 function countById(id) {
@@ -61,6 +76,8 @@ function findById(id) {
 exports.default = {
     post,
     patch,
+    like,
+    cancelLike,
     erase,
     findById,
     countById,

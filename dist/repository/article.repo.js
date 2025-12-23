@@ -27,9 +27,27 @@ function patch(id, articleData) {
         });
     });
 }
+function like(articleId, userId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prismaClient_1.default.article.update({
+            where: { id: articleId },
+            data: { likedUsers: { connect: { id: userId } } },
+            include: { likedUsers: true }
+        });
+    });
+}
+function cancelLike(articleId, userId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prismaClient_1.default.article.update({
+            where: { id: articleId },
+            data: { likedUsers: { disconnect: { id: userId } } },
+            include: { likedUsers: true }
+        });
+    });
+}
 function erase(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        return prismaClient_1.default.article.delete({ where: { id } });
+        prismaClient_1.default.article.delete({ where: { id } });
     });
 }
 function getList(where, orderBy, offset, limit) {
@@ -53,6 +71,8 @@ function findById(id) {
 exports.default = {
     post,
     patch,
+    like,
+    cancelLike,
     erase,
     findById,
     getList

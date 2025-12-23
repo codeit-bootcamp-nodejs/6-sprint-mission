@@ -13,22 +13,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const prismaClient_1 = __importDefault(require("../lib/prismaClient"));
-function getList(where, type, limit, cursor) {
+function getList(where, limit, cursor) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield prismaClient_1.default.comment.findMany({
             skip: cursor ? 1 : 0, // 첫 검색 0, 이후 1
             take: limit, // default 10
             cursor: cursor ? { id: cursor } : undefined, // 첫 검색 undefined, 이후 전 검색의 최종 id
             where, // type과 content에 포함된 단어로 조건 검색
-            orderBy: { id: 'asc' }, // 조회순: id 오름순으로 고정
-            select: {
-                id: true,
-                content: true,
-                productId: type == 'article' ? false : true,
-                articleId: type == 'product' ? false : true,
-                createdAt: true,
-                updatedAt: false
-            }
+            orderBy: { id: 'asc' } // 조회순: id 오름순으로 고정
         });
     });
 }
@@ -54,7 +46,7 @@ function patch(id, commentData) {
 }
 function erase(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_1.default.comment.delete({ where: { id } });
+        yield prismaClient_1.default.comment.delete({ where: { id } });
     });
 }
 exports.default = {

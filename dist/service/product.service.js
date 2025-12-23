@@ -85,40 +85,21 @@ function get(userId, productId) {
         const product2show = (0, selectFields_1.selectFields)(product);
         if (!userId)
             return product2show;
-        const isLiked = product.likedUsers.some((u) => u.id === userId);
+        const isLiked = (0, myFuns_1.includedOk)(product.likedUsers, 'id', userId);
         return Object.assign({ isLiked }, product2show);
     });
 }
-function like(userId, productId) {
+// 좋아요와 좋아요취소 토글
+function likeToggle(userId, productId) {
     return __awaiter(this, void 0, void 0, function* () {
-        let product = yield product_repo_1.default.findById(Number(productId));
-        if (product.likedUsers.some((n) => n.id === userId)) {
-            console.log('Already your favorite product');
-        }
-        else {
-            console.log('Now, one of your favorite products');
-            product = yield product_repo_1.default.patch(Number(productId), {
-                likedUsers: { connect: { id: userId } }
-            });
-        }
-        const product2show = (0, selectFields_1.selectFields)(product);
-        return Object.assign({ isLiked: true }, product2show);
-    });
-}
-function cancelLike(userId, productId) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let product = yield product_repo_1.default.findById(Number(productId));
-        if (!product.likedUsers.some((n) => n.id === userId)) {
-            console.log('Already not one of your liked products');
-        }
-        else {
-            console.log('Now, not one of your liked products');
-            product = yield product_repo_1.default.patch(Number(productId), {
-                likedUsers: { disconnect: { id: userId } }
-            });
-        }
-        const product2show = (0, selectFields_1.selectFields)(product);
-        return Object.assign({ isLiked: false }, product2show);
+        const product = yield product_repo_1.default.findById(Number(productId));
+        const isLiked = (0, myFuns_1.includedOk)(product.likedUsers, 'id', userId);
+        const updated = isLiked
+            ? yield product_repo_1.default.cancelLike(Number(productId), userId)
+            : yield product_repo_1.default.like(Number(productId), userId);
+        console.log(isLiked ? 'Now, not your favorite product' : 'Now, your favorite product');
+        const product2show = (0, selectFields_1.selectFields)(updated);
+        return Object.assign({ isLiked: !isLiked }, product2show);
     });
 }
 exports.default = {
@@ -127,6 +108,5 @@ exports.default = {
     erase,
     getList,
     get,
-    like,
-    cancelLike
+    likeToggle
 };

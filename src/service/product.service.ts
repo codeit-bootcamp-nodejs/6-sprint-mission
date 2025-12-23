@@ -6,6 +6,7 @@ import { selectFields } from '../lib/selectFields';
 import { CreateProductDto, UpdateProductDto } from '../dto/dto';
 import { Product } from '@prisma/client';
 import NotFoundError from '../middleware/errors/NotFoundError';
+import { ProductListToShow, ProductToShow } from '../dto/interfaceType';
 
 async function post(userId: number, data: CreateProductDto): Promise<Product> {
   const productData = { ...data, userId };
@@ -14,14 +15,14 @@ async function post(userId: number, data: CreateProductDto): Promise<Product> {
   return product;
 }
 
-async function patch(productId: string, productData: UpdateProductDto) {
+async function patch(productId: string, productData: UpdateProductDto): Promise<Product> {
   assert(productData, PatchProduct);
   const product = await productRepo.patch(Number(productId), productData);
   if (isEmpty(product)) throw new NotFoundError('product', Number(productId));
   return product;
 }
 
-async function erase(productId: string) {
+async function erase(productId: string): Promise<void> {
   await productRepo.erase(Number(productId));
 }
 
@@ -36,7 +37,7 @@ async function getList(
   orderStr: string,
   nameStr: string | undefined,
   descriptionStr: string | undefined
-) {
+): Promise<ProductListToShow[]> {
   const orderBy = { createdAt: 'desc' };
   if (orderStr === 'oldest') {
     orderBy.createdAt = 'asc';
@@ -57,8 +58,11 @@ async function getList(
 
 // 상품 상세 조회
 // 조회 필드: id, name, description, price, tags, createdAt
-async function get(userId: number | undefined, productId: string) {
-  let product = await productRepo.findById(Number(productId));
+async function get(
+  userId: number | undefined,
+  productId: string
+): Promise<ProductToShow | Product> {
+  const product = await productRepo.findById(Number(productId));
   const product2show = selectFields(product);
   if (!userId) return product2show;
   const isLiked = includedOk(product.likedUsers, 'id', userId);
@@ -66,7 +70,7 @@ async function get(userId: number | undefined, productId: string) {
 }
 
 // 좋아요와 좋아요취소 토글
-async function likeToggle(userId: number, productId: string) {
+async function likeToggle(userId: number, productId: string): Promise<ProductToShow> {
   const product = await productRepo.findById(Number(productId));
 
   const isLiked = includedOk(product.likedUsers, 'id', userId);

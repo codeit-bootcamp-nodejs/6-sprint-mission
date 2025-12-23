@@ -1,3 +1,5 @@
+import { User } from '@prisma/client';
+
 export interface CreateUserDto {
   email: string;
   nickname: string;
@@ -10,6 +12,8 @@ export interface UpdateUserDto {
   password?: string;
   imageUrls?: string[];
 }
+
+export type SafeUser = Omit<User, 'password'>;
 
 export interface CreateProductDto {
   name: string;
@@ -46,17 +50,17 @@ interface BaseComment {
   userId: number;
 }
 
-interface ArticleComment extends BaseComment {
+export interface ArticleCommentDto extends BaseComment {
   articleId: number;
   productId: null;
 }
 
-interface ProductComment extends BaseComment {
+export interface ProductCommentDto extends BaseComment {
   articleId: null;
   productId: number;
 }
 
-export type CreateCommentDTO = ArticleComment | ProductComment;
+export type CreateCommentDto = ArticleCommentDto | ProductCommentDto;
 
 export interface UpdateCommentDto {
   content?: string;

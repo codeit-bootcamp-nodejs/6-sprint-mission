@@ -1,15 +1,16 @@
 import { assert } from 'superstruct';
 import { CreateComment, PatchComment } from '../struct/structs';
 import commentRepo from '../repository/comment.repo';
-import { Prisma } from '@prisma/client';
-import { UpdateCommentDto } from '../dto/dto';
+import { UpdateCommentDto, ArticleCommentDto, ProductCommentDto } from '../dto/dto';
+import { Comment2show, CommentWithNextCursor } from '../dto/interfaceType';
+import { Comment } from '@prisma/client';
 
 async function getList(
   limit: number,
   cursor: number | undefined,
   typeStr: string,
   contentStr: string | undefined
-) {
+): Promise<CommentWithNextCursor> {
   let where = {};
   if (contentStr) where = { content: { contains: contentStr } };
 
@@ -24,65 +25,56 @@ async function getList(
   });
 
   const nextCursor = comments.length > 0 ? comments[comments.length - 1].id : null;
-  return { newComments, nextCursor };
+  return { comments: newComments, nextCursor };
 }
 
-async function get(commentId: string) {
+async function get(commentId: string): Promise<Comment2show> {
   const comment = await commentRepo.findById(Number(commentId));
   const { id, content, articleId, productId, userId, createdAt, updatedAt } = comment;
   if (comment.articleId == null) return { id, content, productId, userId, createdAt };
-  if (comment.productId == null) return { id, content, articleId, userId, createdAt };
+  else return { id, content, articleId, userId, createdAt };
 }
 
-async function postProduct(content: string, productId: string, userId: number) {
-  const commentData = {
-    content,
-    productId: Number(productId),
-    userId
-  };
-  assert(commentData, CreateComment);
+async function post(url: string, content: string, id: string, userId: number): Promise<Comment> {
+  let commentData: ArticleCommentDto | ProductCommentDto;
+  if (url.includes('articles')) {
+    commentData = {
+      content,
+      userId,
+      articleId: Number(id),
+      productId: null
+    };
+  } else {
+    commentData = {
+      content,
+      userId,
+      productId: Number(id),
+      articleId: null
+    };
+  }
 
-  const prismaData: Prisma.CommentCreateInput = {
-    content,
-    product: { connect: { id: Number(productId) } }, // userId → user 연결
-    user: { connect: { id: userId } } // userId → user 연결
-  };
-  const comment = await commentRepo.post(prismaData);
+  assert(commentData, CreateComment);
+  console.log(commentData);
+  const comment = await commentRepo.post(commentData);
   return comment;
 }
 
-async function postArticle(content: string, articleId: string, userId: number) {
-  const commentData = {
-    content,
-    articleId: Number(articleId),
-    userId
-  };
-
-  const prismaData: Prisma.CommentCreateInput = {
-    content,
-    article: { connect: { id: Number(articleId) } }, // userId → user 연결
-    user: { connect: { id: userId } } // userId → user 연결
-  };
-  assert(commentData, CreateComment);
-  const comment = await commentRepo.post(prismaData);
-  return comment;
-}
-
-async function patch(commentId: string, data: UpdateCommentDto, userId: number) {
+async function patch(commentId: string, data: UpdateCommentDto, userId: number): Promise<Comment> {
   const commentData = { ...data, userId };
   assert(commentData, PatchComment);
   return await commentRepo.patch(Number(commentId), commentData);
 }
 
-async function erase(commentId: string) {
+async function erase(commentId: string): Promise<void> {
   await commentRepo.erase(Number(commentId));
 }
 
 export default {
   getList,
   get,
-  postProduct,
-  postArticle,
+  post,
+  // postProduct,
+  // postArticle,
   patch,
   erase
 };

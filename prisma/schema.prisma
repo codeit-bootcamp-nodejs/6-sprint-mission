@@ -8,46 +8,78 @@ datasource db {
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
-  email         String    @unique
+  id            Int            @id @default(autoincrement())
+  email         String         @unique
   nickname      String
   imageUrls     String[]
   password      String
   products      Product[]
   articles      Article[]
   comments      Comment[]
-  likedProducts Product[] @relation("likedProducts")
-  likedArticles Article[] @relation("likedArticles")
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  likedProducts Product[]      @relation("likedProducts")
+  likedArticles Article[]      @relation("likedArticles")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  notifications Notification[]
+}
+
+model Notification {
+  id        Int              @id @default(autoincrement())
+  userId    Int
+  type      NotificationType
+  message   String
+  isRead    Boolean          @default(false)
+  articleId Int?
+  productId Int?
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  article   Article?         @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  product   Product?         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime         @default(now())
+  readAt    DateTime?
+
+  @@index([userId, isRead])
 }
 
 model Product {
-  id          Int       @id @default(autoincrement())
-  name        String
-  description String
-  price       Float
-  tags        String[]
-  imageUrls   String[]
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      Int
-  likedUsers  User[]    @relation("likedProducts")
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  comments    Comment[]
+  id                    Int                   @id @default(autoincrement())
+  name                  String
+  description           String
+  price                 Float
+  tags                  String[]
+  imageUrls             String[]
+  user                  User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                Int
+  likedUsers            User[]                @relation("likedProducts")
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  comments              Comment[]
+  notifications         Notification[]
+  productpricehistories ProductPriceHistory[]
+}
+
+model ProductPriceHistory {
+  id        Int      @id @default(autoincrement())
+  productId Int
+  price     Float // 첫 기록은 초기가격 이후는 변동 후 가격
+  prevPrice Float? // 첫 기록은 null (상품등록), 이후는 직전 가격
+  createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, createdAt])
 }
 
 model Article {
-  id         Int       @id @default(autoincrement())
-  title      String
-  content    String
-  imageUrls  String[]
-  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     Int
-  likedUsers User[]    @relation("likedArticles")
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  comments   Comment[]
+  id            Int            @id @default(autoincrement())
+  title         String
+  content       String
+  imageUrls     String[]
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        Int
+  likedUsers    User[]         @relation("likedArticles")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  comments      Comment[]
+  notifications Notification[]
 }
 
 model Comment {
@@ -61,6 +93,11 @@ model Comment {
   productId Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum NotificationType {
+  ARTICLE
+  PRODUCT
 }
 
 generator erd {

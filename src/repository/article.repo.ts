@@ -40,7 +40,7 @@ async function cancelLike(
 }
 
 async function erase(id: number): Promise<void> {
-  prisma.article.delete({ where: { id } });
+  await prisma.article.delete({ where: { id } });
 }
 
 async function getList(

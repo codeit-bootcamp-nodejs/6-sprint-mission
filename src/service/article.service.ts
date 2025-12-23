@@ -5,6 +5,7 @@ import articleRepo from '../repository/article.repo';
 import { isEmpty, includedOk } from '../lib/myFuns';
 import { selectFields } from '../lib/selectFields';
 import { CreateArticleDto, UpdateArticleDto } from '../dto/dto';
+import { Article2show, ArticleList2show, LikedArticle2show } from '../dto/interfaceType';
 import { Article, Prisma } from '@prisma/client';
 
 // 게시물 생성, 수정, 삭제: 토큰 인증된 유저만 가능
@@ -39,7 +40,7 @@ async function getList(
   orderStr: string,
   titleStr: string | undefined,
   contentStr: string | undefined
-) {
+): Promise<ArticleList2show[]> {
   const orderBy = { createdAt: 'desc' };
   if (orderStr === 'oldest') {
     orderBy.createdAt = 'asc';
@@ -55,14 +56,16 @@ async function getList(
     const { id, title, content, createdAt, ...rest } = a;
     return { id, title, content, createdAt };
   });
-
   return articlesToShow;
 }
 
 // 게시물 상세 조회
 // 조회 필드 요구: id, title, content, createdAt
 // 조회 필드 추가: comments, likedUsers
-async function get(userId: number | undefined, articleId: string) {
+async function get(
+  userId: number | undefined,
+  articleId: string
+): Promise<Article2show | LikedArticle2show> {
   let article = await articleRepo.findById(Number(articleId));
   const article2show = selectFields(article);
   if (!userId) return article2show;
@@ -71,9 +74,8 @@ async function get(userId: number | undefined, articleId: string) {
 }
 
 // 좋아요와 좋아요취소 토글
-async function likeToggle(userId: number, articleId: string) {
+async function likeToggle(userId: number, articleId: string): Promise<LikedArticle2show> {
   const article = await articleRepo.findById(Number(articleId));
-
   const isLiked = includedOk(article.likedUsers, 'id', userId);
 
   const updated = isLiked
@@ -81,13 +83,8 @@ async function likeToggle(userId: number, articleId: string) {
     : await articleRepo.like(Number(articleId), userId);
 
   console.log(isLiked ? 'Now, not your favorite article' : 'Now, your favorite article');
-
   const article2show = selectFields(updated);
-
-  return {
-    isLiked: !isLiked,
-    ...article2show
-  };
+  return { isLiked: !isLiked, ...article2show };
 }
 
 export default {

@@ -1,4 +1,5 @@
 import * as s from 'superstruct';
+import { CreateCommentDto } from '../dto/dto';
 
 export const CreateUser = s.object({
   email: s.string(),
@@ -31,8 +32,8 @@ export const PatchArticle = s.partial(CreateArticle);
 
 export const CreateComment = s.object({
   content: s.string(),
-  articleId: s.optional(s.number()),
-  productId: s.optional(s.number()),
+  articleId: s.optional(s.nullable(s.number())),
+  productId: s.optional(s.nullable(s.number())),
   userId: s.number()
 });
 

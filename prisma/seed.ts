@@ -1,11 +1,17 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
-import { USERS, PRODUCTS, ARTICLES, COMMENTS } from './mock';
+import { USERS, PRODUCTS, ARTICLES, COMMENTS, NOTIFICATIONS, PRODUCTPRICEHISTORIES } from './mock';
+
+import * as mock from './mock';
+console.log(mock.PRODUCTPRICEHISTORIES[0]);
+
 import 'dotenv/config';
 console.log('DATABASE_URL =', process.env.DATABASE_URL);
 
 async function main() {
   console.log('Deleting old data...');
+  await prisma.notification.deleteMany();
+  await prisma.productPriceHistory.deleteMany();
   await prisma.comment.deleteMany();
   await prisma.product.deleteMany();
   await prisma.article.deleteMany();
@@ -17,20 +23,13 @@ async function main() {
     return { id, email, nickname, password, createdAt, updatedAt };
   });
 
-  // const productData = PRODUCTS.map((product) => {
-  //   const { comments, ...rest } = product;
-  //   return rest;
-  // });
-
-  // const articleData = ARTICLES.map((article) => {
-  //   const { comments, ...rest } = article;
-  //   return rest;
-  // });
-
   await prisma.user.createMany({ data: userData, skipDuplicates: true });
   await prisma.product.createMany({ data: PRODUCTS, skipDuplicates: true });
   await prisma.article.createMany({ data: ARTICLES, skipDuplicates: true });
   await prisma.comment.createMany({ data: COMMENTS, skipDuplicates: true });
+
+  await prisma.productPriceHistory.createMany({ data: PRODUCTPRICEHISTORIES, skipDuplicates: true });
+  await prisma.notification.createMany({ data: NOTIFICATIONS, skipDuplicates: true });
 
   for (const user of USERS) {
     if (user.likedProducts && user.likedProducts.length > 0) {
@@ -85,6 +84,22 @@ async function main() {
   SELECT setval(
     pg_get_serial_sequence('"Comment"', 'id'),
     (SELECT MAX(id) FROM "Comment")
+  );
+`;
+
+  // Notification
+  await prisma.$executeRaw`
+  SELECT setval(
+    pg_get_serial_sequence('"Notification"', 'id'),
+    (SELECT MAX(id) FROM "Notification")
+  );
+`;
+
+  // ProductPriceHistory
+  await prisma.$executeRaw`
+  SELECT setval(
+    pg_get_serial_sequence('"ProductPriceHistory"', 'id'),
+    (SELECT MAX(id) FROM "ProductPriceHistory")
   );
 `;
 

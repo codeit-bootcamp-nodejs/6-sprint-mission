@@ -22,10 +22,10 @@ GET {{baseUrl}}/articles?title=사촌&content=연기
 
 // 게시물 상세 조회 및 좋아요 기능: 인증 필요
 ###
-GET {{baseUrl}}/articles/2
+GET {{baseUrl}}/articles/16
 
 ###
-POST {{baseUrl}}/articles/2/like/toggle
+POST {{baseUrl}}/articles/14/like/toggle
 
 
 // 게시물 생성: 인증 필요
@@ -40,14 +40,14 @@ Content-Type: application/json
 
 // 게시물 수정과 삭제: 인증과 인가 필요
 ###
-PATCH {{baseUrl}}/articles/23
+PATCH {{baseUrl}}/articles/21
 Content-Type: application/json
 
 {
-  "content": "헬레나 본 헴 카터와 사이먼 르베이의 열정 충만한 연기가 일품이에요"
+  "content": "20세기 초반 격정의 이태리에서 성에 눈뜨는 영국 처녀의 코믹 로맨스."
 }
 
 ###
-DELETE {{baseUrl}}/articles/24
+DELETE {{baseUrl}}/articles/23
 
 

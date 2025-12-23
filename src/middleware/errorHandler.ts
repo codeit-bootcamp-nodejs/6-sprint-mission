@@ -9,7 +9,7 @@ export const defaultNotFoundHandler: RequestHandler = function (req, res, next) 
 };
 
 export const globalErrorHandler: ErrorRequestHandler = function (err, req, res, next) {
-  //console.error(err); // 개발용 로그
+  console.error(err); // 개발용 로그
 
   // Superstruct 에러 처리
   if (err instanceof StructError) {
@@ -21,6 +21,12 @@ export const globalErrorHandler: ErrorRequestHandler = function (err, req, res, 
     }
 
     return res.status(400).send({ message: '잘못된 요청입니다.' });
+  }
+
+  // NotFoundError (서비스 계층에서 던진 404)
+  if (err instanceof NotFoundError) {
+    if (err.message === 'NOT_FOUND')
+      return res.status(404).send({ message: err.message || '존재하지 않습니다.' });
   }
 
   // 서비스 계층에서 던진 BadRequestError 처리
@@ -45,63 +51,54 @@ export const globalErrorHandler: ErrorRequestHandler = function (err, req, res, 
 
   // 403 Forbidden (비밀번호 오류)
   // throw new Error로 던지는 경우 여기 걸림
-  if (err.message === 'FORBIDDEN') {
-    return res.status(403).send({
-      message: '비밀번호가 틀렸습니다.'
-    });
-  }
-
-  // NotFoundError (서비스 계층에서 던진 404)
-  if (err instanceof NotFoundError || err.message === 'NOT_FOUND') {
-    return res.status(404).send({
-      message: err.message || '존재하지 않습니다.'
-    });
-  }
-  // if (err.code === 'P2002') {
-  //   return res.status(409).send({
-  //     message: '이미 이 큐레이션에는 댓글이 존재합니다.'
+  // if (err.message === 'FORBIDDEN') {
+  //   return res.status(403).send({
+  //     message: '비밀번호가 틀렸습니다.'
   //   });
   // }
+
   // Prisma 관련 오류 처리
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
-    const prisma_errorCode = [
-      'P2000',
-      'P2006',
-      'P2007',
-      'P2009',
-      'P2003',
-      'P2008',
-      'P2025',
-      'P2001',
-      'P2012',
-      'P1016',
-      'P1000',
-      'P1001',
-      'P1008'
-    ];
-    const HTTP_status = [400, 400, 400, 400, 403, 403, 404, 404, 500, 500, 500, 500, 500];
-    const myHTTPstatus = HTTP_status[prisma_errorCode.indexOf(err.code)];
+    const prismaToHttp: Record<string, number> = {
+      P2002: 409,
+      P2003: 400,
+      P2007: 400,
+      P2015: 404,
+      P2025: 404,
 
-    //console.log(`메시지: ${err.message}`);
+      // infra / server errors
+      P1000: 500,
+      P1010: 500,
+      P1012: 500,
+      P1017: 503,
+      P2021: 500
+    };
+    console.log(`Prisma Error: ${err.message}`);
+    const myHTTPstatus = prismaToHttp[err.code] ?? 500;
 
+    let myMessage = '';
     if (myHTTPstatus === 400) {
-      return res.status(400).send({ message: '잘못된 요청입니다.' });
-    } else if (myHTTPstatus === 403) {
-      return res.status(403).send({ message: '권한이 없습니다.' });
+      myMessage = '잘못된 요청입니다.';
     } else if (myHTTPstatus === 404) {
-      return res.status(404).send({ message: '존재하지 않습니다.' });
+      myMessage = '존재하지 않습니다.';
+    } else if (myHTTPstatus === 409) {
+      myMessage = '중복 상태/관계가 존재합니다.';
+    } else if (myHTTPstatus === 503) {
+      myMessage = '일시적 서버 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.';
     } else {
-      return res.status(500).send({ message: '서버 내부 문제가 발생했습니다.' });
+      myMessage = '서버 내부 문제가 발생했습니다.';
     }
+    return res.status(myHTTPstatus).send({ message: myMessage });
   }
 
   // JSON 파싱 오류
   if (err instanceof SyntaxError && 'body' in err) {
+    console.log('Json Parsing Error');
     return res.status(400).send({ message: '잘못된 요청입니다.' });
   }
 
   // 기타 알 수 없는 오류: 지금까지 에러가 안 걸러졌다면, 반드시 여기서 걸리게.
   return res.status(500).send({
-    message: '서버 내부 문제가 발생했습니다'
+    message: '미확인 서버 내부 문제가 발생했습니다'
   });
 };

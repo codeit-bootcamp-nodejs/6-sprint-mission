@@ -40,7 +40,7 @@ function getList() {
             const users = yield user_repo_1.default.getList();
             if (!users)
                 throw new Error('NOT_FOUND');
-            return users;
+            return filterPassword(users);
         }
         else {
             return { message: '개발자 옵션 입니다' };

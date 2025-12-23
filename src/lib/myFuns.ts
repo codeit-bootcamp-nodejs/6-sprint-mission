@@ -1,22 +1,19 @@
-export function isEmptyArray(v: any) {
+export function isEmptyArray<T>(v: T[]): Boolean {
   if (Array.isArray(v)) return v.length === 0;
+  else return false;
 }
 
-export function isEmptyObject(v: any) {
-  if (v === null) return true;
+export function isEmptyObject(v: object): Boolean {
   if (typeof v === 'object') return Object.keys(v).length === 0;
+  else return false;
 }
 
-export function isEmptyString(v: any) {
-  if (typeof v === 'string') return v.length === 0;
-}
-
-export function isEmpty(v: any) {
+export function isEmpty(v: any): Boolean {
   if (v === undefined) return true;
-  return Boolean(isEmptyObject(v) || isEmptyArray(v) || isEmptyString(v));
+  return Boolean(isEmptyObject(v) || isEmptyArray(v));
 }
 
-export function print(message: string) {
+export function print(message: string): void {
   console.log('');
   console.log(message);
   console.log('');
