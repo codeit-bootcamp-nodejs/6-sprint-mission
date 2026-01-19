@@ -22,7 +22,7 @@ async function findById(id: number): Promise<Comment> {
   });
 }
 
-async function post(data: CreateCommentDto): Promise<Comment> {
+async function post(data: Prisma.CommentCreateInput): Promise<Comment> {
   return await prisma.comment.create({ data });
 }
 

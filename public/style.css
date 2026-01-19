@@ -1,0 +1,35 @@
+.chat-container {
+  margin: 0 auto;
+  max-width: 480px;
+  width: 100%;
+}
+
+#message-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 400px;
+  overflow-y: auto;
+  background-color: #f0f0f0;
+  padding: 16px;
+  list-style: none;
+}
+
+.message-item.me {
+  font-weight: bold;
+  color: blue;
+}
+
+.message-item.error {
+  color: red;
+}
+
+#message-form {
+  display: flex;
+  gap: 8px;
+}
+
+#message-form input {
+  flex-grow: 1;
+}
+

@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { NotificationType, User } from '@prisma/client';
 
 export interface CreateUserDto {
   email: string;
@@ -30,6 +30,20 @@ export interface UpdateProductDto {
   tags?: string[];
   imageUrls?: string[];
   userId?: number;
+}
+
+export interface CreateNotificationDto {
+  type: NotificationType,
+  userId: number;
+  productId?: number | null;
+  articleId?: number | null;
+  message: string;
+}
+
+export interface CreateProductPriceHistoryDto {
+  productId: number;
+  price: number;
+  prevPrice?: number;
 }
 
 export interface CreateArticleDto {

@@ -4,15 +4,35 @@ import { Request, Response, NextFunction } from 'express';
 // 상품 등록: 토큰 인증된 유저만 가능
 // 입력 필드: name, description, price, tags
 async function post(req: Request, res: Response, next: NextFunction): Promise<void> {
-  const product = await productService.post(req.user.id, req.body);
-  console.log(`Product_${product.id} posted by ${req.user.nickname}`);
+  const { name, description, price, tags } = req.body;
+  const productData = {
+    userId: req.user.id,
+    name: name.trim() ?? null,
+    description: description?.trim() ?? null,
+    price: price ?? null,
+    tags: tags ?? []
+  };
+  const [product, priceRecord] = await productService.post(productData);
+
+  console.log(`Product_${product.id} created by User_${req.user.id}`);
+  console.log(`PriceRecord_${priceRecord.id} created for Product_${product.id}`);
+
   res.status(201).json(product);
 }
 
 // 상품 수정: 토큰 인증된 유저가 자기가 등록한 상품인 경우만 가능
 async function patch(req: Request, res: Response, next: NextFunction): Promise<void> {
   const { id } = req.params;
-  const product = await productService.patch(id, req.body);
+  const { name, description, price, tags } = req.body;
+
+  const productData = {
+    name: name.trim() ?? null,
+    description: description?.trim() ?? null,
+    price: price ?? null,
+    tags: tags ?? []
+  };
+
+  const product = await productService.patch(Number(id), productData);
   console.log(`Product_${id} patched by ${req.user.nickname}`);
   res.status(200).json(product);
 }

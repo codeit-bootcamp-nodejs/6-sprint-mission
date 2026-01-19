@@ -11,7 +11,9 @@
     "multer": "^2.0.2",
     "path": "^0.12.7",
     "prisma": "^5.22.0",
-    "superstruct": "^1.0.4"
+    "superstruct": "^1.0.4",
+    "socket.io": "^4.8.1",
+    "ws": "^8.18.1"
   },
   "devDependencies": {
     "@mermaid-js/mermaid-cli": "^11.12.0",
@@ -22,6 +24,8 @@
     "@types/is-email": "^1.0.0",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.0.0",
+    "@types/socket.io": "^3.0.2",
+    "@types/ws": "^8.18.1",
     "nodemon": "^3.0.1",
     "prisma-erd-generator": "^2.3.0",
     "ts-node": "^10.9.2",

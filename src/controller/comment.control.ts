@@ -40,7 +40,17 @@ async function post(req: Request, res: Response, next: NextFunction): Promise<vo
   const { content } = req.body;
   const { id } = req.params;
   const { id: userId } = req.user;
-  const comment = await commentService.post(req.url, content, id, userId);
+
+  let comment;
+  let notification;
+  if (req.url.includes('articles')) {
+    [comment, notification] = await commentService.postArticle(content, Number(id), userId);
+    if (notification) console.log('Notification sent');
+  } else {
+    comment = await commentService.postProduct(content, Number(id), userId);
+  }
+
+  if (notification) console.log('Notification sent');
   console.log('Comment created');
   res.status(200).json(comment);
 }

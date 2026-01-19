@@ -7,14 +7,6 @@ const userRouter = express.Router();
 
 userRouter.get('/', withTryCatch(userControl.getList)); // 부가기능
 
-userRouter.post('/register', withTryCatch(userControl.register));
-userRouter.post('/login', withTryCatch(userControl.login));
-userRouter.post('/logout', withTryCatch(userControl.logout));
-
-// 토큰 재발행
-userRouter.get('/tokens/view', withTryCatch(userControl.viewTokens)); // 토큰 확인: 부가 기능
-userRouter.post('/tokens/refresh', withTryCatch(userControl.issueTokens));
-
 // 인증된 유저 APIs (비번은 res로 보여주지 않음)
 userRouter.get('/info', authenticateUser, withTryCatch(userControl.getInfo)); // 자신의 정보 조회
 userRouter.patch('/info/edit', authenticateUser, withTryCatch(userControl.patchInfo)); // 토큰 인증 정보 수정, 비번 제외

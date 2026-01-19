@@ -1,9 +1,19 @@
 import { assert } from 'superstruct';
-import { CreateComment, PatchComment } from '../struct/structs';
+import { CreateComment, PatchComment } from '../struct/userStruct';
 import commentRepo from '../repository/comment.repo';
-import { UpdateCommentDto, ArticleCommentDto, ProductCommentDto } from '../dto/dto';
+import {
+  UpdateCommentDto,
+  ArticleCommentDto,
+  ProductCommentDto,
+  CreateNotificationDto
+} from '../dto/dto';
 import { Comment2show, CommentWithNextCursor } from '../dto/interfaceType';
-import { Comment } from '@prisma/client';
+import { Comment, Notification, NotificationType, Prisma } from '@prisma/client';
+import { CreateNotification } from '../struct/productStruct';
+import prisma from '../lib/prismaClient';
+import articleRepo from '../repository/article.repo';
+import NotFoundError from '../middleware/errors/NotFoundError';
+import { getIO } from '../websocket/socketIO';
 
 async function getList(
   limit: number,
@@ -35,27 +45,73 @@ async function get(commentId: string): Promise<Comment2show> {
   else return { id, content, articleId, userId, createdAt };
 }
 
-async function post(url: string, content: string, id: string, userId: number): Promise<Comment> {
-  let commentData: ArticleCommentDto | ProductCommentDto;
-  if (url.includes('articles')) {
-    commentData = {
-      content,
-      userId,
-      articleId: Number(id),
-      productId: null
-    };
-  } else {
-    commentData = {
-      content,
-      userId,
-      productId: Number(id),
-      articleId: null
-    };
-  }
+async function postArticle(
+  content: string,
+  id: number,
+  userId: number
+): Promise<[Comment, Notification]> {
+  const commentData = {
+    content,
+    userId,
+    articleId: id,
+    productId: null
+  } as ArticleCommentDto;
 
   assert(commentData, CreateComment);
-  console.log(commentData);
-  const comment = await commentRepo.post(commentData);
+
+  const commentDataToRepo = {
+    content,
+    user: { connect: { id: userId } },
+    article: { connect: { id } }
+  } as Prisma.CommentCreateInput;
+
+  const article = await articleRepo.findById(id);
+  if (!article) throw new NotFoundError('article', id);
+
+  const message = `게시글${id}에 사용자${userId}가 댓글을 남겼습니다 (${content})`;
+  const notificationData = {
+    userId: article.userId,
+    type: NotificationType.ARTICLE,
+    message,
+    articleId: id,
+    productId: null
+  } as CreateNotificationDto;
+
+  assert(notificationData, CreateNotification);
+
+  const notificationDataToRepo = {
+    user: { connect: { id: article.userId } },
+    type: NotificationType.ARTICLE,
+    message: notificationData.message,
+    article: { connect: { id } }
+  } as Prisma.NotificationCreateInput;
+
+  const [comment, notification] = await prisma.$transaction([
+    prisma.comment.create({ data: commentDataToRepo }),
+    prisma.notification.create({ data: notificationDataToRepo })
+  ]);
+
+  const io = getIO();
+  io.to(`user:${article.userId}`).emit('notification', { message });
+  return [comment, notification];
+}
+
+async function postProduct(content: string, id: number, userId: number): Promise<Comment> {
+  const commentData = {
+    content,
+    userId,
+    productId: id,
+    articleId: null
+  } as ProductCommentDto;
+  assert(commentData, CreateComment);
+
+  const commentDataToRepo = {
+    content,
+    user: { connect: { id: userId } },
+    product: { connect: { id } }
+  } as Prisma.CommentCreateInput;
+
+  const comment = await commentRepo.post(commentDataToRepo);
   return comment;
 }
 
@@ -72,9 +128,8 @@ async function erase(commentId: string): Promise<void> {
 export default {
   getList,
   get,
-  post,
-  // postProduct,
-  // postArticle,
+  postProduct,
+  postArticle,
   patch,
   erase
 };

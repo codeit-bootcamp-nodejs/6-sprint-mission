@@ -1,8 +1,15 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
-import { USERS, PRODUCTS, ARTICLES, COMMENTS, NOTIFICATIONS, PRODUCTPRICEHISTORIES } from './mock';
+import {
+  USERS,
+  PRODUCTS,
+  ARTICLES,
+  COMMENTS,
+  NOTIFICATIONS,
+  PRODUCTPRICEHISTORIES
+} from '../prisma/mock';
 
-import * as mock from './mock';
+import * as mock from '../prisma/mock';
 console.log(mock.PRODUCTPRICEHISTORIES[0]);
 
 import 'dotenv/config';
@@ -28,7 +35,10 @@ async function main() {
   await prisma.article.createMany({ data: ARTICLES, skipDuplicates: true });
   await prisma.comment.createMany({ data: COMMENTS, skipDuplicates: true });
 
-  await prisma.productPriceHistory.createMany({ data: PRODUCTPRICEHISTORIES, skipDuplicates: true });
+  await prisma.productPriceHistory.createMany({
+    data: PRODUCTPRICEHISTORIES,
+    skipDuplicates: true
+  });
   await prisma.notification.createMany({ data: NOTIFICATIONS, skipDuplicates: true });
 
   for (const user of USERS) {

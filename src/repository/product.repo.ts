@@ -1,6 +1,6 @@
 import { CreateProductDto } from '../dto/dto';
 import prisma from '../lib/prismaClient';
-import { Prisma, Product } from '@prisma/client';
+import { Prisma, Product, ProductPriceHistory } from '@prisma/client';
 
 async function post(data: CreateProductDto): Promise<Product> {
   return await prisma.product.create({ data });
@@ -70,6 +70,9 @@ async function findById(
   });
 }
 
+async function createPriceRecord(data: Prisma.ProductPriceHistoryCreateInput): Promise<ProductPriceHistory> {
+  return prisma.productPriceHistory.create({ data });
+}
 export default {
   post,
   patch,
@@ -78,5 +81,6 @@ export default {
   erase,
   findById,
   countById,
-  getList
+  getList,
+  createPriceRecord
 };

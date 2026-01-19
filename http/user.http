@@ -2,58 +2,6 @@
 
 GET {{baseUrl}}/users
 
-###
-POST {{baseUrl}}/users/register
-Content-Type: application/json
-
-{
-  "email": "user10@example.com",
-  "nickname": "user10",
-  "password": "password10"
-}
-
-// 등록할 때 사용자 이미지도 함께 등록하도록 변경할 예정
-# POST {{baseUrl}}/users/register
-# Content-Type: multipart/form-data; boundary=MyBoundary
- 
-# --MyBoundary
-# Content-Disposition: form-data; name="data"
-# Content-Type: application/json
-
-# {
-#   "email": "Frodo@example.com",
-#   "nickname": "Frodo",
-#   "password": "Frodo"
-# }
-
-# --MyBoundary
-# Content-Disposition: form-data; name="image"; filename="Frodo2.png"
-# Content-Type: image/png
-
-# < ./images/user/Frodo2.png
-# --MyBoundary--
-
-###
-POST {{baseUrl}}/users/login
-Content-Type: application/json
-
-{
-  "email": "user5@example.com",
-  "password": "password5"
-}
-
-###
-POST {{baseUrl}}/users/logout
-
-
-
-// 토큰 발행, 확인
-###
-POST {{baseUrl}}/users/tokens/refresh
-###
-GET {{baseUrl}}/users/tokens/view
-
-
 
 // 토큰 인증이 필요한 User APIs
 ###
@@ -66,26 +14,6 @@ Content-Type: application/json
   "nickname": "user4" ,
   "email": "user4@example.com"
 }
-
-// 나의 정보 수정할 때 이미지도 수정할 수 있도록 변경할 예정
-# PATCH {{baseUrl}}/users/MyInfo/edit
-# Content-Type: multipart/form-data; boundary=MyBoundary
- 
-# --MyBoundary
-# Content-Disposition: form-data; name="data"
-# Content-Type: application/json
-
-# { 
-#   "nickname": "user2" 
-# }
-
-# --MyBoundary
-# Content-Disposition: form-data; name="image"; filename="Frodo1.png"
-# Content-Type: image/png
-
-# < ./images/user/Frodo1.png
-# --MyBoundary--
-
 
 
 ###
@@ -105,3 +33,11 @@ GET {{baseUrl}}/users/articles
 GET {{baseUrl}}/users/like/products
 ###
 GET {{baseUrl}}/users/like/articles
+
+
+### 알림 기능
+GET {{baseUrl}}/users/notifications
+###
+GET {{baseUrl}}/users/notifications/unRead
+###
+PATCH {{baseUrl}}/users/notifications/1

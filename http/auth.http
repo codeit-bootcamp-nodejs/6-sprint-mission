@@ -1,0 +1,32 @@
+@baseUrl = http://localhost:3000
+
+###
+POST {{baseUrl}}/users/register
+Content-Type: application/json
+
+{
+  "email": "user10@example.com",
+  "nickname": "user10",
+  "password": "password10"
+}
+
+
+###
+POST {{baseUrl}}/users/login
+Content-Type: application/json
+
+{
+  "email": "user5@example.com",
+  "password": "password5"
+}
+
+###
+POST {{baseUrl}}/users/logout
+
+
+
+// 토큰 발행, 확인
+###
+POST {{baseUrl}}/users/tokens/refresh
+###
+GET {{baseUrl}}/users/tokens/view

@@ -11,8 +11,10 @@ async function create(data: Prisma.UserCreateInput): Promise<User> {
   return await prisma.user.create({ data });
 }
 
-async function findByEmail(email: string): Promise<User | null> {
-  return await prisma.user.findUnique({ where: { email } });
+async function findByEmail(
+  email: string
+): Promise<Prisma.UserGetPayload<{ include: { notifications: true } }> | null> {
+  return await prisma.user.findUnique({ where: { email }, include: { notifications: true } });
 }
 
 async function findById(id: number): Promise<
@@ -23,6 +25,7 @@ async function findById(id: number): Promise<
       comments: true;
       likedProducts: true;
       likedArticles: true;
+      notifications: true;
     };
   }>
 > {
@@ -33,7 +36,8 @@ async function findById(id: number): Promise<
       articles: true,
       comments: true,
       likedProducts: true,
-      likedArticles: true
+      likedArticles: true,
+      notifications: true
     }
   });
 }

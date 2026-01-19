@@ -1,6 +1,4 @@
 import { Request, Response } from 'express';
-import { assert } from 'superstruct';
-import { CreateUser } from '../struct/structs';
 import userService from '../service/user.service';
 import { SafeCompleteUser } from '../dto/interfaceType';
 import { REFRESH_TOKEN_COOKIE_NAME, NODE_ENV, REFRESH_TOKEN_MAXAGE } from '../lib/constants';
@@ -9,46 +7,6 @@ async function getList(req: Request, res: Response): Promise<void> {
   const users = (await userService.getList()) as SafeCompleteUser[];
   if (users.length > 1) console.log('User list fetched');
   res.status(200).json(users);
-}
-
-async function register(req: Request, res: Response): Promise<void> {
-  assert(req.body, CreateUser);
-  const newUser = await userService.register(req.body);
-  console.log(`User_${newUser.id} registered successfully`);
-  res.status(201).json(newUser);
-}
-
-async function login(req: Request, res: Response): Promise<void> {
-  const { accessToken, refreshToken } = await userService.login(req, res);
-  setTokenCookies(res, accessToken, refreshToken);
-  console.log(`User logged-in`);
-  res.status(200).send({ message: '사용자가 로그인 하였습니다', accessToken });
-}
-
-async function logout(req: Request, res: Response): Promise<void> {
-  userService.logout(res);
-  console.log(`User logged-out`);
-  res.status(200).send({ message: '사용자가 로그아웃 하였습니다' });
-}
-
-async function viewTokens(req: Request, res: Response): Promise<void> {
-  if (NODE_ENV === 'development') {
-    const { accessToken, refreshToken } = userService.viewTokens(req.cookies);
-    console.log('');
-    console.log(`accessToken:  ${accessToken}`);
-    console.log(`refreshToken: ${refreshToken}`);
-    console.log('');
-    if (!refreshToken) res.status(404).send({ message: '로그인 하세요' });
-  } else {
-    res.status(403).send({ message: '개발자 옵션입니다' });
-  }
-}
-
-async function issueTokens(req: Request, res: Response): Promise<void> {
-  const { accessToken, refreshToken } = await userService.issueTokens(req.cookies);
-  setTokenCookies(res, accessToken, refreshToken);
-  console.log(`Tokens refreshed`);
-  res.status(201).send({ accessToken });
 }
 
 async function getInfo(req: Request, res: Response): Promise<void> {
@@ -118,11 +76,6 @@ function setTokenCookies(
 
 export default {
   getList,
-  register,
-  login,
-  logout,
-  viewTokens,
-  issueTokens,
   getInfo,
   patchInfo,
   patchPassword,

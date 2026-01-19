@@ -1,5 +1,5 @@
 import { assert } from 'superstruct';
-import { CreateArticle, PatchArticle } from '../struct/structs';
+import { CreateArticle, PatchArticle } from '../struct/userStruct';
 import NotFoundError from '../middleware/errors/NotFoundError';
 import articleRepo from '../repository/article.repo';
 import { isEmpty, includedOk } from '../lib/myFuns';
