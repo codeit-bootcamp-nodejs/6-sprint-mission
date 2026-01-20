@@ -7,16 +7,17 @@ async function post(req: Request, res: Response, next: NextFunction): Promise<vo
   const { name, description, price, tags } = req.body;
   const productData = {
     userId: req.user.id,
-    name: name.trim() ?? null,
-    description: description?.trim() ?? null,
-    price: price ?? null,
-    tags: tags ?? []
+    name: name.trim(),
+    description: description?.trim(),
+    price: price,
+    tags: tags
   };
   const [product, priceRecord] = await productService.post(productData);
-
+  console.log('');
   console.log(`Product_${product.id} created by User_${req.user.id}`);
-  console.log(`PriceRecord_${priceRecord.id} created for Product_${product.id}`);
-
+  console.log(`Product_${product.id} has PriceRecord_${priceRecord.id}`);
+  console.log(priceRecord);
+  console.log('');
   res.status(201).json(product);
 }
 
@@ -26,14 +27,15 @@ async function patch(req: Request, res: Response, next: NextFunction): Promise<v
   const { name, description, price, tags } = req.body;
 
   const productData = {
-    name: name.trim() ?? null,
-    description: description?.trim() ?? null,
-    price: price ?? null,
-    tags: tags ?? []
+    name: name ? name.trim() : undefined,
+    description: description ? description.trim() : undefined,
+    price: price ?? undefined,
+    tags: tags ?? undefined
   };
 
   const product = await productService.patch(Number(id), productData);
   console.log(`Product_${id} patched by ${req.user.nickname}`);
+  console.log('');
   res.status(200).json(product);
 }
 

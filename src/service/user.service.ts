@@ -3,10 +3,10 @@ import userRepo from '../repository/user.repo';
 import { NODE_ENV } from '../lib/constants';
 import NotFoundError from '../middleware/errors/NotFoundError';
 import { assert } from 'superstruct';
-import { PatchUser } from '../struct/userStruct';
+import { PatchUser } from '../struct/user.struct';
 import { print, isEmpty } from '../lib/myFuns';
 import { selectUserFields } from '../lib/selectFields';
-import { SafeCompleteUser } from '../dto/interfaceType';
+import { SafeCompleteUser } from '../types/interfaceType';
 import { filterPassword, hashingPassword, check_passwordValidity } from './auth.service';
 
 async function getList(): Promise<SafeCompleteUser[] | object> {

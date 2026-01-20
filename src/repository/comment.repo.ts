@@ -1,4 +1,4 @@
-import { CreateCommentDto } from '../dto/dto';
+import { CreateCommentDto } from '../types/dto';
 import prisma from '../lib/prismaClient';
 import { Prisma, Comment } from '@prisma/client';
 

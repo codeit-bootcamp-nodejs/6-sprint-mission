@@ -21,25 +21,23 @@
       form.addEventListener('submit', (e) => {
         e.preventDefault();
         const accessToken = tokenInput.value;
-
-        // if (socket && socket.connected) {
-        //   socket.disconnect();
-        // }
-
         const socket = io('http://localhost:3000', {
           auth: {
-            accessToken
+            accessToken,
+            transports: ['websocket', 'polling']
           }
         });
-
         socket.on('connect', () => {
-          console.log('FE client socket.id:', socket.id);
+          console.log('FE socket.id:', socket.id);
         });
+        socket.on('disconnect', (r) => console.log('disconnect', socket?.id, r));
+        socket.on('connect_error', (err) => console.log('connect_error', err.message));
         socket.on('notification', (data) => {
           console.log('notification', data);
         });
-        socket.on('reconnect_attempt', (n) => console.log('reconnect_attempt', n));
-        socket.on('disconnect', (r) => console.log('disconnect', r));
+        socket.on('notification:unreadCount', ({ unreadCount }) => {
+          console.log('unread notifications:', unreadCount);
+        });
       });
     </script>
   </body>

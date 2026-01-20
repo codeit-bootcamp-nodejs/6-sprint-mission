@@ -4,7 +4,7 @@ import authService from '../service/auth.service';
 import BadRequestError from './errors/BadRequestError';
 import { Request, Response, NextFunction } from 'express';
 
-async function authenticateUser(req: Request, res: Response, next: NextFunction) {
+async function authenticate(req: Request, res: Response, next: NextFunction) {
   try {
     const accessToken = check_accessTokenExist(req.cookies);
     if (!accessToken) {
@@ -43,4 +43,4 @@ function check_accessTokenExist(cookieData: Record<string, string | undefined>) 
   return accessToken;
 }
 
-export default authenticateUser;
+export default authenticate;

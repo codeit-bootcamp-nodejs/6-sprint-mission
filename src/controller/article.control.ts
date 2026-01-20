@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 
 // 게시물 등록, 수정, 삭제: 토큰 인증된 유저만 가능
 async function post(req: Request, res: Response): Promise<void> {
-  const article = await articleService.post(req.user!.id, req.body);
+  const article = await articleService.post(req.user.id, req.body);
   console.log(`Article_${article.id} posted successfully by user${req.user.id}`);
   res.status(201).json(article);
 }

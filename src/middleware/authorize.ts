@@ -6,7 +6,7 @@ import commentRepo from '../repository/comment.repo';
 import { Request, Response, NextFunction } from 'express';
 import { User, Product, Article, Comment } from '@prisma/client';
 
-async function authorizeUser(req: Request, res: Response, next: NextFunction) {
+async function authorize(req: Request, res: Response, next: NextFunction) {
   try {
     let item;
     if (req.originalUrl.includes('users')) {
@@ -41,4 +41,4 @@ async function authorizeUser(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export default authorizeUser;
+export default authorize;

@@ -21,7 +21,7 @@ GET {{baseUrl}}/products?name=Pro&description=기능
 
 // 상품 상세 조회, 좋아요, 등록 인증 필요
 ###
-GET {{baseUrl}}/products/29
+GET {{baseUrl}}/products/8
 
 ###
 POST {{baseUrl}}/products/29/like/toggle
@@ -47,6 +47,14 @@ Content-Type: application/json
   "description": "최신 아이폰으로 8배 광학줌을 가진 후면 카메라가 압권입니다.",
   "price": 1790000,
   "tags": ["전자제품", "스마트폰", "경량 케이스"]
+}
+
+###
+PATCH {{baseUrl}}/products/8
+Content-Type: application/json
+
+{
+  "price": 120000
 }
 
 ###

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { assert } from 'superstruct';
-import { CreateUser } from '../struct/userStruct';
+import { CreateUser } from '../struct/user.struct';
 import {
   REFRESH_TOKEN_COOKIE_NAME,
   ACCESS_TOKEN_COOKIE_NAME,
@@ -9,7 +9,6 @@ import {
   ACCESS_TOKEN_MAXAGE
 } from '../lib/constants';
 import authService from '../service/auth.service';
-import path from 'path';
 
 async function register(req: Request, res: Response): Promise<void> {
   assert(req.body, CreateUser);

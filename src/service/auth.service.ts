@@ -5,11 +5,11 @@ import { ACCESS_TOKEN_COOKIE_NAME, REFRESH_TOKEN_COOKIE_NAME } from '../lib/cons
 import { generateTokens, verifyRefreshToken } from '../lib/token';
 import NotFoundError from '../middleware/errors/NotFoundError';
 import { assert } from 'superstruct';
-import { CreateUser } from '../struct/userStruct';
+import { CreateUser } from '../struct/user.struct';
 import { Response } from 'express';
-import { CreateUserDto, LoginDto } from '../dto/dto';
+import { CreateUserDto, LoginDto } from '../types/dto';
 import { User } from '@prisma/client';
-import { SafeUser, TokenType } from '../dto/interfaceType';
+import { SafeUser, TokenType } from '../types/interfaceType';
 import { getIO } from '../websocket/socketIO';
 
 async function register(data: CreateUserDto): Promise<SafeUser> {
@@ -53,8 +53,13 @@ async function login(data: LoginDto): Promise<TokenType> {
 
 function logout(userId: number, tokenData: Response): void {
   clearTokenCookies(tokenData);
+
   const io = getIO();
-  io.in(`user:${userId}`).disconnectSockets(true);
+  for (const s of io.of('/').sockets.values()) {
+    if (s.data.userId === userId) {
+      s.disconnect(true);
+    }
+  }
 }
 
 async function issueTokens(

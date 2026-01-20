@@ -1,41 +1,64 @@
-# 목표
+# 미션 목표
 
-타입스크립트 마이그레이션하기
-타입스크립트 개발 환경 세팅하기
-(심화) Layered Architecture 적용하기
+알림 기능 구현하기
+웹소켓 또는 Socket.IO를 사용하여 실시간 기능 구현하기
 
 ## 요구사항
 
-### 기본
+기존에 작업한 판다마켓 미션 5에 이어서 진행
+판다마켓 최종 디자인 참조
 
-- [x] 스프린트 미션4의 구현이 완료된 상태에서 진행:
-      -> PR merge시 받은 코멘트가 반영된 정수영-sprint4에서 진행
-- [x] 타입스크립트 마이그레이션을 먼저 진행해 보고, 이전 미션에서 구현하지 못한 부분이 있다면 추가로 구현
+### 알림
 
-### 프로젝트 세팅
+- [x] 사용자는 자신의 알림 목록을 조회할 수 있음
+- [x] 사용자는 자신의 안 읽은 알림의 개수를 조회활 수 있음
+- [x] 사용자는 자신의 알림을 읽음 처리할 수 있음
+- [x] 클라이언트에서는 실시간으로 알림을 받을 수 있음
 
-- [x] tsconfig.json 파일을 생성하고, 필요한 옵션 설정
-      -> rootDir, outDir, typeRoots 설정
-- [x] 필요한 npm script 설정 -> build, start, dev 설정
+### 알림 전송
 
-### 타입스크립트 마이그레이션
+- [x] 좋아요한 상품의 가격이 변동되었을 때 알림을 보냄
+- [x] 자신이 작성한 게시글에 댓글이 달렸을 때 알림을 보냄
 
-- [x] 기존 Express.js 프로젝트를 타입스크립트 프로젝트로 마이그레이션 하기
-- [x] 필요한 타입 패키지 설치
-- [x] any 타입 사용 최소화
-- [x] 복잡한 객체 구조나 배열 구조를 가진 변수에 인터페이스 또는 타입 별칭 사용
-- [x] 타입 별칭 또는 유틸리티 타입을 사용하여 타입 복잡성 감소
-- [x] declare 사용하여 타입을 오버라이드하거나 확장 (req.user)
+### 추가로 구현한 기능
 
-### 개발 환경 설정
+- [x] 사용자가 로그인 하면 읽지 않은 알림의 갯수가 실시간 전송됨
+- [x] 상품의 가격 기록을 남기기 위한 모델 추가 (ProductPriceHistory)
 
-- [x] ts-node 사용하여 .ts 코드를 바로 실행할수 있는 npm script 작성 (npm run dev)
-- [x] nodemon 사용하여 .ts 코드가 변경될 때마다 서버가 다시 실행되는 npm script 작성 (npm run dev)
+## 기능 구현
 
-### 심화 요구 사항: Layered Architecture 적용하기
+### 스키마 변경
 
-- [x] Controller, Service, Repository로 나누어 코드 리팩토링 (미션4 당시 완료)
-- [x] 계층 사이에서 데이터 주고 받을 때 DTO 활용
+- Notification 모델 추가: 알림 저장
+- ProductPriceHistory 모델 추가: 상품 가격 변동 기록
+
+### 알림 Notification 모델
+
+- Notification 모델
+- 알림 생성 시에는 isRead = false, readAt = null
+- 알림 변경하면 isRead = true, readAt = now()
+
+### 알림 기능 로직
+
+- 사용자 로그인, 토큰 발급
+  --> 토큰 이용하며 Socket.IO 연결 --> 사용자 id로 된 방에 넣고 --> 안 읽은 알림 수 실시간 공지
+
+- 상품의 가격이 update될 때 트렌젝션으로 묶어 (1)~(3) 시행하고, 이후 (4) 실시간 알림 날림
+  (1) 상품 update: prisma.product.update
+  (2) 좋아요를 누른 사람들 (likedUsers)에게 보내는 알림 생성: prisma.notification.create
+  (3) 상품 가격 기록 생성: prisma.productPriceHistory.creatae
+  (4) likedUsers의 userId로 된 socket.IO room에 실시간 알림 날림
+
+- 게시글에 댓글이 달리면 아래 (1)(2)를 트렌젝션으로 묶어 실시하고, 이후 (3) 실시
+  (1) 댓글 생성: prisma.comment.create
+  (2) 게시글 저자에게 보내는 알림 생성: prisma.notification.create
+  (3) 게시글 저자의 id로 된 socket.IO room에 실시간 알림 날림
+
+### 상품 가격 기록 로직
+
+- ProductPriceHistory 모델
+- 상품이 생성되면, prevPrice없는 기록 생성 (트렌잭션 사용)
+- 상품 가격이 변동되면, prevPrice(전 가격)과 price(변동 가격) 모두 있는 기록 생성
 
 ## ERD
 
@@ -54,57 +77,71 @@
 
 ```
 6-sprint-mission
-├── dist
+├── src
 │   ├── controller
-│   │   ├── articleControl.js
-│   │   ├── commentControl.js
-│   │   ├── imageControl.js
-│   │   ├── productControl.js
-│   │   └── userControl.js
-│   ├── dto
-│   │   ├── dto.js
-│   │   └── interfacedType.js
+│   │   ├── article.control.ts
+│   │   ├── auth.control.ts
+│   │   ├── comment.control.ts
+│   │   ├── image.control.ts
+│   │   ├── notification.control.ts
+│   │   ├── product.control.ts
+│   │   └── user.control.ts
 │   ├── lib
-│   │   ├── constants.js
-│   │   ├── myFuns.js
-│   │   ├── prismaClient.js
-│   │   ├── selectFields.js
-│   │   ├── token.js
-│   │   └── withTryCatch.js
+│   │   ├── constants.ts
+│   │   ├── myFuns.ts
+│   │   ├── prismaClient.ts
+│   │   ├── selectFields.ts
+│   │   ├── token.ts
+│   │   └── withTryCatch.ts
 │   ├── middleware
 │   │   ├── errors
-│   │   │   ├── BadRequestError.js
-│   │   │   └── NotFoundError.js
-│   │   ├── authenticateUser.js
-│   │   ├── authorizeUser.js
-│   │   ├── errorHandler.js
-│   │   └── multer.js
+│   │   │   ├── BadRequestError.ts
+│   │   │   └── NotFoundError.ts
+│   │   ├── authenticate.ts
+│   │   ├── authorize.ts
+│   │   ├── errorHandler.ts
+│   │   └── multer.ts
 │   ├── repository
-│   │   ├── articleRepo.js
-│   │   ├── commentRepo.js
-│   │   ├── productRepo.js
-│   │   └── userRepo.js
+│   │   ├── article.repo.ts
+│   │   ├── comment.repo.ts
+│   │   ├── notification.repo.ts
+│   │   ├── product.repo.ts
+│   │   └── user.repo.ts
 │   ├── router
-│   │   ├── articleRouter.js
-│   │   ├── commentRouter.js
-│   │   ├── imageRouter.js
-│   │   ├── productRouter.js
-│   │   └── userRouter.js
+│   │   ├── article.router.ts
+│   │   ├── auth.router.ts
+│   │   ├── comment.router.ts
+│   │   ├── image.router.ts
+│   │   ├── notification.router.ts
+│   │   ├── product.router.ts
+│   │   └── user.router.ts
 │   ├── service
-│   │   ├── articleService.js
-│   │   ├── commentService.js
-│   │   ├── imageService.js
-│   │   ├── productService.js
-│   │   └── userService.js
+│   │   ├── article.service.ts
+│   │   ├── auth.service.ts
+│   │   ├── comment.service.ts
+│   │   ├── image.service.ts
+│   │   ├── notification.service.ts
+│   │   ├── product.service.ts
+│   │   └── user.service.ts
 │   ├── struct
-│   │   └── structs.js
-│   └── app.js
+│   │   ├── article.struct.ts
+│   │   ├── comment.struct.ts
+│   │   ├── product.struct.ts
+│   │   └── user.structs.ts
+│   ├── types
+│   │   ├── dto.ts
+│   │   ├── express.d.ts
+│   │   └── interfacedType.ts
+│   ├── websocket
+│   │   └── socketIO.ts
+│   ├── app.ts
+│   ├── mock.ts
+│   └── seed.ts
 └── README.md
 ```
 
 ## 멘토에게
 
-- Prisma Type에는 User, Product, Article, Comment가 있고, 이를 확장한 completeUser, completeProduct, completeArticle이 interfaceType.js에 정의되어 있습니다. 그리고 dto.js에는 controller에 들어온 데이터를 정의해 주기 위하여 user, product, article, comment에 관련된 interface와 type이 정의되어 있습니다. 이들의 정의와 층별 사용이 절절한지 코멘트 부탁드립니다. (Prisma Type은 Repository와 Service에서, DTO는 Controller와 Service에서 사용한다는 게 의도였지만, 혼란스러웠어요. 특히 DTO도 Prisma Type도 관계형 필드를 넣지 않게 되어 있어서, 확장형 interface와 type을 만들어 썼는데, 제대로 한 것인지 모르곘습니다)
-
-- 미션4 이후 계속 예정으로 남겨진 작업이 있습니다. 시간이 날 때 해보겠습니다.
-  - 유저/상품/게시물 등록 시 이미지와 json data를 동시에 함께 등록하는 API
+- 타입 정의가 아직 많이 미숙합니다.
+- 미션 5이후 멘토님의 코멘트를 반영하여 수정하였고, 타입 정의 연습을 위하여 TS가 요구하지 않는 함수 리턴값도 모두 타입 정의를 해보았습니다.
+- 이번 미션8에서 product와 comment APIs에 알림 기능 구현하면서, 타입 정의에 신경을 썼습니다. 예를 들면 req.body에서 들어온 데이터를 CreateCommentDto로 타입정의하고 superstruct로 검증. 이후 레포로 보내기 위한 형태로 데이터 가공한 후 이를 Prisma.CommentCreateInput 같은 프리즈마 타입으로 타입정의하고 레포로 보내고 있습니다. 코드 리뷰 중 부적절하게 타입정의를 하고 있거나, 더 적절한 타입정의를 할 수 있는 곳이 보이면 알려 주시면 많은 도움이 되겠습니다. 감사합니다.

@@ -1,11 +1,11 @@
 import { assert } from 'superstruct';
-import { CreateArticle, PatchArticle } from '../struct/userStruct';
+import { CreateArticle, PatchArticle } from '../struct/article.struct';
 import NotFoundError from '../middleware/errors/NotFoundError';
 import articleRepo from '../repository/article.repo';
 import { isEmpty, includedOk } from '../lib/myFuns';
 import { selectFields } from '../lib/selectFields';
-import { CreateArticleDto, UpdateArticleDto } from '../dto/dto';
-import { Article2show, ArticleList2show, LikedArticle2show } from '../dto/interfaceType';
+import { CreateArticleDto, UpdateArticleDto } from '../types/dto';
+import { Article2show, ArticleList2show, LikedArticle2show } from '../types/interfaceType';
 import { Article, Prisma } from '@prisma/client';
 
 // 게시물 생성, 수정, 삭제: 토큰 인증된 유저만 가능

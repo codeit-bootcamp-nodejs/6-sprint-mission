@@ -1,23 +1,23 @@
 import { assert } from 'superstruct';
 import { includedOk } from '../lib/myFuns';
 import productRepo from '../repository/product.repo';
-import { PatchProduct } from '../struct/userStruct';
 import { selectFields } from '../lib/selectFields';
+import { ProductListToShow, ProductToShow } from '../types/interfaceType';
 import {
   CreateProductDto,
   UpdateProductDto,
   CreateNotificationDto,
   CreateProductPriceHistoryDto
-} from '../dto/dto';
+} from '../types/dto';
 import { Prisma, Product, ProductPriceHistory, NotificationType } from '@prisma/client';
 import NotFoundError from '../middleware/errors/NotFoundError';
-import { ProductListToShow, ProductToShow } from '../dto/interfaceType';
 import prisma from '../lib/prismaClient';
 import {
   CreateProduct,
+  PatchProduct,
   CreateProductPriceHistory,
   CreateNotification
-} from '../struct/productStruct';
+} from '../struct/product.struct';
 import { getIO } from '../websocket/socketIO';
 
 async function post(data: CreateProductDto): Promise<[Product, ProductPriceHistory]> {
@@ -42,23 +42,23 @@ async function post(data: CreateProductDto): Promise<[Product, ProductPriceHisto
   return [product, newPriceRecord];
 }
 
-async function patch(productId: number, productData: UpdateProductDto): Promise<Product> {
-  assert(productData, PatchProduct);
-  const prevPrice = await priceToBeChanged(productId, productData);
+async function patch(productId: number, data: UpdateProductDto): Promise<Product> {
+  assert(data, PatchProduct);
+  const prevPrice = await priceToBeChanged(productId, data);
   let newProduct;
 
   // 상품 가격 변동이 있는 경우, 가격 변동 기록 생성
   if (Number(prevPrice)) {
     const priceData = {
       prevPrice,
-      price: productData.price,
+      price: data.price,
       productId
     } as CreateProductPriceHistoryDto;
     assert(priceData, CreateProductPriceHistory);
 
     const priceDataToRepo = {
       prevPrice,
-      price: productData.price,
+      price: data.price,
       product: { connect: { id: productId } }
     } as Prisma.ProductPriceHistoryCreateInput;
 
@@ -70,7 +70,7 @@ async function patch(productId: number, productData: UpdateProductDto): Promise<
 
     // 그 상품에 좋아요를 누른 사람이 있는 경우 알림 생성
     if (product.likedUsers.length !== 0) {
-      const message = `상품${productId} 가격 변동 알림: (${prevPrice} --> ${productData.price})`;
+      const message = `상품${productId} 가격 변동 알림: (${prevPrice} --> ${data.price})`;
 
       for (let likedUser of product.likedUsers) {
         let notificationData = {
@@ -95,7 +95,7 @@ async function patch(productId: number, productData: UpdateProductDto): Promise<
 
       [priceRecord, newProduct, ...notifications] = await prisma.$transaction([
         prisma.productPriceHistory.create({ data: priceDataToRepo }),
-        prisma.product.update({ data: productData, where: { id: productId } }),
+        prisma.product.update({ data, where: { id: productId } }),
         ...notificationQueries
       ]);
 
@@ -103,15 +103,19 @@ async function patch(productId: number, productData: UpdateProductDto): Promise<
       for (const likeUser of product.likedUsers) {
         io.to(`user:${likeUser.id}`).emit('notification', { message });
       }
+      console.log('');
+      console.log('Price changed');
+      console.log('ProductPriceHistory updated');
+      console.log('Notification sent & stored');
     } else {
       // 좋아요를 누른 유저가 없는 상품인 경우 알림 없음
       [priceRecord, newProduct] = await prisma.$transaction([
         prisma.productPriceHistory.create({ data: priceDataToRepo }),
-        prisma.product.update({ data: productData, where: { id: productId } })
+        prisma.product.update({ data, where: { id: productId } })
       ]);
     }
   } else {
-    newProduct = await productRepo.patch(productId, productData);
+    newProduct = await productRepo.patch(productId, data);
   }
 
   if (!newProduct) throw new NotFoundError('product', productId);

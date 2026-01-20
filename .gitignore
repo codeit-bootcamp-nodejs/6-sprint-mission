@@ -1,6 +1,9 @@
+.github
+.vscode
 node_modules/
 images/
 images_upload/
+prisma/migrations/
 prisma/ERD/
 .env
 .prettierrc
@@ -13,4 +16,7 @@ src/middleware/index.txt
 hide/
 test_isEmpty.js
 src/main.ts
+public/socket-client-test-old1.html
+public/socket-client-test-old2.html
+README_mission5.md
 

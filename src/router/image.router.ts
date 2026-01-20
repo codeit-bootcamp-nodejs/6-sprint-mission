@@ -1,6 +1,6 @@
 import express from 'express';
-import authenticateUser from '../middleware/authenticate.user';
-import authorizeUser from '../middleware/authorize.user';
+import authenticate from '../middleware/authenticate';
+import authorize from '../middleware/authorize';
 import imageControl from '../controller/image.control';
 import withTryCatch from '../lib/withTryCatch';
 import upload from '../middleware/multer';
@@ -11,44 +11,34 @@ const imageRouter = express.Router();
 imageRouter.get('/users/:id', withTryCatch(imageControl.get));
 imageRouter.post(
   '/users/:id',
-  authenticateUser,
-  authorizeUser,
+  authenticate,
+  authorize,
   upload.single('image'),
   withTryCatch(imageControl.post)
 );
-imageRouter.delete('/users/:id', authenticateUser, authorizeUser, withTryCatch(imageControl.erase));
+imageRouter.delete('/users/:id', authenticate, authorize, withTryCatch(imageControl.erase));
 
 // 상품
 imageRouter.get('/products/:id', withTryCatch(imageControl.get));
 imageRouter.post(
   '/products/:id',
-  authenticateUser,
-  authorizeUser,
+  authenticate,
+  authorize,
   upload.single('image'),
   withTryCatch(imageControl.post)
 );
-imageRouter.delete(
-  '/products/:id',
-  authenticateUser,
-  authorizeUser,
-  withTryCatch(imageControl.erase)
-);
+imageRouter.delete('/products/:id', authenticate, authorize, withTryCatch(imageControl.erase));
 
 // 게시글
 imageRouter.get('/articles/:id', withTryCatch(imageControl.get));
 imageRouter.post(
   '/articles/:id',
-  authenticateUser,
-  authorizeUser,
+  authenticate,
+  authorize,
   upload.single('image'),
   withTryCatch(imageControl.post)
 );
-imageRouter.delete(
-  '/articles/:id',
-  authenticateUser,
-  authorizeUser,
-  withTryCatch(imageControl.erase)
-);
+imageRouter.delete('/articles/:id', authenticate, authorize, withTryCatch(imageControl.erase));
 export default imageRouter;
 
 // imageUrls String[]? 로 스키마에 정의되어 있어

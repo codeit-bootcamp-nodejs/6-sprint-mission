@@ -21,11 +21,11 @@ GET {{baseUrl}}/comments/24
 
 // 댓글 등록: 인증
 ###
-POST {{baseUrl}}/comments/articles/17
+POST {{baseUrl}}/comments/articles/21
 Content-Type: application/json
 
 {
-  "content": "유명한 죠커 연기죠"
+  "content": "웃기면서 사랑스러운 영화"
 }
 ###
 POST {{baseUrl}}/comments/products/29
@@ -37,7 +37,7 @@ Content-Type: application/json
 
 // 댓글 수정과 삭제: 인증과 인가
 ###
-PATCH {{baseUrl}}/comments/94
+PATCH {{baseUrl}}/comments/21
 Content-Type: application/json
 
 {

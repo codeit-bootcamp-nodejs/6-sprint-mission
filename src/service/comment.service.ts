@@ -1,15 +1,15 @@
 import { assert } from 'superstruct';
-import { CreateComment, PatchComment } from '../struct/userStruct';
+import { CreateComment, PatchComment } from '../struct/comment.struct';
+import { CreateNotification } from '../struct/product.struct';
 import commentRepo from '../repository/comment.repo';
 import {
   UpdateCommentDto,
   ArticleCommentDto,
   ProductCommentDto,
   CreateNotificationDto
-} from '../dto/dto';
-import { Comment2show, CommentWithNextCursor } from '../dto/interfaceType';
+} from '../types/dto';
+import { Comment2show, CommentWithNextCursor } from '../types/interfaceType';
 import { Comment, Notification, NotificationType, Prisma } from '@prisma/client';
-import { CreateNotification } from '../struct/productStruct';
 import prisma from '../lib/prismaClient';
 import articleRepo from '../repository/article.repo';
 import NotFoundError from '../middleware/errors/NotFoundError';
@@ -68,7 +68,7 @@ async function postArticle(
   const article = await articleRepo.findById(id);
   if (!article) throw new NotFoundError('article', id);
 
-  const message = `게시글${id}에 사용자${userId}가 댓글을 남겼습니다 (${content})`;
+  const message = `댓글 알림: ${content} (게시글${id} by 사용자${userId})`;
   const notificationData = {
     userId: article.userId,
     type: NotificationType.ARTICLE,
@@ -92,16 +92,6 @@ async function postArticle(
   ]);
 
   const io = getIO();
-  const room = `user:${article.userId}`;
-  const sockets = await (io.in(room) as any).fetchSockets();
-  console.log(
-    'room:',
-    room,
-    'BE socket ids:',
-    sockets.map((s: any) => s.id)
-  );
-  console.log('room:', room, 'socket count:', sockets.length);
-
   io.to(`user:${article.userId}`).emit('notification', { message });
 
   return [comment, notification];

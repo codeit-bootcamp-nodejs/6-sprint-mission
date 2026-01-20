@@ -1,4 +1,4 @@
-import { CreateProductDto } from '../dto/dto';
+import { CreateProductDto } from '../types/dto';
 import prisma from '../lib/prismaClient';
 import { Prisma, Product, ProductPriceHistory } from '@prisma/client';
 
@@ -70,7 +70,9 @@ async function findById(
   });
 }
 
-async function createPriceRecord(data: Prisma.ProductPriceHistoryCreateInput): Promise<ProductPriceHistory> {
+async function createPriceRecord(
+  data: Prisma.ProductPriceHistoryCreateInput
+): Promise<ProductPriceHistory> {
   return prisma.productPriceHistory.create({ data });
 }
 export default {

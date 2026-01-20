@@ -5,8 +5,8 @@ export const CreateProduct = s.object({
   description: s.string(),
   price: s.min(s.number(), 0),
   tags: s.array(s.string()),
-  imageUrls: s.optional(s.array()),
-  userId: s.number()
+  imageUrls: s.optional(s.array(s.string())),
+  userId: s.min(s.number(), 1)
 });
 
 export const PatchProduct = s.partial(CreateProduct);
@@ -21,5 +21,6 @@ export const CreateNotification = s.object({
 
 export const CreateProductPriceHistory = s.object({
   productId: s.min(s.number(), 1),
-  price: s.min(s.number(), 0)
+  price: s.min(s.number(), 0),
+  prevPrice: s.optional(s.min(s.number(), 0))
 });

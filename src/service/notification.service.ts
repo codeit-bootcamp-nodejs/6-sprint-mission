@@ -1,4 +1,3 @@
-import NotFoundError from '../middleware/errors/NotFoundError';
 import { Notification } from '@prisma/client';
 import notiRepo from '../repository/notification.repo';
 

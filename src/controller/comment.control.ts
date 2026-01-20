@@ -36,43 +36,32 @@ async function get(req: Request, res: Response, next: NextFunction): Promise<voi
 // 입력 필드: content
 // req.params에 productId 있어야 함
 
-async function post(req: Request, res: Response, next: NextFunction): Promise<void> {
+async function postArticle(req: Request, res: Response, next: NextFunction): Promise<void> {
   const { content } = req.body;
   const { id } = req.params;
   const { id: userId } = req.user;
 
   let comment;
   let notification;
-  if (req.url.includes('articles')) {
-    [comment, notification] = await commentService.postArticle(content, Number(id), userId);
-  } else {
-    comment = await commentService.postProduct(content, Number(id), userId);
-  }
+  [comment, notification] = await commentService.postArticle(content, Number(id), userId);
+  console.log('');
   console.log('Comment created');
-  if (notification) console.log('Notification sent');
+  if (notification) {
+    console.log('Notification sent & stored');
+    console.log(notification);
+  }
   res.status(200).json(comment);
 }
-// async function postProduct(req: Request, res: Response, next: NextFunction): Promise<void> {
-//   const { content } = req.body;
-//   const { id: productId } = req.params;
-//   const { id: userId } = req.user;
-//   const comment = await commentService.postProduct(content, productId, userId);
-//   console.log('Comment created');
-//   res.status(200).json(comment);
-// }
 
-// 게시물 댓글 등록
-// req.params에 commentId 있어야 함
-// 입력 필드: content
-// req.params에 articleId 있어야 함
-// async function postArticle(req: Request, res: Response, next: NextFunction): Promise<void> {
-//   const { content } = req.body;
-//   const { id: articleId } = req.params;
-//   const { id: userId } = req.user;
-//   const comment = await commentService.postArticle(content, articleId, userId);
-//   console.log('Comment created');
-//   res.status(200).json(comment);
-// }
+async function postProduct(req: Request, res: Response, next: NextFunction): Promise<void> {
+  const { content } = req.body;
+  const { id } = req.params;
+  const { id: userId } = req.user;
+
+  const comment = await commentService.postProduct(content, Number(id), userId);
+  console.log('Comment created');
+  res.status(200).json(comment);
+}
 
 // 1개 댓글 수정
 // req.params에 commentId 있어야 함
@@ -94,9 +83,8 @@ async function erase(req: Request, res: Response, next: NextFunction): Promise<v
 export default {
   getList,
   get,
-  post,
-  // postProduct,
-  // postArticle,
+  postArticle,
+  postProduct,
   patch,
   erase
 };

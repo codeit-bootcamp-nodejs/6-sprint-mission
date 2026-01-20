@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import userService from '../service/user.service';
-import { SafeCompleteUser } from '../dto/interfaceType';
+import { SafeCompleteUser } from '../types/interfaceType';
 import { REFRESH_TOKEN_COOKIE_NAME, NODE_ENV, REFRESH_TOKEN_MAXAGE } from '../lib/constants';
 
 async function getList(req: Request, res: Response): Promise<void> {

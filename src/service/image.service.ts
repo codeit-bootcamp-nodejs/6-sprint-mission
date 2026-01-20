@@ -4,7 +4,7 @@ import userRepo from '../repository/user.repo';
 import articleRepo from '../repository/article.repo';
 import productRepo from '../repository/product.repo';
 import { selectFields, selectUserFields } from '../lib/selectFields';
-import { CompleteArticle, CompleteProduct, CompleteUser } from '../dto/interfaceType';
+import { CompleteArticle, CompleteProduct, CompleteUser } from '../types/interfaceType';
 import { Prisma, Article, Product, User } from '@prisma/client';
 
 async function get(originalUrl: string, id: string) {

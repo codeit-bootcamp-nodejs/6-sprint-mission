@@ -1,4 +1,4 @@
-import { CreateArticleDto } from '../dto/dto';
+import { CreateArticleDto } from '../types/dto';
 import prisma from '../lib/prismaClient';
 import { Article, Prisma } from '@prisma/client';
 

@@ -1,16 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
-import {
-  USERS,
-  PRODUCTS,
-  ARTICLES,
-  COMMENTS,
-  NOTIFICATIONS,
-  PRODUCTPRICEHISTORIES
-} from '../prisma/mock';
-
-import * as mock from '../prisma/mock';
-console.log(mock.PRODUCTPRICEHISTORIES[0]);
+import { USERS, PRODUCTS, ARTICLES, COMMENTS, NOTIFICATIONS, PRODUCTPRICEHISTORIES } from './mock';
 
 import 'dotenv/config';
 console.log('DATABASE_URL =', process.env.DATABASE_URL);
