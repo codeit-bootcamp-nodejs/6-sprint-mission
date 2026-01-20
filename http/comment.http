@@ -21,11 +21,11 @@ GET {{baseUrl}}/comments/24
 
 // 댓글 등록: 인증
 ###
-POST {{baseUrl}}/comments/articles/21
+POST {{baseUrl}}/comments/articles/17
 Content-Type: application/json
 
 {
-  "content": "바넷사 레드그레이브즈의 감초 연기가 일품"
+  "content": "유명한 죠커 연기죠"
 }
 ###
 POST {{baseUrl}}/comments/products/29

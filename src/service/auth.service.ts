@@ -6,8 +6,8 @@ import { generateTokens, verifyRefreshToken } from '../lib/token';
 import NotFoundError from '../middleware/errors/NotFoundError';
 import { assert } from 'superstruct';
 import { CreateUser } from '../struct/userStruct';
-import { Request, Response } from 'express';
-import { CreateUserDto } from '../dto/dto';
+import { Response } from 'express';
+import { CreateUserDto, LoginDto } from '../dto/dto';
 import { User } from '@prisma/client';
 import { SafeUser, TokenType } from '../dto/interfaceType';
 import { getIO } from '../websocket/socketIO';
@@ -32,12 +32,11 @@ async function register(data: CreateUserDto): Promise<SafeUser> {
   return filterPassword(newUser) as SafeUser;
 }
 
-async function login(req: Request, res: Response): Promise<TokenType> {
-  const { email, password } = req.body;
-  const user = await userRepo.findByEmail(email);
+async function login(data: LoginDto): Promise<TokenType> {
+  const user = await userRepo.findByEmail(data.email);
   if (!user) throw new NotFoundError('user', 0);
 
-  const isPasswordOk = await check_passwordValidity(password, user.password);
+  const isPasswordOk = await check_passwordValidity(data.password, user.password);
   if (!isPasswordOk) {
     console.log('Invalid password');
     throw new BadRequestError('FORBIDDEN');

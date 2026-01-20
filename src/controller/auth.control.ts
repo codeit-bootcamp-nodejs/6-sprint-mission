@@ -1,7 +1,13 @@
 import { Request, Response } from 'express';
 import { assert } from 'superstruct';
 import { CreateUser } from '../struct/userStruct';
-import { REFRESH_TOKEN_COOKIE_NAME, NODE_ENV, REFRESH_TOKEN_MAXAGE } from '../lib/constants';
+import {
+  REFRESH_TOKEN_COOKIE_NAME,
+  ACCESS_TOKEN_COOKIE_NAME,
+  NODE_ENV,
+  REFRESH_TOKEN_MAXAGE,
+  ACCESS_TOKEN_MAXAGE
+} from '../lib/constants';
 import authService from '../service/auth.service';
 import path from 'path';
 
@@ -13,10 +19,10 @@ async function register(req: Request, res: Response): Promise<void> {
 }
 
 async function login(req: Request, res: Response): Promise<void> {
-  const { accessToken, refreshToken } = await authService.login(req, res);
+  const { accessToken, refreshToken } = await authService.login(req.body);
   setTokenCookies(res, accessToken, refreshToken);
   console.log(`User logged-in`);
-  res.status(200).send({ message: '사용자가 로그인 하였습니다', accessToken });
+  res.status(200).send({ accessToken });
 }
 
 async function logout(req: Request, res: Response): Promise<void> {
@@ -45,29 +51,24 @@ async function issueTokens(req: Request, res: Response): Promise<void> {
   res.status(201).send({ accessToken });
 }
 
-async function connectSocketIO(req: Request, res: Response): Promise<void> {
-  const filePath = path.join(__dirname, '../../public/socket-client-test.html');
-  res.sendFile(filePath);
-}
-
 //-------------------------------------------------- local functions
 function setTokenCookies(
   res: Response,
   accessToken: string | undefined,
   refreshToken: string | undefined
 ): void {
-  // res.cookie(ACCESS_TOKEN_COOKIE_NAME, accessToken, {
-  //   httpOnly: true,
-  //   secure: NODE_ENV === 'production', // false: 쓸데없이 우회적인 표현
-  //   sameSite: 'lax',
-  //   maxAge: ACCESS_TOKEN_MAXAGE || 1 * 60 * 60 * 1000 // 1 hour
-  // });
+  res.cookie(ACCESS_TOKEN_COOKIE_NAME, accessToken, {
+    httpOnly: true,
+    secure: NODE_ENV === 'production', // false: 쓸데없이 우회적인 표현
+    sameSite: 'lax',
+    maxAge: ACCESS_TOKEN_MAXAGE || 1 * 60 * 60 * 1000 // 1 hour
+  });
   res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
     httpOnly: true,
     secure: NODE_ENV === 'production',
     sameSite: 'lax',
     maxAge: REFRESH_TOKEN_MAXAGE || 1 * 24 * 60 * 60 * 1000, // 1 day,
-    path: '/users/tokens'
+    path: '/auth/tokens'
   });
 }
 
@@ -76,6 +77,5 @@ export default {
   login,
   logout,
   viewTokens,
-  issueTokens,
-  connectSocketIO
+  issueTokens
 };

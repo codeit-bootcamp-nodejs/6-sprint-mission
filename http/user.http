@@ -36,8 +36,10 @@ GET {{baseUrl}}/users/like/articles
 
 
 ### 알림 기능
-GET {{baseUrl}}/users/notifications
+GET {{baseUrl}}/notifications
 ###
-GET {{baseUrl}}/users/notifications/unRead
+GET {{baseUrl}}/notifications?type=unread
 ###
-PATCH {{baseUrl}}/users/notifications/1
+GET {{baseUrl}}/notifications/unRead
+###
+PATCH {{baseUrl}}/notifications/8

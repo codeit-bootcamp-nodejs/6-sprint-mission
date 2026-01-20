@@ -16,10 +16,9 @@ import imageRouter from './router/image.router';
 import notiRouter from './router/notification.router';
 
 const app = express();
-
-app.use(cors());
-app.use(cookieParser());
 app.use(express.json());
+app.use(cookieParser());
+app.use(cors());
 
 app.use(express.static(path.join(process.cwd(), 'public')));
 const server = http.createServer(app);
@@ -46,6 +45,6 @@ app.use('/images', imageRouter);
 app.use(defaultNotFoundHandler);
 app.use(globalErrorHandler);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

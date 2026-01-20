@@ -1,7 +1,9 @@
 @baseUrl = http://localhost:3000
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzY4ODI1Mzc5LCJleHAiOjE3Njg4Mjg5Nzl9.tqlhcQKVpxRqKowr6zErtMMWKQquKQ9HFAA6Tlj7AN4
+
 
 ###
-POST {{baseUrl}}/users/register
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
@@ -12,21 +14,22 @@ Content-Type: application/json
 
 
 ###
-POST {{baseUrl}}/users/login
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "user5@example.com",
-  "password": "password5"
+  "email": "user1@example.com",
+  "password": "password1"
 }
 
 ###
-POST {{baseUrl}}/users/logout
+POST {{baseUrl}}/auth/logout
 
 
 
 // 토큰 발행, 확인
 ###
-POST {{baseUrl}}/users/tokens/refresh
+POST {{baseUrl}}/auth/tokens/refresh
 ###
-GET {{baseUrl}}/users/tokens/view
+GET {{baseUrl}}/auth/tokens/view
+#Authorization: Bearer {{accessToken}}

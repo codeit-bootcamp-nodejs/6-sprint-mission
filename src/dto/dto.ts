@@ -33,7 +33,7 @@ export interface UpdateProductDto {
 }
 
 export interface CreateNotificationDto {
-  type: NotificationType,
+  type: NotificationType;
   userId: number;
   productId?: number | null;
   articleId?: number | null;
@@ -81,4 +81,9 @@ export interface UpdateCommentDto {
   userId?: number;
   productId?: number;
   articleId?: number;
+}
+
+export interface LoginDto {
+  email: string;
+  password: string;
 }

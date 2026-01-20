@@ -92,7 +92,18 @@ async function postArticle(
   ]);
 
   const io = getIO();
+  const room = `user:${article.userId}`;
+  const sockets = await (io.in(room) as any).fetchSockets();
+  console.log(
+    'room:',
+    room,
+    'BE socket ids:',
+    sockets.map((s: any) => s.id)
+  );
+  console.log('room:', room, 'socket count:', sockets.length);
+
   io.to(`user:${article.userId}`).emit('notification', { message });
+
   return [comment, notification];
 }
 

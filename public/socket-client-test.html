@@ -14,23 +14,32 @@
 
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
     <script>
+      console.log('script loaded');
       const form = document.getElementById('form');
       const tokenInput = document.getElementById('token');
 
       form.addEventListener('submit', (e) => {
         e.preventDefault();
         const accessToken = tokenInput.value;
+
+        // if (socket && socket.connected) {
+        //   socket.disconnect();
+        // }
+
         const socket = io('http://localhost:3000', {
           auth: {
-            accessToken,
-          },
+            accessToken
+          }
         });
+
         socket.on('connect', () => {
-          console.log('connected');
+          console.log('FE client socket.id:', socket.id);
         });
         socket.on('notification', (data) => {
           console.log('notification', data);
         });
+        socket.on('reconnect_attempt', (n) => console.log('reconnect_attempt', n));
+        socket.on('disconnect', (r) => console.log('disconnect', r));
       });
     </script>
   </body>

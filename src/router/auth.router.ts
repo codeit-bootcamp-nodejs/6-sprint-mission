@@ -13,6 +13,4 @@ authRouter.post('/logout', authenticateUser, withTryCatch(authControl.logout));
 authRouter.get('/tokens/view', withTryCatch(authControl.viewTokens)); // 토큰 확인: 부가 기능
 authRouter.post('/tokens/refresh', withTryCatch(authControl.issueTokens));
 
-authRouter.post('/', authenticateUser, withTryCatch(authControl.connectSocketIO));
-
 export default authRouter;

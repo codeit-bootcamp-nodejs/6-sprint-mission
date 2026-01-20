@@ -69,8 +69,8 @@ async function getProducts(userId: number): Promise<Omit<SafeCompleteUser, 'upda
 async function getArticles(userId: number): Promise<Omit<SafeCompleteUser, 'updatedAt'>> {
   const user = await userRepo.findById(userId);
   const selectedInfo = selectUserFields(user, 'myArticles');
-  console.log(selectedInfo);
-  console.log(isEmpty(selectedInfo));
+  // console.log(selectedInfo);
+  // console.log(isEmpty(selectedInfo));
   if (isEmpty(selectedInfo)) {
     print(`No articles registered by user_${userId}`);
     throw new NotFoundError('User', userId);
