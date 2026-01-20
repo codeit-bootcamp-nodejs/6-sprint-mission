@@ -8,70 +8,72 @@
 기존에 작업한 판다마켓 미션 5에 이어서 진행
 판다마켓 최종 디자인 참조
 
-### 알림
+#### 알림
 
 - [x] 사용자는 자신의 알림 목록을 조회할 수 있음
 - [x] 사용자는 자신의 안 읽은 알림의 개수를 조회활 수 있음
 - [x] 사용자는 자신의 알림을 읽음 처리할 수 있음
 - [x] 클라이언트에서는 실시간으로 알림을 받을 수 있음
 
-### 알림 전송
+#### 알림 전송
 
 - [x] 좋아요한 상품의 가격이 변동되었을 때 알림을 보냄
 - [x] 자신이 작성한 게시글에 댓글이 달렸을 때 알림을 보냄
 
-### 추가로 구현한 기능
+#### 추가로 구현한 기능
 
 - [x] 사용자가 로그인 하면 읽지 않은 알림의 갯수가 실시간 전송됨
-- [x] 상품의 가격 기록을 남기기 위한 모델 추가 (ProductPriceHistory)
+- [x] 특정 상품의 가격 변동 기록을 모두 조회할 수 있음
+- [x] 특정 가격 변동 기록을 조회할 수 있음
 
 ## 기능 구현
 
-### 스키마 변경
+#### 스키마 변경
 
 - Notification 모델 추가: 알림 저장
 - ProductPriceHistory 모델 추가: 상품 가격 변동 기록
 
-### 알림 Notification 모델
+#### 알림 Notification 모델
 
-- Notification 모델
+- enum 필드인 type은 'ARTICLE' 또는 'PRODUCT'. 각기 게시글에 댓글 달릴 때와 상품 가격 변동 시의 알림에 해당
 - 알림 생성 시에는 isRead = false, readAt = null
-- 알림 변경하면 isRead = true, readAt = now()
+- 알림을 읽으면 isRead = true, readAt = now()
 
-### 알림 기능 로직
+#### 알림 기능 로직
 
 - 사용자 로그인, 토큰 발급
-  --> 토큰 이용하며 Socket.IO 연결 --> 사용자 id로 된 방에 넣고 --> 안 읽은 알림 수 실시간 공지
+- 토큰으로 Socket.IO 연결 --> 사용자 id로 된 방에 넣고 --> 안 읽은 알림 갯수 실시간 공지
 
 - 상품의 가격이 update될 때 트렌젝션으로 묶어 (1)~(3) 시행하고, 이후 (4) 실시간 알림 날림
-  (1) 상품 update: prisma.product.update
-  (2) 좋아요를 누른 사람들 (likedUsers)에게 보내는 알림 생성: prisma.notification.create
-  (3) 상품 가격 기록 생성: prisma.productPriceHistory.creatae
-  (4) likedUsers의 userId로 된 socket.IO room에 실시간 알림 날림
+  - (1) 상품 update
+  - (2) 좋아요를 누른 사람들 (likedUsers)에게 보내는 알림 생성
+  - (3) 상품 가격 기록 생성
+  - (4) likedUsers의 userId로 된 socket.IO room에 실시간 알림 날림
 
 - 게시글에 댓글이 달리면 아래 (1)(2)를 트렌젝션으로 묶어 실시하고, 이후 (3) 실시
-  (1) 댓글 생성: prisma.comment.create
-  (2) 게시글 저자에게 보내는 알림 생성: prisma.notification.create
-  (3) 게시글 저자의 id로 된 socket.IO room에 실시간 알림 날림
+  - (1) 댓글 생성
+  - (2) 게시글 저자에게 보내는 알림 생성
+  - (3) 게시글 저자의 id로 된 socket.IO room에 실시간 알림 날림
 
-### 상품 가격 기록 로직
+#### 상품 가격 기록 로직
 
 - ProductPriceHistory 모델
-- 상품이 생성되면, prevPrice없는 기록 생성 (트렌잭션 사용)
-- 상품 가격이 변동되면, prevPrice(전 가격)과 price(변동 가격) 모두 있는 기록 생성
+- 새 상품 등록 시 (1)과 (2)를 트렌젝션으로 묶어 시행
+  - (1) 상품 생성
+  - (2) prevPrice없는 기록 생성
+- 상품 가격이 변동되면, prevPrice(전 가격)와 price(변동가격) 모두 갖는 ProductPriceHistory 생성 (트렌젝션 사용)
 
 ## ERD
+<img width="1214" height="1280" alt="image" src="https://github.com/user-attachments/assets/f225c6b9-98a2-4077-a36b-8c9996f0ba37" />
 
-<img width="1013" height="1073" alt="image" src="https://github.com/user-attachments/assets/b331bb3b-c692-4ebf-ac90-663ad86d5a1a" />
 
 ## 스크린샷
 
-토큰 갱신
-<img width="1939" height="1093" alt="image1" src="https://github.com/user-attachments/assets/13604e4f-0809-4d32-95fd-260ff124db27" />
-사용자2가 좋아요를 누른 게시물 조회
-<img width="2294" height="1289" alt="image" src="https://github.com/user-attachments/assets/42cb0f34-5c34-4f6b-b822-32711de14f69" />
+Socket-client-test.html 브라우져의 dev tool
+<img width="947" height="1099" alt="image" src="https://github.com/user-attachments/assets/cbe7143e-79c2-43f0-92da-6909c8124c10" />
 
-## 폴더 구조
+안 읽은 알림 목록 조회
+<img width="2140" height="1343" alt="image" src="https://github.com/user-attachments/assets/673f9070-26ab-4ae5-9709-d05742b83768" />
 
 ## 폴더 구조
 

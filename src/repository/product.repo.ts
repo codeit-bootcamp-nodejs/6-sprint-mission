@@ -75,6 +75,18 @@ async function createPriceRecord(
 ): Promise<ProductPriceHistory> {
   return prisma.productPriceHistory.create({ data });
 }
+
+async function getPriceRecord(id: number): Promise<ProductPriceHistory | null> {
+  return prisma.productPriceHistory.findUnique({ where: { id } });
+}
+
+async function getPriceRecords(productId: number): Promise<ProductPriceHistory[]> {
+  return prisma.productPriceHistory.findMany({
+    where: { productId },
+    orderBy: { createdAt: 'asc' }
+  });
+}
+
 export default {
   post,
   patch,
@@ -84,5 +96,7 @@ export default {
   findById,
   countById,
   getList,
-  createPriceRecord
+  createPriceRecord,
+  getPriceRecords,
+  getPriceRecord
 };

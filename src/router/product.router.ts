@@ -13,4 +13,11 @@ productRouter.post('/', authenticate, withTryCatch(productControl.post));
 productRouter.patch('/:id', authenticate, authorize, withTryCatch(productControl.patch));
 productRouter.delete('/:id', authenticate, authorize, withTryCatch(productControl.erase));
 
+productRouter.get(
+  '/:productId/price-records/',
+  authenticate,
+  withTryCatch(productControl.getPriceRecords)
+);
+productRouter.get('/price-records/:id', authenticate, withTryCatch(productControl.getPriceRecord));
+
 export default productRouter;

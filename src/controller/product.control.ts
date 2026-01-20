@@ -80,11 +80,24 @@ async function likeToggle(req: Request, res: Response, next: NextFunction): Prom
   res.status(200).json(product);
 }
 
+// 모든 상품의 가격 기록 조회
+async function getPriceRecord(req: Request, res: Response, next: NextFunction): Promise<void> {
+  const records = await productService.getPriceRecord(Number(req.params.id));
+  res.status(200).json(records);
+}
+
+async function getPriceRecords(req: Request, res: Response, next: NextFunction): Promise<void> {
+  const records = await productService.getPriceRecords(Number(req.params.productId));
+  res.status(200).json({ total: records.length, data: records });
+}
+
 export default {
   post,
   patch,
   erase,
   getList,
   get,
-  likeToggle
+  likeToggle,
+  getPriceRecords,
+  getPriceRecord
 };

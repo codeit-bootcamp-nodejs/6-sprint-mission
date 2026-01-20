@@ -189,6 +189,14 @@ async function likeToggle(userId: number, productId: string): Promise<ProductToS
   };
 }
 
+async function getPriceRecord(id: number): Promise<ProductPriceHistory | null> {
+  return await productRepo.getPriceRecord(id);
+}
+
+async function getPriceRecords(productId: number): Promise<ProductPriceHistory[]> {
+  return await productRepo.getPriceRecords(productId);
+}
+
 //-----------------------------------
 
 async function priceToBeChanged(productId: number, productData: UpdateProductDto): Promise<Number> {
@@ -206,5 +214,7 @@ export default {
   erase,
   getList,
   get,
-  likeToggle
+  likeToggle,
+  getPriceRecord,
+  getPriceRecords
 };
