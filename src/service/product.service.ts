@@ -10,7 +10,6 @@ import {
   CreateProductPriceHistoryDto
 } from '../types/dto';
 import { Prisma, Product, ProductPriceHistory, NotificationType } from '@prisma/client';
-import NotFoundError from '../middleware/errors/NotFoundError';
 import prisma from '../lib/prismaClient';
 import {
   CreateProduct,
@@ -19,6 +18,7 @@ import {
   CreateNotification
 } from '../struct/product.struct';
 import { getIO } from '../websocket/socketIO';
+import NotFoundError from '../middleware/errors/NotFoundError';
 
 async function post(data: CreateProductDto): Promise<[Product, ProductPriceHistory]> {
   assert(data, CreateProduct);
@@ -63,7 +63,7 @@ async function patch(productId: number, data: UpdateProductDto): Promise<Product
     } as Prisma.ProductPriceHistoryCreateInput;
 
     const product = await productRepo.findById(productId);
-    if (!product) throw new NotFoundError('product', productId);
+    if (!product) throw new NotFoundError();
 
     let priceRecord;
     let notifications = [];
@@ -118,11 +118,11 @@ async function patch(productId: number, data: UpdateProductDto): Promise<Product
     newProduct = await productRepo.patch(productId, data);
   }
 
-  if (!newProduct) throw new NotFoundError('product', productId);
+  if (!newProduct) throw new NotFoundError();
   return newProduct;
 }
 
-async function erase(productId: string): Promise<void> {
+async function erase(productId: number): Promise<void> {
   await productRepo.erase(Number(productId));
 }
 
@@ -160,9 +160,9 @@ async function getList(
 // 조회 필드: id, name, description, price, tags, createdAt
 async function get(
   userId: number | undefined,
-  productId: string
+  productId: number
 ): Promise<ProductToShow | Product> {
-  const product = await productRepo.findById(Number(productId));
+  const product = await productRepo.findById(productId);
   const product2show = selectFields(product);
   if (!userId) return product2show;
   const isLiked = includedOk(product.likedUsers, 'id', userId);
@@ -170,14 +170,15 @@ async function get(
 }
 
 // 좋아요와 좋아요취소 토글
-async function likeToggle(userId: number, productId: string): Promise<ProductToShow> {
-  const product = await productRepo.findById(Number(productId));
+async function likeToggle(userId: number, productId: number): Promise<ProductToShow> {
+  const product = await productRepo.findById(productId);
 
+  // console.log(product.likedUsers);
   const isLiked = includedOk(product.likedUsers, 'id', userId);
 
   const updated = isLiked
-    ? await productRepo.cancelLike(Number(productId), userId)
-    : await productRepo.like(Number(productId), userId);
+    ? await productRepo.cancelLike(productId, userId)
+    : await productRepo.like(productId, userId);
 
   console.log(isLiked ? 'Now, not your favorite product' : 'Now, your favorite product');
 
@@ -203,7 +204,7 @@ async function priceToBeChanged(productId: number, productData: UpdateProductDto
   if (productData.price === undefined) return 0;
 
   const currentProduct = await productRepo.findById(productId);
-  if (!currentProduct) throw new NotFoundError('product', productId);
+  if (!currentProduct) throw new NotFoundError();
   if (productData.price === currentProduct.price) return 0;
   return currentProduct.price;
 }

@@ -9,7 +9,7 @@ GET {{baseUrl}}/articles?order=recent&offset=10
 
 // 게시물 목록 조회
 // title 또는 content에 포함된 단어로 검색
-// titler과 content에 포함된 단어로 검색
+// title과 content에 포함된 단어로 검색
 ###
 GET {{baseUrl}}/articles?title=전망
 ###
@@ -22,7 +22,7 @@ GET {{baseUrl}}/articles?title=사촌&content=연기
 
 // 게시물 상세 조회 및 좋아요 기능: 인증 필요
 ###
-GET {{baseUrl}}/articles/16
+GET {{baseUrl}}/articles/21
 
 ###
 POST {{baseUrl}}/articles/14/like/toggle
@@ -40,7 +40,7 @@ Content-Type: application/json
 
 // 게시물 수정과 삭제: 인증과 인가 필요
 ###
-PATCH {{baseUrl}}/articles/21
+PATCH {{baseUrl}}/articles/25
 Content-Type: application/json
 
 {
@@ -48,6 +48,6 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{baseUrl}}/articles/23
+DELETE {{baseUrl}}/articles/25
 
 

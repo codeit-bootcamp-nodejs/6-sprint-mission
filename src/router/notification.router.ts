@@ -10,3 +10,5 @@ notiRouter.get('/:id', authenticate, withTryCatch(notiControl.countUnread)); // 
 notiRouter.patch('/:id', authenticate, withTryCatch(notiControl.patch)); // 알림 수정 (단방향: 읽음으로)
 
 export default notiRouter;
+
+// userRouter로 합칠 예정

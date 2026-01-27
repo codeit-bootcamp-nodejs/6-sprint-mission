@@ -21,6 +21,7 @@ async function login(req: Request, res: Response): Promise<void> {
   const { accessToken, refreshToken } = await authService.login(req.body);
   setTokenCookies(res, accessToken, refreshToken);
   console.log(`User logged-in`);
+  //console.log(res.getHeader('set-cookie'));
   res.status(200).send({ accessToken });
 }
 

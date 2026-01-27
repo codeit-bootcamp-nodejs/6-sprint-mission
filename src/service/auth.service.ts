@@ -1,9 +1,7 @@
 import bcrypt from 'bcrypt';
-import BadRequestError from '../middleware/errors/BadRequestError';
 import userRepo from '../repository/user.repo';
 import { ACCESS_TOKEN_COOKIE_NAME, REFRESH_TOKEN_COOKIE_NAME } from '../lib/constants';
 import { generateTokens, verifyRefreshToken } from '../lib/token';
-import NotFoundError from '../middleware/errors/NotFoundError';
 import { assert } from 'superstruct';
 import { CreateUser } from '../struct/user.struct';
 import { Response } from 'express';
@@ -11,15 +9,19 @@ import { CreateUserDto, LoginDto } from '../types/dto';
 import { User } from '@prisma/client';
 import { SafeUser, TokenType } from '../types/interfaceType';
 import { getIO } from '../websocket/socketIO';
+import ConflictError from '../middleware/errors/ConflictError';
+import ForbiddenError from '../middleware/errors/ForbiddenError';
+import UnauthorizedError from '../middleware/errors/UnauthorizedError';
+import NotFoundError from '../middleware/errors/NotFoundError';
 
 async function register(data: CreateUserDto): Promise<SafeUser> {
   assert(data, CreateUser);
   const { email, nickname, password } = data;
 
   const user = await userRepo.findByEmail(email);
-  if (!user) {
+  if (user) {
     console.log('User registered already');
-    throw new BadRequestError('USER_FOUND');
+    throw new ConflictError('이미 등록된 이메일입니다');
   }
 
   const newData = {
@@ -34,12 +36,12 @@ async function register(data: CreateUserDto): Promise<SafeUser> {
 
 async function login(data: LoginDto): Promise<TokenType> {
   const user = await userRepo.findByEmail(data.email);
-  if (!user) throw new NotFoundError('user', 0);
+  if (!user) throw new NotFoundError();
 
   const isPasswordOk = await check_passwordValidity(data.password, user.password);
   if (!isPasswordOk) {
     console.log('Invalid password');
-    throw new BadRequestError('FORBIDDEN');
+    throw new ForbiddenError('비밀번호가 틀렸습니다');
   }
 
   if (user.notifications.length) {
@@ -115,7 +117,7 @@ function check_refreshTokenValidity(tokenData: Record<string, string | undefined
   const refreshToken = tokenData[REFRESH_TOKEN_COOKIE_NAME];
   if (!refreshToken) {
     console.log('Tokens expired');
-    throw new BadRequestError('EXPIRED_TOKENS');
+    throw new UnauthorizedError('토큰이 만료되었습니다');
   }
   return refreshToken;
 }
@@ -124,7 +126,7 @@ async function verifyUserExist(userId: number): Promise<User> {
   const user = await userRepo.findById(userId);
   if (!user) {
     console.log('No user found. Resgister again.');
-    throw new NotFoundError(user, userId);
+    throw new NotFoundError('등록되지 않은 사용자입니다');
   }
   return user;
 }

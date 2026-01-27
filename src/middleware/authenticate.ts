@@ -1,8 +1,9 @@
 import { verifyAccessToken } from '../lib/token';
 import { ACCESS_TOKEN_COOKIE_NAME } from '../lib/constants';
 import authService from '../service/auth.service';
-import BadRequestError from './errors/BadRequestError';
 import { Request, Response, NextFunction } from 'express';
+import NotFoundError from './errors/NotFoundError';
+import UnauthorizedError from './errors/UnauthorizedError';
 
 async function authenticate(req: Request, res: Response, next: NextFunction) {
   try {
@@ -12,19 +13,19 @@ async function authenticate(req: Request, res: Response, next: NextFunction) {
       if (req.method === 'GET' && typeof req.params.id === 'string') return next();
 
       console.log('Unauthorized');
-      throw new BadRequestError('UNAUTHORIZED');
+      throw new UnauthorizedError('인증 토큰이 없습니다');
     }
     const { userId } = verifyAccessToken(accessToken);
 
     if (!userId) {
       console.log('No user found under the authorized token');
-      throw new BadRequestError('NO_USER_FOUND');
+      throw new NotFoundError();
     }
 
     const user = await authService.verifyUserExist(userId);
     if (!user) {
       console.log('No user foundwith the given ID by accessToken');
-      throw new BadRequestError('NO_USER_FOUND');
+      throw new NotFoundError();
     }
 
     req.user = user;

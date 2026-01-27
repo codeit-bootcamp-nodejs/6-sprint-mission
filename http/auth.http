@@ -7,9 +7,9 @@ POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-  "email": "user10@example.com",
-  "nickname": "user10",
-  "password": "password10"
+  "email": "user9@example.com",
+  "nickname": "user9",
+  "password": "password8"
 }
 
 

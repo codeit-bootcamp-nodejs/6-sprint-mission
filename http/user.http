@@ -43,4 +43,4 @@ GET {{baseUrl}}/notifications?type=unread
 ### 안 읽은 알림 갯수
 GET {{baseUrl}}/notifications/unRead
 ### 읽음으로 일방향 변경 (이미 변경되어 있어도 오케이)
-PATCH {{baseUrl}}/notifications/9
+PATCH {{baseUrl}}/notifications/4

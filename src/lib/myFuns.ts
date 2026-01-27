@@ -19,6 +19,6 @@ export function print(message: string): void {
   console.log('');
 }
 
-export function includedOk<T, K extends keyof T>(myArray: T[], myKey: K, myValue: T[K]): Boolean {
+export function includedOk<T, K extends keyof T>(myArray: T[], myKey: K, myValue: T[K]): boolean {
   return myArray.some((n) => n[myKey] === myValue);
 }

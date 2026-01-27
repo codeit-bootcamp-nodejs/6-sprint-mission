@@ -1,12 +1,12 @@
 import { assert } from 'superstruct';
 import { CreateArticle, PatchArticle } from '../struct/article.struct';
-import NotFoundError from '../middleware/errors/NotFoundError';
 import articleRepo from '../repository/article.repo';
 import { isEmpty, includedOk } from '../lib/myFuns';
 import { selectFields } from '../lib/selectFields';
 import { CreateArticleDto, UpdateArticleDto } from '../types/dto';
 import { Article2show, ArticleList2show, LikedArticle2show } from '../types/interfaceType';
 import { Article, Prisma } from '@prisma/client';
+import NotFoundError from '../middleware/errors/NotFoundError';
 
 // 게시물 생성, 수정, 삭제: 토큰 인증된 유저만 가능
 async function post(userId: number, data: CreateArticleDto): Promise<Article> {
@@ -22,7 +22,7 @@ async function patch(articleId: string, articleData: UpdateArticleDto) {
     Number(articleId),
     articleData as Prisma.ArticleUpdateInput
   );
-  if (isEmpty(article)) throw new NotFoundError('article', Number(articleId));
+  if (isEmpty(article)) throw new NotFoundError();
   return article;
 }
 

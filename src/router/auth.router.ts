@@ -1,12 +1,18 @@
-import express from 'express';
 import authControl from '../controller/auth.control';
 import withTryCatch from '../lib/withTryCatch';
 import authenticate from '../middleware/authenticate';
+import express from 'express';
+import { allowedUserKeys } from '../lib/constants';
+import { validateReqBody } from '../middleware/validateReqBody';
 
 const authRouter = express.Router();
 
-authRouter.post('/register', withTryCatch(authControl.register));
-authRouter.post('/login', withTryCatch(authControl.login));
+authRouter.post(
+  '/register',
+  validateReqBody(allowedUserKeys, true),
+  withTryCatch(authControl.register)
+);
+authRouter.post('/login', validateReqBody(allowedUserKeys), withTryCatch(authControl.login));
 authRouter.post('/logout', authenticate, withTryCatch(authControl.logout));
 
 // 토큰 재발행

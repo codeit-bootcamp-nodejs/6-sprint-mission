@@ -66,7 +66,7 @@ async function postArticle(
   } as Prisma.CommentCreateInput;
 
   const article = await articleRepo.findById(id);
-  if (!article) throw new NotFoundError('article', id);
+  if (!article) throw new NotFoundError();
 
   const message = `댓글 알림: ${content} (게시글${id} by 사용자${userId})`;
   const notificationData = {

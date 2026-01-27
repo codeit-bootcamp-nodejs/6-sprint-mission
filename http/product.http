@@ -21,10 +21,10 @@ GET {{baseUrl}}/products?name=Pro&description=기능
 
 // 상품 상세 조회, 좋아요, 등록 인증 필요
 ###
-GET {{baseUrl}}/products/8
+GET {{baseUrl}}/products/200
 
 ###
-POST {{baseUrl}}/products/29/like/toggle
+POST {{baseUrl}}/products/3/like/toggle
 
 
 ###
@@ -40,7 +40,7 @@ Content-Type: application/json
 
 // 상품 수정과 삭제: 인증, 인가 필요
 ###
-PATCH {{baseUrl}}/products/29
+PATCH {{baseUrl}}/products/32
 Content-Type: application/json
 
 {
@@ -50,18 +50,19 @@ Content-Type: application/json
 }
 
 ###
-PATCH {{baseUrl}}/products/8
+PATCH {{baseUrl}}/products/2
 Content-Type: application/json
 
 {
-  "price": 120000
+  "description": "시리 음성 명령과 스마트홈 제어 기능이 탑재된 컴팩트 스마트 스피커입니다.",
+  "price": 110000
 }
 
 ###
-DELETE {{baseUrl}}/products/30
+DELETE {{baseUrl}}/products/31
 
 ###
-GET {{baseUrl}}/products/2/price-records
+GET {{baseUrl}}/products/30/price-records
 ###
-GET {{baseUrl}}/products/price-records/3
+GET {{baseUrl}}/products/price-records/5
 

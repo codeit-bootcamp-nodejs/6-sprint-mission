@@ -1,10 +1,11 @@
-import BadRequestError from './errors/BadRequestError';
 import userRepo from '../repository/user.repo';
 import articleRepo from '../repository/article.repo';
 import productRepo from '../repository/product.repo';
 import commentRepo from '../repository/comment.repo';
 import { Request, Response, NextFunction } from 'express';
 import { User, Product, Article, Comment } from '@prisma/client';
+import BadRequestError from './errors/BadRequestError';
+import ForbiddenError from './errors/ForbiddenError';
 
 async function authorize(req: Request, res: Response, next: NextFunction) {
   try {
@@ -21,7 +22,7 @@ async function authorize(req: Request, res: Response, next: NextFunction) {
     } else {
       console.log('');
       console.log('Something went wrong');
-      throw new BadRequestError('BADREQUEST');
+      throw new BadRequestError('잘못된 요청입니다');
     }
 
     // console.log('');
@@ -30,10 +31,10 @@ async function authorize(req: Request, res: Response, next: NextFunction) {
     // console.log(`item.userId: ${item.userId}`);
     // console.log('');
 
-    if (req.user!.id !== item.userId) {
+    if (req.user.id !== item.userId) {
       console.log('');
-      console.log('Unauthorized');
-      throw new BadRequestError('UNAUTHORIZED');
+      console.log('Forbidden');
+      throw new ForbiddenError('권한이 없습니다');
     }
     next();
   } catch (err) {

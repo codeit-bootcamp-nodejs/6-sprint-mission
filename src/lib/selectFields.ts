@@ -1,4 +1,4 @@
-import { CompleteUser, CompleteProduct, CompleteArticle } from '../types/interfaceType';
+import { CompleteUser } from '../types/interfaceType';
 import { isEmpty } from './myFuns';
 
 type CommonFields = {

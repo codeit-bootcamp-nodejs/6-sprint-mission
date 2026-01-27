@@ -8,7 +8,7 @@ async function post(req: Request, res: Response, next: NextFunction): Promise<vo
   const productData = {
     userId: req.user.id,
     name: name.trim(),
-    description: description?.trim(),
+    description: description.trim(),
     price: price,
     tags: tags
   };
@@ -42,7 +42,7 @@ async function patch(req: Request, res: Response, next: NextFunction): Promise<v
 // 상품 삭제: 토큰 인증된 유저가 자기가 등록한 상품인 경우만 가능
 async function erase(req: Request, res: Response, next: NextFunction): Promise<void> {
   const { id } = req.params;
-  await productService.erase(id);
+  await productService.erase(Number(id));
   console.log(`Product_${id} deleted by ${req.user.nickname}`);
   res.status(204).send({ message: '상품이 삭제되었습니다' });
 }
@@ -68,15 +68,15 @@ async function getList(req: Request, res: Response, next: NextFunction): Promise
 // 조회 필드: id, name, description, price, tags, createdAt
 async function get(req: Request, res: Response, next: NextFunction): Promise<void> {
   const { id: productId } = req.params;
-  const userId = req.user?.id;
-  const product = await productService.get(userId, productId);
+  const userId = req.user.id;
+  const product = await productService.get(userId, Number(productId));
   console.log(`Product_${productId} fetched (in detail)`);
   res.status(200).json(product);
 }
 
 // 상품: 좋아요/좋아요-취소
 async function likeToggle(req: Request, res: Response, next: NextFunction): Promise<void> {
-  const product = await productService.likeToggle(req.user.id, req.params.id);
+  const product = await productService.likeToggle(req.user.id, Number(req.params.id));
   res.status(200).json(product);
 }
 

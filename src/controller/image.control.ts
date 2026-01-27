@@ -17,7 +17,7 @@ async function get(req: Request, res: Response, next: NextFunction): Promise<voi
 // 상품 이미지 저장 (현재는 로컬호스트에)
 // 상품 이미지 Url을 기존 imageUrls 배열에 추가 (없다면 생성)
 async function post(req: Request, res: Response, next: NextFunction): Promise<void> {
-  if (!req.file) throw new BadRequestError('IMAGE_FILE_NOT_FOUND');
+  if (!req.file) throw new BadRequestError('이미지 화일이 존재하지 않습니다');
 
   const item = await imageService.post(
     req.originalUrl,
@@ -26,7 +26,7 @@ async function post(req: Request, res: Response, next: NextFunction): Promise<vo
     req.file,
     req.get('host')
   );
-  if (!item) throw new NotFoundError('User/Product/Article', Number(req.params.id));
+  if (!item) throw new NotFoundError();
 
   console.log('Image uploaded. ImgUrls in DB updated.');
   console.log(item.imageUrls);

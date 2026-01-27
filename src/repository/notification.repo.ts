@@ -1,6 +1,5 @@
 import { Notification } from '@prisma/client';
 import prisma from '../lib/prismaClient';
-import { constructNow } from 'date-fns';
 
 async function findById(id: number, type: string): Promise<Notification | null> {
   return prisma.notification.findUnique({ where: { id } });

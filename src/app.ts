@@ -6,7 +6,6 @@ import http from 'http';
 import { setupSocket } from './websocket/socketIO';
 import { defaultNotFoundHandler, globalErrorHandler } from './middleware/errorHandler';
 import { PUBLIC_IMG_PATH, STATIC_IMG_PATH } from './lib/constants';
-import { PORT } from './lib/constants';
 import authRouter from './router/auth.router';
 import userRouter from './router/user.router';
 import productRouter from './router/product.router';
@@ -45,6 +44,4 @@ app.use('/images', imageRouter);
 app.use(defaultNotFoundHandler);
 app.use(globalErrorHandler);
 
-server.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+export default server;
