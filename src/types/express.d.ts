@@ -1,3 +1,4 @@
+import 'express';
 import { User } from '@prisma/client';
 
 declare global {

@@ -10,6 +10,7 @@ import {
   CreateProductPriceHistoryDto
 } from '../types/dto';
 import { Prisma, Product, ProductPriceHistory, NotificationType } from '@prisma/client';
+import NotFoundError from '../middleware/errors/NotFoundError';
 import prisma from '../lib/prismaClient';
 import {
   CreateProduct,
@@ -18,7 +19,6 @@ import {
   CreateNotification
 } from '../struct/product.struct';
 import { getIO } from '../websocket/socketIO';
-import NotFoundError from '../middleware/errors/NotFoundError';
 
 async function post(data: CreateProductDto): Promise<[Product, ProductPriceHistory]> {
   assert(data, CreateProduct);
@@ -162,7 +162,7 @@ async function get(
   userId: number | undefined,
   productId: number
 ): Promise<ProductToShow | Product> {
-  const product = await productRepo.findById(productId);
+  const product = await productRepo.findById(Number(productId));
   const product2show = selectFields(product);
   if (!userId) return product2show;
   const isLiked = includedOk(product.likedUsers, 'id', userId);
@@ -171,14 +171,13 @@ async function get(
 
 // 좋아요와 좋아요취소 토글
 async function likeToggle(userId: number, productId: number): Promise<ProductToShow> {
-  const product = await productRepo.findById(productId);
+  const product = await productRepo.findById(Number(productId));
 
-  // console.log(product.likedUsers);
   const isLiked = includedOk(product.likedUsers, 'id', userId);
 
   const updated = isLiked
-    ? await productRepo.cancelLike(productId, userId)
-    : await productRepo.like(productId, userId);
+    ? await productRepo.cancelLike(Number(productId), userId)
+    : await productRepo.like(Number(productId), userId);
 
   console.log(isLiked ? 'Now, not your favorite product' : 'Now, your favorite product');
 
