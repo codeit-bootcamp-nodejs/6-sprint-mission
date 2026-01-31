@@ -9,7 +9,8 @@ module.exports = {
   },
   moduleFileExtensions: ['ts', 'js'],
   collectCoverageFrom: [
-    'src/middleware/authorize.ts'
+    'src/service/product.service.ts'
+    //'src/middleware/authorize.ts'
     //   'src/controller/auth.control.ts',
     //   'src/controller/product.control.ts',
     //   'src/controller/article.control.ts',

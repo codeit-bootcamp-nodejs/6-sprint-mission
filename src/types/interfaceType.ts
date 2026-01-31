@@ -15,8 +15,12 @@ export interface CompleteProduct extends Product {
   likedUsers?: User[];
   comments?: Comment[];
 }
-export type ProductListToShow = Pick<Product, 'id' | 'name' | 'price' | 'createdAt'>;
-export type ProductToShow = { isLiked: Boolean } & Product;
+export type ProductList2show = Pick<Product, 'id' | 'name' | 'price' | 'createdAt'>;
+export type Product2show = Omit<Product, 'comments' | 'likedUsers'> & {
+  comments?: string[];
+  likedUsers?: string[];
+};
+export type LikedProduct2show = { isLiked: boolean } & Product2show;
 
 export interface CompleteArticle extends Article {
   likedUsers?: User[];
@@ -29,7 +33,7 @@ export type Article2show = Omit<Article, 'comments' | 'likedUsers'> & {
   likedUsers?: string[];
 };
 
-export type LikedArticle2show = { isLiked: Boolean } & Article2show;
+export type LikedArticle2show = { isLiked: boolean } & Article2show;
 
 export type CommentWithNextCursor = { comments: Comment[]; nextCursor: number | null };
 

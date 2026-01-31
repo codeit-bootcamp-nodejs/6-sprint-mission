@@ -1,24 +1,36 @@
-import { CompleteUser } from '../types/interfaceType';
+import {
+  Article2show,
+  CompleteArticle,
+  CompleteProduct,
+  CompleteUser,
+  Product2show
+} from '../types/interfaceType';
+// import { Prisma } from '@prisma/client';
 import { isEmpty } from './myFuns';
 
-type CommonFields = {
-  id: number;
-  userId: number;
-  createdAt: Date;
-  imageUrls?: string[];
-  comments?: { content: string }[];
-  likedUsers?: { nickname: string }[];
-};
+// type CommonFields = {
+//   id: number;
+//   userId: number;
+//   createdAt: Date;
+//   imageUrls?: string[];
+//   comments?: { content: string }[];
+//   likedUsers?: { nickname: string }[];
+// };
 
-export function selectFields<T extends CommonFields>(item: T) {
+//export function selectFields<T extends CommonFields>(item: T) {
+//return result as Omit<T, 'comments' | 'likedUsers'> & {
+export function selectFields(item: CompleteProduct | CompleteArticle): Product2show | Article2show {
   const result: any = { ...item };
   if (item.comments) result.comments = item.comments.map((c) => c.content);
   if (item.likedUsers) result.likedUsers = item.likedUsers.map((u) => u.nickname);
 
-  return result as Omit<T, 'comments' | 'likedUsers'> & {
-    comments?: string[];
-    likedUsers?: string[];
-  };
+  return result;
+  // return result as
+  //   | ProductToShow
+  //   | (Article2show & {
+  //       comments?: string[];
+  //       likedUsers?: string[];
+  //     });
 }
 
 export function selectUserFields(user: CompleteUser, fieldStr: string) {

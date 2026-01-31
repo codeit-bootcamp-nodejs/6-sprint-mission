@@ -68,9 +68,9 @@ async function get(
 ): Promise<Article2show | LikedArticle2show> {
   let article = await articleRepo.findById(Number(articleId));
   const article2show = selectFields(article);
-  if (!userId) return article2show;
+  if (!userId) return article2show as Article2show;
   const isLiked = article.likedUsers.some((a) => a.id === userId);
-  return { isLiked, ...article2show };
+  return { isLiked, ...article2show } as LikedArticle2show;
 }
 
 // 좋아요와 좋아요취소 토글
@@ -84,7 +84,7 @@ async function likeToggle(userId: number, articleId: string): Promise<LikedArtic
 
   console.log(isLiked ? 'Now, not your favorite article' : 'Now, your favorite article');
   const article2show = selectFields(updated);
-  return { isLiked: !isLiked, ...article2show };
+  return { isLiked: !isLiked, ...article2show } as LikedArticle2show;
 }
 
 export default {

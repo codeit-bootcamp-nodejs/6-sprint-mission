@@ -6,6 +6,7 @@ images_upload/
 prisma/migrations/
 prisma/ERD/
 .env
+.env.test
 .prettierrc
 src/router/index.txt
 src/controller/index.txt

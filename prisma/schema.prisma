@@ -102,6 +102,6 @@ enum NotificationType {
 
 generator erd {
   provider = "prisma-erd-generator"
-  output   = "ERD/diagram.md"
+  output   = "../hide/ERD/diagram.md"
   erdType  = "mermaid"
 }
