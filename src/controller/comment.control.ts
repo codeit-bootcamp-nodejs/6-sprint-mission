@@ -13,12 +13,7 @@ async function getList(req: Request, res: Response, next: NextFunction): Promise
 
   console.log(`Fetching ${type} comment list...`);
   console.log(`cursor, now:   ${cursor}`);
-  const { comments: comments, nextCursor } = await commentService.getList(
-    limit,
-    cursor,
-    type,
-    content
-  );
+  const { comments, nextCursor } = await commentService.getList(limit, cursor, type, content);
   console.log(`cursor, next:  ${nextCursor}`);
   console.log('');
   res.status(200).json(comments);
@@ -41,15 +36,9 @@ async function postArticle(req: Request, res: Response, next: NextFunction): Pro
   const { id } = req.params;
   const { id: userId } = req.user;
 
-  let comment;
-  let notification;
-  [comment, notification] = await commentService.postArticle(content, Number(id), userId);
+  const comment = await commentService.postArticle(content, Number(id), userId);
   console.log('');
   console.log('Comment created');
-  if (notification) {
-    console.log('Notification sent & stored');
-    console.log(notification);
-  }
   res.status(200).json(comment);
 }
 

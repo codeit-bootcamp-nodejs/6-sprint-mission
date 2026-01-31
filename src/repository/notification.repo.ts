@@ -1,4 +1,4 @@
-import { Notification } from '@prisma/client';
+import { Prisma, Notification } from '@prisma/client';
 import prisma from '../lib/prismaClient';
 
 async function findById(id: number, type: string): Promise<Notification | null> {
@@ -26,9 +26,14 @@ async function patch(id: number): Promise<Notification> {
   });
 }
 
+async function post(data: Prisma.NotificationCreateInput): Promise<Notification> {
+  return prisma.notification.create({ data });
+}
+
 export default {
   findById,
   findMany,
   countUnread,
-  patch
+  patch,
+  post
 };

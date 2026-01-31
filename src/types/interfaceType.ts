@@ -35,7 +35,16 @@ export type Article2show = Omit<Article, 'comments' | 'likedUsers'> & {
 
 export type LikedArticle2show = { isLiked: boolean } & Article2show;
 
-export type CommentWithNextCursor = { comments: Comment[]; nextCursor: number | null };
+type CommentWithoutNull = {
+  id: number;
+  content: string;
+  userId: number;
+  productId?: number;
+  articleId?: number;
+  createdAt: Date;
+  updatedAt: Date;
+};
+export type CommentWithNextCursor = { comments: CommentWithoutNull[]; nextCursor: number | null };
 
 type CommentBase = Pick<Comment, 'id' | 'content' | 'createdAt' | 'userId'>;
 
