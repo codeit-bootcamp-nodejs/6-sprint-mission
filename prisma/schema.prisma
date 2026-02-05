@@ -99,9 +99,3 @@ enum NotificationType {
   ARTICLE
   PRODUCT
 }
-
-generator erd {
-  provider = "prisma-erd-generator"
-  output   = "../hide/ERD/diagram.md"
-  erdType  = "mermaid"
-}

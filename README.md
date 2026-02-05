@@ -1,56 +1,60 @@
 # 미션 목표
 
-Jest와 Supertest를 사용하여 유닛 테스트, 통합 테스트 작성하기
+- 판다마켓 서비스를 AWS로 배포하기
+- AWS S3 적용
+- AWS RDS 적용
+- AWS EC2에 Express 서버 배포하기
+- (심화) 프로세스 매니저 적용
+- (심화) 리버스 프록시 적용
 
 ## 요구사항
 
-### 기본 요구사항: /test/api.test.ts
+### 기본 요구사항
 
-- [x] Jest의 테스트 커버리지 도구를 사용하도록 설정
-- [x] 인증이 필요하지 않은 상품 API에 대한 통합 테스트 작성
-- [x] 인증이 필요하지 않은 게시글 API에 대한 통합 테스트 작성
-- [x] 로그인, 회원가입 API에 대한 통합 테스트 작성
-- [x] 인증이 필요한 상품 API에 대한 통합 테스트 작성
-- [x] 인증이 필요한 상품 API에 대한 통합 테스트 작성
+- [x] 프로젝트에 프로덕션 배포를 위한 환경 변수 설정
+
+#### AWS S3 적용
+
+- [x] AWS S3 버킷을 생성하고, 퍼블릭 액세스를 허용
+- [x] 일반 사용자가 S3 업로드된 파일에 접근할 수 있도록 S3 버킷 정책을 설정
+- [x] AWS EC2에서 AWS S3를 사용하기 위한 액세스 키를 AWS IAM에서 발급
+- [x] 프로덕션 환경에서는 파일 업로드에 AWS S3를 사용하도록 구현을 수정
+
+#### AWS RDS 적용
+
+- [x] AWS RDS 프리티어에 해당하는 인스턴스를 생성
+- [x] RDS 인스턴스에 대한 보안 그룹을 설정
+- [x] 프로덕션 환경에서는 Prisma에 프로젝트 데이터베이스와 연결
+
+#### AWS EC2에 Express 서버 배포하기
+
+- [x] AWS EC2 프리티어에 해당하는 인스턴스를 생성
+- [x] SSH를 사용해 EC2 인스턴스에 접속해 Express 서버를 배포
 
 ### 심화 요구사항: /test/productService_likeToggle.test.ts (spy 사용)
 
-- [x] 상품 API의 비즈니스 로직에 대하여 Mock, Spy를 활용한 유닛 테스트 작성
+- [x] EC2 인스턴스에서 pm2 프로세스 매니저를 사용하여 애플리케이션을 실행
+- [x] EC2 인스턴스에서 nginx 리버스 프록시를 설정해 서버를 80번 포트로 서비스
 
-### 추가 구현한 심화 기능: /test/middlewarae_authorize.test.ts (mock 사용)
+## 제출
 
-- [x] 인가 로직에 대하여 Mock을 활용한 유닛 테스트 작성: authorize.test.ts
+AWS S3 버킷 정책 설정: /infra/s3/policy.png
 
-## 스크린샷: /test/result_snapshots
+AWS RDS 인스턴스 정책 설정
+/infra/rds/secure-group-inbound.png
 
-jest_endPointAPI_test
-<img width="898" height="1093" alt="image" src="https://github.com/user-attachments/assets/c7efdc78-625d-4f1c-9ac4-ea1a95c3d221" />
+/infra/rds/secure-group-inbound.png
 
-jest_authorize_mockTest
-<img width="685" height="446" alt="image" src="https://github.com/user-attachments/assets/9982551d-184b-41f8-a90d-384219016600" />
+AWS EC2 인스턴스 보안 그룹 설정
+/infra/ec2/secure-group-inbound.png
 
-jest_likeToggle_spyTest
-<img width="689" height="281" alt="image" src="https://github.com/user-attachments/assets/6695d519-00f5-4ba8-ad0b-7866460fe4ad" />
+/infra/ec2/secure-group-outbound.png
 
-## 폴더 구조
+(심화) pm2 실행에 사용되었던 명령어: /infra/ec2/start.sh
 
-```
-6-sprint-mission
-├── src
-├── test
-│   ├── result_snapshots
-│   │   ├── jest_authorize_mockTest.png
-│   │   ├── jest_endPointAPI_test.png
-│   │   └── jest_likeToggle_spyTest.png
-│   ├── api.test.ts
-│   ├── dummyArticleData.ts
-│   ├── dummyPriceData.ts
-│   ├── dummyProductData.ts
-│   ├── dummyUserData.ts
-│   ├── middleware_authorize.test.ts
-│   └── productService_likeToggle.test.ts
-└── README.md
-```
+(심화) pm2 실행에 사용헀던 설정 파일: /infra/ec2/ecosystem.config.js
+
+(심화) nginx 실행에 사용했던 설정 파일: /infra/ec2/nginx.conf
 
 ## 멘토에게
 
