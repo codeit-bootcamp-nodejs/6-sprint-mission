@@ -6,13 +6,13 @@ import 'dotenv/config';
 console.log('DATABASE_URL =', process.env.DATABASE_URL);
 
 async function main() {
-  // console.log('Deleting old data...');
-  // await prisma.notification.deleteMany();
-  // await prisma.productPriceHistory.deleteMany();
-  // await prisma.comment.deleteMany();
-  // await prisma.product.deleteMany();
-  // await prisma.article.deleteMany();
-  // await prisma.user.deleteMany();
+  console.log('Deleting old data...');
+  await prisma.notification.deleteMany();
+  await prisma.productPriceHistory.deleteMany();
+  await prisma.comment.deleteMany();
+  await prisma.product.deleteMany();
+  await prisma.article.deleteMany();
+  await prisma.user.deleteMany();
 
   console.log('Seeding started...');
   const userData = USERS.map((user) => {

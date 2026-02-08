@@ -42,15 +42,11 @@
     "typescript": "^5.9.3"
   },
   "type": "commonjs",
-  "main": "dist/app.js",
+  "main": "dist/main.js",
   "scripts": {
     "build": "tsc",
-    "start2": "node dist/app.js",
-    "start": "ts-node src/main.ts",
+    "start": "node dist/main.js",
     "dev": "nodemon --watch src --exec ts-node src/main.ts",
-    "test": "dotenv -e .env.test -- npm run prisma:migrate && dotenv -e .env.test -- npx prisma generate && dotenv -e .env.test -- jest --detectOpenHandles",
-    "test1": "jest",
-    "coverage": "dotenv -e .env.test -- jest --coverage",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "ts-node prisma/seed.ts"
