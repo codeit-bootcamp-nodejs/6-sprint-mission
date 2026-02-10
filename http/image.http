@@ -1,26 +1,26 @@
 @baseUrl = http://localhost:3000
 
 //------------------------상품 이미지 APIs
-GET {{baseUrl}}/images/products/32
+GET {{baseUrl}}/images/products/12
 ###
 GET {{baseUrl}}/images/products/32/1770697009465.png
 
 // 토큰 인증 + 인가 (상품을 등록한 유저만 가능)
 ###
-POST {{baseUrl}}/images/products/33
+POST {{baseUrl}}/images/products/12
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
-Content-Disposition: form-data; name="image"; filename="iphone17pro.png"
+Content-Disposition: form-data; name="image"; filename="kindle11.png"
 Content-Type: image/png
 
-< ./images/product/iphone17pro.png
+< ./images/product/kindle11.png
 --MyBoundary--
 
 ###
-DELETE {{baseUrl}}/images/products/33
+DELETE {{baseUrl}}/images/products/12
 ###
-DELETE {{baseUrl}}/images/products/32/1770697009465.png
+DELETE {{baseUrl}}/images/products/12/1770704226337.png
 
 
 
@@ -30,45 +30,45 @@ DELETE {{baseUrl}}/images/products/32/1770697009465.png
 // 사촌 비니 
 
 ###
-GET {{baseUrl}}/images/articles/20
+GET {{baseUrl}}/images/articles/9
 ###
 GET {{baseUrl}}/images/articles/20/1770698048592.png 
 
 ###
-POST {{baseUrl}}/images/articles/20
+POST {{baseUrl}}/images/articles/9
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
-Content-Disposition: form-data; name="image"; filename="eternalSunshine.png"
+Content-Disposition: form-data; name="image"; filename="parasite.png"
 Content-Type: image/png
 
-< ./images/article/eternalSunshine.png
+< ./images/article/parasite.png
 --MyBoundary--
 
 ###
-DELETE {{baseUrl}}/images/articles/20
+DELETE {{baseUrl}}/images/articles/9
 ###
-DELETE {{baseUrl}}/images/articles/20/1770698048592.png
+DELETE {{baseUrl}}/images/articles/9/1770704311657.png
 
 
 //------------------------ 사용자 이미지 APIs
 
 ###
-GET {{baseUrl}}/images/users/4
+GET {{baseUrl}}/images/users/2
 ###
-GET {{baseUrl}}/images/users/1/1770696383105.png
+GET {{baseUrl}}/images/users/2/1770703915184.png
 ###
-DELETE {{baseUrl}}/images/users/1/1770696383105.png
+DELETE {{baseUrl}}/images/users/2/1770703915184.png
 
 ###
-POST {{baseUrl}}/images/users/3
+POST {{baseUrl}}/images/users/2
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
-Content-Disposition: form-data; name="image"; filename="Sam.png"
+Content-Disposition: form-data; name="image"; filename="Frodo2.png"
 Content-Type: image/png
 
-< ./images/user/Sam.png
+< ./images/user/Frodo2.png
 --MyBoundary--
 
 ###

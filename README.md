@@ -57,4 +57,8 @@
 ## 멘토에게
 
 - image API에서 AWS S3를 사용하도록 수정하였고, 테스트 완료하였습니다.
-- image API를 User, Product, Article이 공유하고 있습니다. req.originalUrl에서 users, products, 또는 articles를 포함하는지 if문을 사용하여 각각의 service와 repo 함수를 부르고 있는지라 중복이 많습니다. 그래서 수정하였습니다.
+- image API를 User, Product, Article이 공유하고 있습니다. 전 버전에서는 req.originalUrl 또는 req.path에서 users, products, 또는 articles를 포함하는지 if문을 사용하여 각각의 service와 repo 함수를 부르고 있는지라 중복이 많았습니다. 그래서 req.params.type을 이미지 타입으로 사용하고, 이미지 타입에 따라 서비스단에서 RepoMap에서 적절한 repository를 호출하는 방식으로 수정하였습니다.
+  - ./types/interfaceType.ts
+  - ./src/router/image.router.ts
+  - ./src/controller/image.control.ts
+  - ./src/service/image.service.ts
