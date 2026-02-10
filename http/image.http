@@ -48,6 +48,10 @@ DELETE {{baseUrl}}/images/articles/16
 
 ###
 GET {{baseUrl}}/images/users/5
+###
+GET {{baseUrl}}/images/users/2/23465476.png
+###
+DELETE {{baseUrl}}/images/users/2/23465476.png
 
 ###
 POST {{baseUrl}}/images/users/5
@@ -62,4 +66,9 @@ Content-Type: image/png
 
 ###
 DELETE {{baseUrl}}/images/users/2
+
+
+
+
+
 

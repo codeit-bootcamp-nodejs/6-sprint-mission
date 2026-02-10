@@ -1,6 +1,7 @@
 import { CreateArticleDto } from '../types/dto';
 import prisma from '../lib/prismaClient';
 import { Article, Prisma } from '@prisma/client';
+import NotFoundError from '../middleware/errors/NotFoundError';
 
 async function post(data: CreateArticleDto): Promise<Article> {
   return await prisma.article.create({ data });
@@ -66,6 +67,17 @@ async function findById(
   });
 }
 
+async function findImgUrls(id: number): Promise<string[]> {
+  const result = await prisma.article.findUniqueOrThrow({
+    where: { id },
+    select: { imageUrls: true }
+  });
+  if (result.imageUrls) {
+    throw new NotFoundError('imageUrls not found');
+  }
+  return result.imageUrls;
+}
+
 export default {
   post,
   patch,
@@ -73,5 +85,6 @@ export default {
   cancelLike,
   erase,
   findById,
+  findImgUrls,
   getList
 };

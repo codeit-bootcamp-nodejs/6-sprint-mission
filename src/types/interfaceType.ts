@@ -53,3 +53,18 @@ export type Comment2show =
   | (CommentBase & { productId: number | null });
 
 export type TokenType = { accessToken: string | undefined; refreshToken: string | undefined };
+
+interface ImageFile {
+  buffer: Buffer;
+  mimetype: string;
+  originalname: string;
+  size: number;
+}
+
+export interface ImagePostInput {
+  path: string;
+  targetId: number;
+  protocol: string;
+  host?: string;
+  file: ImageFile;
+}

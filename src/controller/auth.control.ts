@@ -13,21 +13,21 @@ import authService from '../service/auth.service';
 async function register(req: Request, res: Response): Promise<void> {
   assert(req.body, CreateUser);
   const newUser = await authService.register(req.body);
-  console.log(`User_${newUser.id} registered successfully`);
+  if (NODE_ENV === 'development') console.log(`User_${newUser.id} registered successfully`);
   res.status(201).json(newUser);
 }
 
 async function login(req: Request, res: Response): Promise<void> {
   const { accessToken, refreshToken } = await authService.login(req.body);
   setTokenCookies(res, accessToken, refreshToken);
-  console.log(`User logged-in`);
+  if (NODE_ENV === 'development') console.log(`User logged-in`);
   //console.log(res.getHeader('set-cookie'));
   res.status(200).send({ accessToken });
 }
 
 async function logout(req: Request, res: Response): Promise<void> {
   authService.logout(req.user.id, res);
-  console.log(`User logged-out`);
+  if (NODE_ENV === 'development') console.log(`User logged-out`);
   res.status(200).send({ message: '사용자가 로그아웃 하였습니다' });
 }
 
@@ -47,7 +47,7 @@ async function viewTokens(req: Request, res: Response): Promise<void> {
 async function issueTokens(req: Request, res: Response): Promise<void> {
   const { accessToken, refreshToken } = await authService.issueTokens(req.cookies);
   setTokenCookies(res, accessToken, refreshToken);
-  console.log(`Tokens refreshed`);
+  if (NODE_ENV === 'development') console.log(`Tokens refreshed`);
   res.status(201).send({ accessToken });
 }
 

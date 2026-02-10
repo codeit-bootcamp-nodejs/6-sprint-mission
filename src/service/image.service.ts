@@ -1,99 +1,154 @@
-import path from 'path';
-import { PUBLIC_IMG_PATH, STATIC_IMG_PATH } from '../lib/constants';
 import userRepo from '../repository/user.repo';
 import articleRepo from '../repository/article.repo';
 import productRepo from '../repository/product.repo';
 import { selectFields, selectUserFields } from '../lib/selectFields';
-import { CompleteArticle, CompleteProduct, CompleteUser } from '../types/interfaceType';
-import { Prisma, Article, Product, User } from '@prisma/client';
+import {
+  CompleteArticle,
+  CompleteProduct,
+  CompleteUser,
+  ImagePostInput
+} from '../types/interfaceType';
+import { Prisma } from '@prisma/client';
 
-async function get(originalUrl: string, id: string) {
-  let item = {};
-  if (originalUrl.includes('users')) {
-    item = await userRepo.findById(Number(id));
-    return selectUserFields(item as CompleteUser, 'core');
-  } else if (originalUrl.includes('products')) {
-    item = await productRepo.findById(Number(id));
-    return selectFields(item as CompleteProduct);
-  } else {
-    item = await articleRepo.findById(Number(id));
-    return selectFields(item as CompleteArticle);
+import {
+  PutObjectCommand,
+  ListObjectsV2Command,
+  GetObjectCommand,
+  DeleteObjectCommand,
+  DeleteObjectsCommand
+} from '@aws-sdk/client-s3';
+import fs from 'fs';
+import { s3Client } from '../lib/s3Client';
+import { BUCKETNAME, REGION, ACCESS_KEY_ID, SECRET_ACCESS_KEY } from '../lib/constants';
+import path from 'path';
+import InternalServerError from '../middleware/errors/internalServerError';
+
+const bucket = BUCKETNAME;
+const region = REGION;
+
+const repoMap = {
+  products: productRepo,
+  articles: articleRepo,
+  users: userRepo
+} as const;
+
+async function getList(path: string, id: number) {
+  const key = `images${path}/`;
+
+  const command = new ListObjectsV2Command({ Bucket: bucket, Prefix: key });
+
+  try {
+    const data = await s3Client.send(command);
+
+    const imageUrls = (data.Contents ?? []).map(
+      (obj) => `https://${bucket}.s3.${region}.amazonaws.com/${obj.Key}`
+    );
+    return imageUrls;
+  } catch (err) {
+    throw new InternalServerError('S3 장애/권한 오류');
+  }
+
+  // DB에서 imageUrls 찾아 반환하는 경우 (현업에서 더 쓰는 방식이라 함)
+  // const type = path.split('/')[1];
+  // const repo = repoMap[type as keyof typeof repoMap];
+  // const imageUrlsDB = await repo.findImgUrls(id);
+  // return imageUrlsDB;
+}
+
+async function get(type: string, filename: string, id: number) {
+  const key = `images/${type}/${id}/${filename}`;
+  try {
+    const imgObj = await s3Client.send(new GetObjectCommand({ Bucket: bucket, Key: key }));
+    return imgObj;
+  } catch (err) {
+    throw new InternalServerError('AWS S3 fetch failure');
   }
 }
 
-async function post(
-  originalUrl: string,
-  id: string,
-  protocol: string,
-  file: Express.Multer.File | undefined,
-  host: string | undefined
-) {
-  // 업로드된 파일을 접근 가능한 URL생성해서 응답으로 반환
-  let staticPath = '';
-  let publicPath = '';
-  let item = {};
+async function post(input: ImagePostInput) {
+  const { file, host, protocol } = input;
 
-  if (originalUrl.includes('products')) {
-    staticPath = path.join(STATIC_IMG_PATH, '/product'); // 이미지 저장 폴더 설정: 현재는 localhost
-    publicPath = path.join(PUBLIC_IMG_PATH, '/product'); // 위 폴더를 가리키는 public용 라우터 폴더
-    item = (await productRepo.findById(Number(id))) as Product;
-  }
-  if (originalUrl.includes('articles')) {
-    staticPath = path.join(STATIC_IMG_PATH, '/article');
-    publicPath = path.join(PUBLIC_IMG_PATH, '/article');
-    item = (await articleRepo.findById(Number(id))) as Article;
-  }
-  if (originalUrl.includes('users')) {
-    staticPath = path.join(STATIC_IMG_PATH, '/user');
-    publicPath = path.join(PUBLIC_IMG_PATH, '/user');
-    item = (await userRepo.findById(Number(id))) as User;
+  // AWS S3에 이미지 저장
+  const ext = path.extname(file.originalname);
+  const key = `images${input.path}/${Date.now()}${ext}`;
+
+  const params = {
+    Bucket: BUCKETNAME,
+    Key: key,
+    Body: file.buffer,
+    ContentType: file.mimetype
+  };
+
+  const command = new PutObjectCommand(params);
+  try {
+    await s3Client.send(command);
+  } catch (err) {
+    throw new InternalServerError('S3 업로드 실패');
   }
 
-  const newImageUrl = file
-    ? `${protocol}://${host}${path.posix.join(publicPath, file.filename)}`
-    : null;
+  // DB에 새 imageUrl 저장
+  const type = input.path.split('/')[1];
+  const repo = repoMap[type as keyof typeof repoMap];
+
+  const imageUrls = await repo.findImgUrls(input.targetId);
+  const newImageUrl = `https://${bucket}.s3.${region}.amazonaws.com/${key}`;
 
   let updatedUrls = [];
-  if ('imageUrls' in item) {
-    updatedUrls = [...(item.imageUrls as string[]), newImageUrl]; // 기존 imageUrls에 이번 것 끝에 넣어줌
+  if (imageUrls) {
+    updatedUrls = [...imageUrls, newImageUrl]; // 기존 imageUrls에 이번 것 끝에 넣어줌
   } else {
     updatedUrls = [newImageUrl];
   }
 
   const imageData = { imageUrls: updatedUrls };
-
-  if (originalUrl.includes('products')) {
-    item = await productRepo.patch(Number(id), imageData as Prisma.ProductUpdateInput);
-    return selectFields(item as Product);
-  }
-  if (originalUrl.includes('articles')) {
-    item = await articleRepo.patch(Number(id), imageData as Prisma.ArticleUpdateInput);
-    return selectFields(item as Article);
-  }
-  if (originalUrl.includes('users')) {
-    item = await userRepo.patch(Number(id), imageData as Prisma.UserUpdateInput);
-    return selectUserFields(item as User, 'core');
-  }
+  const item = await repo.patch(input.targetId, imageData);
+  if (type === 'users') return selectUserFields(item as CompleteUser, 'core');
+  else return selectFields(item as CompleteProduct | CompleteArticle);
 }
 
-async function erase(originalUrl: string, id: string) {
-  let item = {};
-  if (originalUrl.includes('products')) {
-    item = await productRepo.patch(Number(id), { imageUrls: [] });
-    return selectFields(item as Product);
+async function del(type: string, filename: string, id: number) {
+  const key = `images/${type}/${id}/${filename}`;
+  await s3Client.send(new DeleteObjectCommand({ Bucket: bucket, Key: key }));
+
+  const repo = repoMap[type as keyof typeof repoMap];
+  const delImgUrl = `https://${bucket}.s3.${region}.amazonaws.com/${key}`;
+
+  const imageUrls = await repo.findImgUrls(id);
+
+  const i = imageUrls.indexOf(delImgUrl);
+  if (i !== -1) imageUrls.splice(i, 1);
+
+  await repo.patch(id, { imageUrls });
+  return imageUrls;
+}
+
+async function delList(type: string, id: number) {
+  const key = `images/${type}/${id}/`;
+
+  let command = new ListObjectsV2Command({ Bucket: bucket, Prefix: key });
+  const list = await s3Client.send(command);
+
+  if (list.Contents?.length) {
+    await s3Client.send(
+      new DeleteObjectsCommand({
+        Bucket: bucket,
+        Delete: {
+          Objects: list.Contents.map((obj) => ({ Key: obj.Key! }))
+        }
+      })
+    );
   }
-  if (originalUrl.includes('articles')) {
-    item = await articleRepo.patch(Number(id), { imageUrls: [] });
-    return selectFields(item as Article);
-  }
-  if (originalUrl.includes('users')) {
-    item = await userRepo.patch(Number(id), { imageUrls: [] });
-    return selectUserFields(item as User, 'core');
-  }
+
+  const repo = repoMap[type as keyof typeof repoMap];
+  const item = await repo.patch(id, { imageUrls: [] });
+  if (type === 'users') return selectUserFields(item as CompleteUser, 'core');
+  else return selectFields(item as CompleteProduct | CompleteArticle);
 }
 
 export default {
+  getList,
   get,
   post,
-  erase
+  del,
+  delList
 };

@@ -22,5 +22,14 @@
     /* Completeness */
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
-  "include": ["src/**/*", "src/mock.ts", "src/seed.ts", "src/websocket/websocket.ts", "src/main.ts"]
+  "include": [
+    "src/**/*",
+    "src/mock.ts",
+    "src/seed.ts",
+    "src/websocket/websocket.ts",
+    "src/main.ts",
+    "hide/repo_options.ts",
+    "hide/DB_options2.ts"
+  ],
+  "exclude": ["hide"]
 }

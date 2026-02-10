@@ -1,3 +1,4 @@
+import { NODE_ENV } from '../lib/constants';
 import productService from '../service/product.service';
 import { Request, Response, NextFunction } from 'express';
 
@@ -13,11 +14,13 @@ async function post(req: Request, res: Response, next: NextFunction): Promise<vo
     tags: tags
   };
   const [product, priceRecord] = await productService.post(productData);
-  console.log('');
-  console.log(`Product_${product.id} created by User_${req.user.id}`);
-  console.log(`Product_${product.id} has PriceRecord_${priceRecord.id}`);
-  console.log(priceRecord);
-  console.log('');
+  if (NODE_ENV === 'development') {
+    console.log('');
+    console.log(`Product_${product.id} created by User_${req.user.id}`);
+    console.log(`Product_${product.id} has PriceRecord_${priceRecord.id}`);
+    console.log(priceRecord);
+    console.log('');
+  }
   res.status(201).json(product);
 }
 
@@ -34,8 +37,10 @@ async function patch(req: Request, res: Response, next: NextFunction): Promise<v
   };
 
   const product = await productService.patch(Number(id), productData);
-  console.log(`Product_${id} patched by ${req.user.nickname}`);
-  console.log('');
+  if (NODE_ENV === 'development') {
+    console.log(`Product_${id} patched by ${req.user.nickname}`);
+    console.log('');
+  }
   res.status(200).json(product);
 }
 
@@ -43,7 +48,7 @@ async function patch(req: Request, res: Response, next: NextFunction): Promise<v
 async function erase(req: Request, res: Response, next: NextFunction): Promise<void> {
   const { id } = req.params;
   await productService.erase(Number(id));
-  console.log(`Product_${id} deleted by ${req.user.nickname}`);
+  if (NODE_ENV === 'development') console.log(`Product_${id} deleted by ${req.user.nickname}`);
   res.status(204).send({ message: '상품이 삭제되었습니다' });
 }
 
@@ -60,7 +65,7 @@ async function getList(req: Request, res: Response, next: NextFunction): Promise
   const description = req.query.description as string | undefined;
 
   const products = await productService.getList(offset, limit, order, name, description);
-  console.log('Product list fetched');
+  if (NODE_ENV === 'development') console.log('Product list fetched');
   res.status(200).json(products);
 }
 
@@ -70,7 +75,7 @@ async function get(req: Request, res: Response, next: NextFunction): Promise<voi
   const { id: productId } = req.params;
   const userId = req.user.id;
   const product = await productService.get(userId, Number(productId));
-  console.log(`Product_${productId} fetched (in detail)`);
+  if (NODE_ENV === 'development') console.log(`Product_${productId} fetched (in detail)`);
   res.status(200).json(product);
 }
 

@@ -5,7 +5,7 @@ import path from 'path';
 import http from 'http';
 import { setupSocket } from './websocket/socketIO';
 import { defaultNotFoundHandler, globalErrorHandler } from './middleware/errorHandler';
-import { PUBLIC_IMG_PATH, STATIC_IMG_PATH } from './lib/constants';
+//import { PUBLIC_IMG_PATH, STATIC_IMG_PATH } from './lib/constants';
 import authRouter from './router/auth.router';
 import userRouter from './router/user.router';
 import productRouter from './router/product.router';
@@ -23,15 +23,15 @@ app.use(express.static(path.join(process.cwd(), 'public')));
 const server = http.createServer(app);
 setupSocket(server);
 
-app.use(
-  path.join(PUBLIC_IMG_PATH, 'product'),
-  express.static(path.join(STATIC_IMG_PATH, 'product'))
-);
-app.use(
-  path.join(PUBLIC_IMG_PATH, 'article'),
-  express.static(path.join(STATIC_IMG_PATH, 'article'))
-);
-app.use(path.join(PUBLIC_IMG_PATH, 'user'), express.static(path.join(STATIC_IMG_PATH, 'user')));
+// app.use(
+//   path.join(PUBLIC_IMG_PATH, 'product'),
+//   express.static(path.join(STATIC_IMG_PATH, 'product'))
+// );
+// app.use(
+//   path.join(PUBLIC_IMG_PATH, 'article'),
+//   express.static(path.join(STATIC_IMG_PATH, 'article'))
+// );
+// app.use(path.join(PUBLIC_IMG_PATH, 'user'), express.static(path.join(STATIC_IMG_PATH, 'user')));
 
 app.use('/auth', authRouter);
 app.use('/users', userRouter);
