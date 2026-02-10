@@ -26,24 +26,89 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const superstruct_1 = require("superstruct");
 const myFuns_1 = require("../lib/myFuns");
 const product_repo_1 = __importDefault(require("../repository/product.repo"));
-const structs_1 = require("../struct/structs");
 const selectFields_1 = require("../lib/selectFields");
+const client_1 = require("@prisma/client");
 const NotFoundError_1 = __importDefault(require("../middleware/errors/NotFoundError"));
-function post(userId, data) {
+const prismaClient_1 = __importDefault(require("../lib/prismaClient"));
+const product_struct_1 = require("../struct/product.struct");
+const socketIO_1 = require("../websocket/socketIO");
+function post(data) {
     return __awaiter(this, void 0, void 0, function* () {
-        const productData = Object.assign(Object.assign({}, data), { userId });
-        (0, superstruct_1.assert)(productData, structs_1.CreateProduct);
-        const product = yield product_repo_1.default.post(productData);
-        return product;
+        (0, superstruct_1.assert)(data, product_struct_1.CreateProduct);
+        const { userId } = data, rest = __rest(data, ["userId"]);
+        const productData = Object.assign(Object.assign({}, rest), { user: { connect: { id: userId } } });
+        const { product, newPriceRecord } = yield prismaClient_1.default.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
+            const product = yield tx.product.create({ data: productData });
+            const priceData = {
+                price: data.price,
+                product: { connect: { id: product.id } }
+            };
+            (0, superstruct_1.assert)({ productId: product.id, price: data.price }, product_struct_1.CreateProductPriceHistory);
+            const newPriceRecord = yield tx.productPriceHistory.create({ data: priceData });
+            return { product, newPriceRecord };
+        }));
+        return [product, newPriceRecord];
     });
 }
-function patch(productId, productData) {
+function patch(productId, data) {
     return __awaiter(this, void 0, void 0, function* () {
-        (0, superstruct_1.assert)(productData, structs_1.PatchProduct);
-        const product = yield product_repo_1.default.patch(Number(productId), productData);
-        if ((0, myFuns_1.isEmpty)(product))
-            throw new NotFoundError_1.default('product', Number(productId));
-        return product;
+        (0, superstruct_1.assert)(data, product_struct_1.PatchProduct);
+        const prevPrice = yield priceToBeChanged(productId, data);
+        let newProduct;
+        let priceRecord;
+        // 상품 가격 변동이 있는 경우, 가격 변동 기록 생성
+        if (Number(prevPrice)) {
+            const priceData = {
+                prevPrice,
+                price: data.price,
+                productId
+            };
+            (0, superstruct_1.assert)(priceData, product_struct_1.CreateProductPriceHistory);
+            const priceDataToRepo = {
+                prevPrice,
+                price: data.price,
+                product: { connect: { id: productId } }
+            };
+            const product = yield product_repo_1.default.findById(productId);
+            if (!product)
+                throw new NotFoundError_1.default();
+            [priceRecord, newProduct] = yield prismaClient_1.default.$transaction([
+                prismaClient_1.default.productPriceHistory.create({ data: priceDataToRepo }),
+                prismaClient_1.default.product.update({ data, where: { id: productId } })
+            ]);
+            // 그 상품에 좋아요를 누른 사람이 있는 경우 알림 생성
+            if (product.likedUsers.length !== 0) {
+                const message = `상품${productId} 가격 변동 알림: (${prevPrice} --> ${data.price})`;
+                let notificationData = [];
+                for (const likedUser of product.likedUsers) {
+                    // if (likedUser.id === product.userId) continue; //테스트 위해 본인에게도 보냄
+                    const tempData = {
+                        userId: likedUser.id,
+                        type: client_1.NotificationType.PRODUCT,
+                        message,
+                        productId
+                    };
+                    (0, superstruct_1.assert)(tempData, product_struct_1.CreateNotification);
+                    notificationData.push(tempData);
+                }
+                const notifications = yield prismaClient_1.default.notification.createMany({ data: notificationData });
+                const io = (0, socketIO_1.getIO)();
+                for (const likedUser of product.likedUsers) {
+                    // if (likedUser.id === product.userId) continue; // 테스트 위해 본인에게도 보내기
+                    io.to(`user:${likedUser.id}`).emit('notification', { message });
+                }
+                console.log('');
+                console.log('Price changed');
+                console.log('ProductPriceHistory updated');
+                console.log('Notification sent & stored');
+            }
+        }
+        else {
+            newProduct = yield product_repo_1.default.patch(productId, data);
+        }
+        if (!newProduct)
+            throw new NotFoundError_1.default();
+        return newProduct;
     });
 }
 function erase(productId) {
@@ -81,7 +146,7 @@ function getList(offset, limit, orderStr, nameStr, descriptionStr) {
 // 조회 필드: id, name, description, price, tags, createdAt
 function get(userId, productId) {
     return __awaiter(this, void 0, void 0, function* () {
-        let product = yield product_repo_1.default.findById(Number(productId));
+        const product = yield product_repo_1.default.findById(productId);
         const product2show = (0, selectFields_1.selectFields)(product);
         if (!userId)
             return product2show;
@@ -92,14 +157,37 @@ function get(userId, productId) {
 // 좋아요와 좋아요취소 토글
 function likeToggle(userId, productId) {
     return __awaiter(this, void 0, void 0, function* () {
-        const product = yield product_repo_1.default.findById(Number(productId));
+        const product = yield product_repo_1.default.findById(productId);
         const isLiked = (0, myFuns_1.includedOk)(product.likedUsers, 'id', userId);
         const updated = isLiked
-            ? yield product_repo_1.default.cancelLike(Number(productId), userId)
-            : yield product_repo_1.default.like(Number(productId), userId);
+            ? yield product_repo_1.default.cancelLike(productId, userId)
+            : yield product_repo_1.default.like(productId, userId);
         console.log(isLiked ? 'Now, not your favorite product' : 'Now, your favorite product');
         const product2show = (0, selectFields_1.selectFields)(updated);
         return Object.assign({ isLiked: !isLiked }, product2show);
+    });
+}
+function getPriceRecord(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield product_repo_1.default.getPriceRecord(id);
+    });
+}
+function getPriceRecords(productId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield product_repo_1.default.getPriceRecords(productId);
+    });
+}
+//-----------------------------------
+function priceToBeChanged(productId, productData) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (productData.price === undefined)
+            return 0;
+        const currentProduct = yield product_repo_1.default.findById(productId);
+        if (!currentProduct)
+            throw new NotFoundError_1.default();
+        if (productData.price === currentProduct.price)
+            return 0;
+        return currentProduct.price;
     });
 }
 exports.default = {
@@ -108,5 +196,7 @@ exports.default = {
     erase,
     getList,
     get,
-    likeToggle
+    likeToggle,
+    getPriceRecord,
+    getPriceRecords
 };

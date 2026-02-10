@@ -8,27 +8,27 @@ import { allowedCommentKeys } from '../lib/constants';
 
 const commentRouter = express.Router();
 
-commentRouter.get('/', withTryCatch(commentControl.getList));
-commentRouter.get('/:id', withTryCatch(commentControl.get));
+commentRouter.get('/', authenticate({ optional: true }), withTryCatch(commentControl.getList));
+commentRouter.get('/:id', authenticate(), withTryCatch(commentControl.get));
 commentRouter.post(
   '/articles/:id',
-  authenticate,
+  authenticate(),
   validateReqBody(allowedCommentKeys, true),
   withTryCatch(commentControl.postArticle)
 );
 commentRouter.post(
   '/products/:id',
-  authenticate,
+  authenticate(),
   validateReqBody(allowedCommentKeys, true),
   withTryCatch(commentControl.postProduct)
 );
 commentRouter.patch(
   '/:id',
-  authenticate,
+  authenticate(),
   authorize,
   validateReqBody(allowedCommentKeys),
   withTryCatch(commentControl.patch)
 );
-commentRouter.delete('/:id', authenticate, authorize, withTryCatch(commentControl.erase));
+commentRouter.delete('/:id', authenticate(), authorize, withTryCatch(commentControl.erase));
 
 export default commentRouter;

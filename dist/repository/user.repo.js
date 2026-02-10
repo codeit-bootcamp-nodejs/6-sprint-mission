@@ -27,7 +27,7 @@ function create(data) {
 }
 function findByEmail(email) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_1.default.user.findUnique({ where: { email } });
+        return yield prismaClient_1.default.user.findUnique({ where: { email }, include: { notifications: true } });
     });
 }
 function findById(id) {
@@ -39,9 +39,19 @@ function findById(id) {
                 articles: true,
                 comments: true,
                 likedProducts: true,
-                likedArticles: true
+                likedArticles: true,
+                notifications: true
             }
         });
+    });
+}
+function findImgUrls(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield prismaClient_1.default.user.findUniqueOrThrow({
+            where: { id },
+            select: { imageUrls: true }
+        });
+        return result.imageUrls;
     });
 }
 function patch(id, userData) {
@@ -72,6 +82,7 @@ exports.default = {
     patch,
     findByEmail,
     findById,
+    findImgUrls,
     getProducts,
     getArticles
 };

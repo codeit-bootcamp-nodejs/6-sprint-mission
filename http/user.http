@@ -1,23 +1,29 @@
+#@baseUrl = http://3.34.97.118
 @baseUrl = http://localhost:3000
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcwNzEzMDU1LCJleHAiOjE3NzA3MTY2NTV9.ViTVxr3EqPXi2aA4fByOJSIqaV1kyyMhMhYyZAHr86I
 
 GET {{baseUrl}}/users
-
+Authorization: Bearer {{accessToken}}
 
 // 토큰 인증이 필요한 User APIs
 ###
 GET {{baseUrl}}/users/info
+Authorization: Bearer {{accessToken}}
+
 ###
 PATCH {{baseUrl}}/users/info/edit
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 { 
-  "nickname": "user4" ,
-  "email": "user4@example.com"
+  "nickname": "user1" ,
+  "email": "user1@example.com"
 }
 
 
 ###
 PATCH {{baseUrl}}/users/info/password/change
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
@@ -27,20 +33,28 @@ Content-Type: application/json
 
 ###
 GET {{baseUrl}}/users/products
+Authorization: Bearer {{accessToken}}
 ###
 GET {{baseUrl}}/users/articles 
+Authorization: Bearer {{accessToken}}
 ###
 GET {{baseUrl}}/users/like/products
+Authorization: Bearer {{accessToken}}
 ###
 GET {{baseUrl}}/users/like/articles
+Authorization: Bearer {{accessToken}}
 
 
 ### 알림 기능
 GET {{baseUrl}}/notifications
+Authorization: Bearer {{accessToken}}
 ###
 GET {{baseUrl}}/notifications?type=unread
+Authorization: Bearer {{accessToken}}
 
 ### 안 읽은 알림 갯수
 GET {{baseUrl}}/notifications/unRead
+Authorization: Bearer {{accessToken}}
 ### 읽음으로 일방향 변경 (이미 변경되어 있어도 오케이)
 PATCH {{baseUrl}}/notifications/8
+Authorization: Bearer {{accessToken}}

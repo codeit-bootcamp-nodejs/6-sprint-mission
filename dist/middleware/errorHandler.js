@@ -1,105 +1,58 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.globalErrorHandler = exports.defaultNotFoundHandler = void 0;
-const superstruct_1 = require("superstruct");
-const BadRequestError_1 = __importDefault(require("./errors/BadRequestError"));
-const NotFoundError_1 = __importDefault(require("./errors/NotFoundError"));
-const client_1 = require("@prisma/client");
-const defaultNotFoundHandler = function (req, res, next) {
-    return res.status(404).send({ message: '요청하신 페이지를 찾을 수 없습니다.' });
-};
 exports.defaultNotFoundHandler = defaultNotFoundHandler;
-const globalErrorHandler = function (err, req, res, next) {
-    //console.error(err); // 개발용 로그
-    // Superstruct 에러 처리
-    if (err instanceof superstruct_1.StructError) {
-        const failures = typeof err.failures === 'function' ? err.failures() : [];
-        const firstFailure = failures.length > 0 ? failures[0] : null;
-        if (firstFailure && firstFailure.message && firstFailure.refinement) {
-            return res.status(400).send({ message: firstFailure.message });
-        }
-        return res.status(400).send({ message: '잘못된 요청입니다.' });
-    }
-    // 서비스 계층에서 던진 BadRequestError 처리
-    if (err instanceof BadRequestError_1.default) {
-        switch (err.message) {
-            case 'FORBIDDEN':
-                return res.status(403).send({ message: '비밀번호가 틀렸습니다' });
-            case 'USER_FOUND':
-                return res.status(401).send({ message: '이미 등록된 사용자입니다' });
-            case 'NO_USER_FOUND':
-                return res.status(401).send({ message: '등록되지 않은 사용자입니다' });
-            case 'EXPIRED_TOKENS':
-                return res.status(400).send({ message: '유효한 토큰이 없습니다' });
-            case 'UNAUTHORIZED':
-                return res.status(401).send({ message: '권한이 없습니다' });
-            case 'NOTHING_TO_CHANGE':
-                return res.status(401).send({ message: '변경할 것이 없습니다' });
-            default:
-                return res.status(400).send({ message: err.message || '잘못된 요청입니다.' });
-        }
-    }
-    // 403 Forbidden (비밀번호 오류)
-    // throw new Error로 던지는 경우 여기 걸림
-    if (err.message === 'FORBIDDEN') {
-        return res.status(403).send({
-            message: '비밀번호가 틀렸습니다.'
-        });
-    }
-    // NotFoundError (서비스 계층에서 던진 404)
-    if (err instanceof NotFoundError_1.default || err.message === 'NOT_FOUND') {
-        return res.status(404).send({
-            message: err.message || '존재하지 않습니다.'
-        });
-    }
-    // if (err.code === 'P2002') {
-    //   return res.status(409).send({
-    //     message: '이미 이 큐레이션에는 댓글이 존재합니다.'
-    //   });
-    // }
-    // Prisma 관련 오류 처리
-    if (err instanceof client_1.Prisma.PrismaClientKnownRequestError) {
-        const prisma_errorCode = [
-            'P2000',
-            'P2006',
-            'P2007',
-            'P2009',
-            'P2003',
-            'P2008',
-            'P2025',
-            'P2001',
-            'P2012',
-            'P1016',
-            'P1000',
-            'P1001',
-            'P1008'
-        ];
-        const HTTP_status = [400, 400, 400, 400, 403, 403, 404, 404, 500, 500, 500, 500, 500];
-        const myHTTPstatus = HTTP_status[prisma_errorCode.indexOf(err.code)];
-        //console.log(`메시지: ${err.message}`);
-        if (myHTTPstatus === 400) {
-            return res.status(400).send({ message: '잘못된 요청입니다.' });
-        }
-        else if (myHTTPstatus === 403) {
-            return res.status(403).send({ message: '권한이 없습니다.' });
-        }
-        else if (myHTTPstatus === 404) {
-            return res.status(404).send({ message: '존재하지 않습니다.' });
-        }
-        else {
-            return res.status(500).send({ message: '서버 내부 문제가 발생했습니다.' });
-        }
-    }
-    // JSON 파싱 오류
-    if (err instanceof SyntaxError && 'body' in err) {
-        return res.status(400).send({ message: '잘못된 요청입니다.' });
-    }
-    // 기타 알 수 없는 오류: 지금까지 에러가 안 걸러졌다면, 반드시 여기서 걸리게.
-    return res.status(500).send({
-        message: '서버 내부 문제가 발생했습니다'
-    });
-};
 exports.globalErrorHandler = globalErrorHandler;
+const superstruct_1 = require("superstruct");
+const client_1 = require("@prisma/client");
+function defaultNotFoundHandler(req, res, next) {
+    return res.status(404).send({ message: '요청하신 페이지를 찾을 수 없습니다' });
+}
+const defaultMessageByStatus = {
+    400: '잘못된 요청입니다',
+    401: '인증이 필요합니다',
+    403: '권한이 없습니다',
+    404: '존재하지 않습니다',
+    409: '중복 상태/관계가 존재합니다',
+    500: '서버 내부 문제가 발생했습니다',
+    503: '일시적 서버 문제가 발생했습니다. 잠시 후 다시 시도해 주세요'
+};
+function globalErrorHandler(err, req, res, next) {
+    var _a, _b, _c;
+    console.error(err);
+    let statusCode = err.statusCode;
+    let message = err.message;
+    // 1) Superstruct
+    if (!statusCode && err instanceof superstruct_1.StructError) {
+        statusCode = 400;
+        const failures = typeof err.failures === 'function' ? err.failures() : [];
+        const firstFailure = failures[0];
+        if (!message && (firstFailure === null || firstFailure === void 0 ? void 0 : firstFailure.message)) {
+            message = firstFailure.message;
+        }
+    }
+    // 2) Prisma
+    if (!statusCode && err instanceof client_1.Prisma.PrismaClientKnownRequestError) {
+        const prismaToHttp = {
+            P2002: 409,
+            P2003: 400,
+            P2007: 400,
+            P2015: 404,
+            P2025: 404,
+            P1000: 500,
+            P1010: 500,
+            P1012: 500,
+            P1017: 503,
+            P2021: 500
+        };
+        statusCode = (_a = prismaToHttp[err.code]) !== null && _a !== void 0 ? _a : 500;
+        message = (_b = defaultMessageByStatus[statusCode]) !== null && _b !== void 0 ? _b : defaultMessageByStatus[500];
+    }
+    // 3) JSON 파싱 에러
+    if (!statusCode && err instanceof SyntaxError && 'body' in err) {
+        statusCode = 400;
+    }
+    // 4) 최종 폴백
+    statusCode !== null && statusCode !== void 0 ? statusCode : (statusCode = 500);
+    message !== null && message !== void 0 ? message : (message = (_c = defaultMessageByStatus[statusCode]) !== null && _c !== void 0 ? _c : defaultMessageByStatus[500]);
+    return res.status(statusCode).send({ message });
+}

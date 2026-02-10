@@ -2,34 +2,26 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isEmptyArray = isEmptyArray;
 exports.isEmptyObject = isEmptyObject;
-exports.isEmptyString = isEmptyString;
 exports.isEmpty = isEmpty;
 exports.print = print;
 exports.includedOk = includedOk;
+exports.stripNulls = stripNulls;
 function isEmptyArray(v) {
     if (Array.isArray(v))
         return v.length === 0;
     else
-        return 'Not an array';
+        return false;
 }
 function isEmptyObject(v) {
-    if (v === null)
-        return true;
     if (typeof v === 'object')
         return Object.keys(v).length === 0;
     else
-        return 'Not an object';
-}
-function isEmptyString(v) {
-    if (typeof v === 'string')
-        return v.length === 0;
-    else
-        return 'Not a string';
+        return false;
 }
 function isEmpty(v) {
     if (v === undefined)
         return true;
-    return Boolean(isEmptyObject(v) || isEmptyArray(v) || isEmptyString(v));
+    return Boolean(isEmptyObject(v) || isEmptyArray(v));
 }
 function print(message) {
     console.log('');
@@ -38,4 +30,7 @@ function print(message) {
 }
 function includedOk(myArray, myKey, myValue) {
     return myArray.some((n) => n[myKey] === myValue);
+}
+function stripNulls(obj) {
+    return Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== null));
 }

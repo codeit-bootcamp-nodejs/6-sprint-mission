@@ -2,7 +2,18 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.selectFields = selectFields;
 exports.selectUserFields = selectUserFields;
+// import { Prisma } from '@prisma/client';
 const myFuns_1 = require("./myFuns");
+// type CommonFields = {
+//   id: number;
+//   userId: number;
+//   createdAt: Date;
+//   imageUrls?: string[];
+//   comments?: { content: string }[];
+//   likedUsers?: { nickname: string }[];
+// };
+//export function selectFields<T extends CommonFields>(item: T) {
+//return result as Omit<T, 'comments' | 'likedUsers'> & {
 function selectFields(item) {
     const result = Object.assign({}, item);
     if (item.comments)
@@ -10,6 +21,12 @@ function selectFields(item) {
     if (item.likedUsers)
         result.likedUsers = item.likedUsers.map((u) => u.nickname);
     return result;
+    // return result as
+    //   | ProductToShow
+    //   | (Article2show & {
+    //       comments?: string[];
+    //       likedUsers?: string[];
+    //     });
 }
 function selectUserFields(user, fieldStr) {
     let { id, email, nickname, createdAt, imageUrls, products = [], articles = [], likedArticles = [], likedProducts = [], comments = [] } = user;

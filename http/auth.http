@@ -1,9 +1,11 @@
+#@baseUrl = http://3.34.97.118
 @baseUrl = http://localhost:3000
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzY4ODI1Mzc5LCJleHAiOjE3Njg4Mjg5Nzl9.tqlhcQKVpxRqKowr6zErtMMWKQquKQ9HFAA6Tlj7AN4
-
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcwNzIyNDA4LCJleHAiOjE3NzA3MjYwMDh9.MxMhHnhdrHVDLs23Sglv-FOSUgJzmShQRplrp5H_84Q
+@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcwNzIyNDA4LCJleHAiOjE3NzA4MDg4MDh9.UsDouuszhUcfwpJ2GfW01RQj8jXtQ2NmBjs9ttNSxsE
 
 ###
 POST {{baseUrl}}/auth/register
+Cookie: access-token={{accessToken}}
 Content-Type: application/json
 
 {
@@ -18,18 +20,22 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "user2@example.com",
-  "password": "password2"
+  "email": "user1@example.com",
+  "password": "password1"
 }
 
 ###
 POST {{baseUrl}}/auth/logout
+Authorization: Bearer {{accessToken}}
 
 
 
 // 토큰 발행, 확인
 ###
 POST {{baseUrl}}/auth/tokens/refresh
+Cookie: refresh-token={{refreshToken}}
+
 ###
 GET {{baseUrl}}/auth/tokens/view
-#Authorization: Bearer {{accessToken}}
+Authorization: Bearer {{accessToken}}
+

@@ -15,15 +15,33 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const image_service_1 = __importDefault(require("../service/image.service"));
 const NotFoundError_1 = __importDefault(require("../middleware/errors/NotFoundError"));
 const BadRequestError_1 = __importDefault(require("../middleware/errors/BadRequestError"));
+const constants_1 = require("../lib/constants");
 // 이미지 목록 imageUrls 조회, 개발 위해 현재는 전체 상품/게시물 출력.
 // req.originalUrl로 서비스에서 product인지 article인지 구분
+function getList(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { id } = req.params;
+        const { type } = req.params;
+        const imageUrls = yield image_service_1.default.getList(type, Number(id));
+        console.log('imageUrls fetched');
+        console.log(imageUrls);
+        console.log('');
+        res.status(200).json(imageUrls);
+    });
+}
 function get(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const item = yield image_service_1.default.get(req.originalUrl, req.params.id);
-        console.log('imageUrls fetched');
-        console.log(item.imageUrls);
-        console.log('');
-        res.status(200).json(item);
+        var _a;
+        const { id, filename } = req.params;
+        const { type } = req.params;
+        const imgObj = yield image_service_1.default.get(type, Number(id), filename);
+        if (!imgObj.Body)
+            throw new Error('Image body not found');
+        res.setHeader('Content-Type', (_a = imgObj.ContentType) !== null && _a !== void 0 ? _a : 'application/octet-stream');
+        if (constants_1.NODE_ENV == 'development')
+            console.log('image fetched');
+        const bytes = yield imgObj.Body.transformToByteArray();
+        res.end(Buffer.from(bytes));
     });
 }
 // 이미지 등록
@@ -32,26 +50,59 @@ function get(req, res, next) {
 function post(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!req.file)
-            throw new BadRequestError_1.default('IMAGE_FILE_NOT_FOUND');
-        const item = yield image_service_1.default.post(req.originalUrl, req.params.id, req.protocol, req.file, req.get('host'));
+            throw new BadRequestError_1.default('이미지 화일이 존재하지 않습니다');
+        const { id } = req.params;
+        const { type } = req.params;
+        const { buffer, mimetype, originalname, size } = req.file;
+        const item = yield image_service_1.default.post({
+            type,
+            id: Number(id),
+            file: {
+                buffer,
+                mimetype,
+                originalname,
+                size
+            }
+        });
         if (!item)
-            throw new NotFoundError_1.default('User/Product/Article', Number(req.params.id));
-        console.log('Image uploaded. ImgUrls in DB updated.');
-        console.log(item.imageUrls);
-        console.log('');
+            throw new NotFoundError_1.default();
+        if (constants_1.NODE_ENV == 'development') {
+            console.log('Image uploaded in AWS S3. ImgUrls in DB updated.');
+            console.log(item.imageUrls);
+            console.log('');
+        }
         res.status(201).json(item);
     });
 }
 // imageUrls 삭제
-function erase(req, res, next) {
+function delList(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const item = yield image_service_1.default.erase(req.originalUrl, req.params.id);
-        console.log('ImageUrls deleted');
-        res.status(200).json(item); // json/send?
+        const { id } = req.params;
+        const { type } = req.params;
+        const item = yield image_service_1.default.delList(type, Number(id));
+        if (constants_1.NODE_ENV == 'development') {
+            console.log(item);
+            console.log('ImageUrls deleted');
+        }
+        res.status(204).send({ message: '이미지가 삭제되었습니다' });
+    });
+}
+function del(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { id, filename } = req.params;
+        const { type } = req.params;
+        const item = yield image_service_1.default.del(type, Number(id), filename);
+        if (constants_1.NODE_ENV == 'development') {
+            console.log(item);
+            console.log('ImageUrls deleted');
+        }
+        res.status(204).send({ message: '이미지가 삭제되었습니다' });
     });
 }
 exports.default = {
+    getList,
     get,
     post,
-    erase
+    del,
+    delList
 };

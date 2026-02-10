@@ -7,16 +7,21 @@ import upload from '../middleware/multer';
 
 const imageRouter = express.Router();
 
-imageRouter.get('/:type/:id', authenticate, withTryCatch(imageControl.getList));
-imageRouter.get('/:type/:id/:filename', authenticate, withTryCatch(imageControl.get));
+imageRouter.get('/:type/:id', authenticate(), withTryCatch(imageControl.getList));
+imageRouter.get('/:type/:id/:filename', authenticate(), withTryCatch(imageControl.get));
 imageRouter.post(
   '/:type/:id',
-  authenticate,
+  authenticate(),
   authorize,
   upload.single('image'),
   withTryCatch(imageControl.post)
 );
-imageRouter.delete('/:type/:id', authenticate, authorize, withTryCatch(imageControl.delList));
-imageRouter.delete('/:type/:id/:filename', authenticate, authorize, withTryCatch(imageControl.del));
+imageRouter.delete('/:type/:id', authenticate(), authorize, withTryCatch(imageControl.delList));
+imageRouter.delete(
+  '/:type/:id/:filename',
+  authenticate(),
+  authorize,
+  withTryCatch(imageControl.del)
+);
 
 export default imageRouter;

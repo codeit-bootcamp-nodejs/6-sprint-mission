@@ -1,34 +1,46 @@
+#@baseUrl = http://3.34.97.118
 @baseUrl = http://localhost:3000
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcwNzEzMDU1LCJleHAiOjE3NzA3MTY2NTV9.ViTVxr3EqPXi2aA4fByOJSIqaV1kyyMhMhYyZAHr86I
+
 
 // 상품 목록 조회
 // 페이지네이션: offset 기반 (default 값: offset=0, limit=undefined)
 // 조회순: order=recent(default)/oldest
 GET {{baseUrl}}/products
+Authorization: Bearer {{accessToken}}
 ###
 GET {{baseUrl}}/products?order=oldest
+Authorization: Bearer {{accessToken}}
 ###
 GET {{baseUrl}}/products?order=oldest&offset=4
+Authorization: Bearer {{accessToken}}
 
 // 상품 목록 조회
 // 조건 검색: name and/or description에 포함된 단어
 ###
 GET {{baseUrl}}/products?name=Pro
+Authorization: Bearer {{accessToken}}
 ###
 GET {{baseUrl}}/products?description=스마트
+Authorization: Bearer {{accessToken}}
 ###
 GET {{baseUrl}}/products?name=Pro&description=기능
+Authorization: Bearer {{accessToken}}
 
 
 // 상품 상세 조회, 좋아요, 등록 인증 필요
 ###
-GET {{baseUrl}}/products/200
+GET {{baseUrl}}/products/12
+Authorization: Bearer {{accessToken}}
 
 ###
 POST {{baseUrl}}/products/3/like/toggle
+Authorization: Bearer {{accessToken}}
 
 
 ###
 POST {{baseUrl}}/products
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
@@ -41,6 +53,7 @@ Content-Type: application/json
 // 상품 수정과 삭제: 인증, 인가 필요
 ###
 PATCH {{baseUrl}}/products/32
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
@@ -51,6 +64,7 @@ Content-Type: application/json
 
 ###
 PATCH {{baseUrl}}/products/2
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
@@ -60,9 +74,12 @@ Content-Type: application/json
 
 ###
 DELETE {{baseUrl}}/products/31
+Authorization: Bearer {{accessToken}}
 
 ###
 GET {{baseUrl}}/products/30/price-records
+Authorization: Bearer {{accessToken}}
 ###
 GET {{baseUrl}}/products/price-records/5
+Authorization: Bearer {{accessToken}}
 

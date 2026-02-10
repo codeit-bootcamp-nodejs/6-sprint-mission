@@ -8,29 +8,33 @@ import { allowedProductKeys } from '../lib/constants';
 
 const productRouter = express.Router();
 
-productRouter.get('/', withTryCatch(productControl.getList));
-productRouter.get('/:id', authenticate, withTryCatch(productControl.get));
-productRouter.post('/:id/like/toggle', authenticate, withTryCatch(productControl.likeToggle));
+productRouter.get('/', authenticate({ optional: true }), withTryCatch(productControl.getList));
+productRouter.get('/:id', authenticate(), withTryCatch(productControl.get));
+productRouter.post('/:id/like/toggle', authenticate(), withTryCatch(productControl.likeToggle));
 productRouter.post(
   '/',
-  authenticate,
+  authenticate(),
   validateReqBody(allowedProductKeys, true),
   withTryCatch(productControl.post)
 );
 productRouter.patch(
   '/:id',
-  authenticate,
+  authenticate(),
   validateReqBody(allowedProductKeys),
   authorize,
   withTryCatch(productControl.patch)
 );
-productRouter.delete('/:id', authenticate, authorize, withTryCatch(productControl.erase));
+productRouter.delete('/:id', authenticate(), authorize, withTryCatch(productControl.erase));
 
 productRouter.get(
   '/:productId/price-records',
-  authenticate,
+  authenticate(),
   withTryCatch(productControl.getPriceRecords)
 );
-productRouter.get('/price-records/:id', authenticate, withTryCatch(productControl.getPriceRecord));
+productRouter.get(
+  '/price-records/:id',
+  authenticate(),
+  withTryCatch(productControl.getPriceRecord)
+);
 
 export default productRouter;

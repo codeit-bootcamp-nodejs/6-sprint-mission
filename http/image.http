@@ -1,13 +1,48 @@
+#@baseUrl = http://3.34.97.118
 @baseUrl = http://localhost:3000
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcwNzEzMDU1LCJleHAiOjE3NzA3MTY2NTV9.ViTVxr3EqPXi2aA4fByOJSIqaV1kyyMhMhYyZAHr86I
+
+
+//------------------------ 사용자 이미지 APIs
+
+###
+GET {{baseUrl}}/images/users/1
+Authorization: Bearer {{accessToken}}
+###
+GET {{baseUrl}}/images/users/2/1770703915184.png
+Authorization: Bearer {{accessToken}}
+
+###
+POST {{baseUrl}}/images/users/1
+Authorization: Bearer {{accessToken}}
+Content-Type: multipart/form-data; boundary=MyBoundary
+
+--MyBoundary
+Content-Disposition: form-data; name="image"; filename="Frodo.png"
+Content-Type: image/png
+
+< ./images/user/Frodo.png
+--MyBoundary--
+
+###
+DELETE {{baseUrl}}/images/users/2
+Authorization: Bearer {{accessToken}}
+###
+DELETE {{baseUrl}}/images/users/2/1770703915184.png
+Authorization: Bearer {{accessToken}}
+
 
 //------------------------상품 이미지 APIs
 GET {{baseUrl}}/images/products/12
+Authorization: Bearer {{accessToken}}
 ###
 GET {{baseUrl}}/images/products/32/1770697009465.png
+Authorization: Bearer {{accessToken}}
 
 // 토큰 인증 + 인가 (상품을 등록한 유저만 가능)
 ###
 POST {{baseUrl}}/images/products/12
+Authorization: Bearer {{accessToken}}
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
@@ -19,8 +54,10 @@ Content-Type: image/png
 
 ###
 DELETE {{baseUrl}}/images/products/12
+Authorization: Bearer {{accessToken}}
 ###
 DELETE {{baseUrl}}/images/products/12/1770704226337.png
+Authorization: Bearer {{accessToken}}
 
 
 
@@ -31,11 +68,14 @@ DELETE {{baseUrl}}/images/products/12/1770704226337.png
 
 ###
 GET {{baseUrl}}/images/articles/9
+Authorization: Bearer {{accessToken}}
 ###
 GET {{baseUrl}}/images/articles/20/1770698048592.png 
+Authorization: Bearer {{accessToken}}
 
 ###
 POST {{baseUrl}}/images/articles/9
+Authorization: Bearer {{accessToken}}
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
@@ -47,32 +87,12 @@ Content-Type: image/png
 
 ###
 DELETE {{baseUrl}}/images/articles/9
+Authorization: Bearer {{accessToken}}
 ###
 DELETE {{baseUrl}}/images/articles/9/1770704311657.png
+Authorization: Bearer {{accessToken}}
 
 
-//------------------------ 사용자 이미지 APIs
-
-###
-GET {{baseUrl}}/images/users/2
-###
-GET {{baseUrl}}/images/users/2/1770703915184.png
-###
-DELETE {{baseUrl}}/images/users/2/1770703915184.png
-
-###
-POST {{baseUrl}}/images/users/2
-Content-Type: multipart/form-data; boundary=MyBoundary
-
---MyBoundary
-Content-Disposition: form-data; name="image"; filename="Frodo2.png"
-Content-Type: image/png
-
-< ./images/user/Frodo2.png
---MyBoundary--
-
-###
-DELETE {{baseUrl}}/images/users/2
 
 
 

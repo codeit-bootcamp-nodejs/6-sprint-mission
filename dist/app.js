@@ -7,28 +7,40 @@ const express_1 = __importDefault(require("express"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
 const path_1 = __importDefault(require("path"));
+const http_1 = __importDefault(require("http"));
+const socketIO_1 = require("./websocket/socketIO");
 const errorHandler_1 = require("./middleware/errorHandler");
-const constants_1 = require("./lib/constants");
-const constants_2 = require("./lib/constants");
+//import { PUBLIC_IMG_PATH, STATIC_IMG_PATH } from './lib/constants';
+const auth_router_1 = __importDefault(require("./router/auth.router"));
 const user_router_1 = __importDefault(require("./router/user.router"));
 const product_router_1 = __importDefault(require("./router/product.router"));
 const article_router_1 = __importDefault(require("./router/article.router"));
 const comment_router_1 = __importDefault(require("./router/comment.router"));
 const image_router_1 = __importDefault(require("./router/image.router"));
+const notification_router_1 = __importDefault(require("./router/notification.router"));
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
-app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
-app.use(path_1.default.join(constants_1.PUBLIC_IMG_PATH, 'product'), express_1.default.static(path_1.default.join(constants_1.STATIC_IMG_PATH, 'product')));
-app.use(path_1.default.join(constants_1.PUBLIC_IMG_PATH, 'article'), express_1.default.static(path_1.default.join(constants_1.STATIC_IMG_PATH, 'article')));
-app.use(path_1.default.join(constants_1.PUBLIC_IMG_PATH, 'user'), express_1.default.static(path_1.default.join(constants_1.STATIC_IMG_PATH, 'user')));
+app.use((0, cookie_parser_1.default)());
+app.use((0, cors_1.default)());
+app.use(express_1.default.static(path_1.default.join(process.cwd(), 'public')));
+const server = http_1.default.createServer(app);
+(0, socketIO_1.setupSocket)(server);
+// app.use(
+//   path.join(PUBLIC_IMG_PATH, 'product'),
+//   express.static(path.join(STATIC_IMG_PATH, 'product'))
+// );
+// app.use(
+//   path.join(PUBLIC_IMG_PATH, 'article'),
+//   express.static(path.join(STATIC_IMG_PATH, 'article'))
+// );
+// app.use(path.join(PUBLIC_IMG_PATH, 'user'), express.static(path.join(STATIC_IMG_PATH, 'user')));
+app.use('/auth', auth_router_1.default);
 app.use('/users', user_router_1.default);
+app.use('/notifications', notification_router_1.default);
 app.use('/products', product_router_1.default);
 app.use('/articles', article_router_1.default);
 app.use('/comments', comment_router_1.default);
 app.use('/images', image_router_1.default);
 app.use(errorHandler_1.defaultNotFoundHandler);
 app.use(errorHandler_1.globalErrorHandler);
-app.listen(constants_2.PORT, () => {
-    console.log(`Server is running on http://localhost:${constants_2.PORT}`);
-});
+exports.default = server;

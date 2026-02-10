@@ -47,7 +47,7 @@ function cancelLike(articleId, userId) {
 }
 function erase(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        prismaClient_1.default.article.delete({ where: { id } });
+        yield prismaClient_1.default.article.delete({ where: { id } });
     });
 }
 function getList(where, orderBy, offset, limit) {
@@ -68,6 +68,15 @@ function findById(id) {
         });
     });
 }
+function findImgUrls(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield prismaClient_1.default.article.findUniqueOrThrow({
+            where: { id },
+            select: { imageUrls: true }
+        });
+        return result.imageUrls;
+    });
+}
 exports.default = {
     post,
     patch,
@@ -75,5 +84,6 @@ exports.default = {
     cancelLike,
     erase,
     findById,
+    findImgUrls,
     getList
 };

@@ -1,27 +1,34 @@
+#@baseUrl = http://3.34.97.118
 @baseUrl = http://localhost:3000
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcwNzEzMDU1LCJleHAiOjE3NzA3MTY2NTV9.ViTVxr3EqPXi2aA4fByOJSIqaV1kyyMhMhYyZAHr86I
 
 
 // 댓글 목록 조회: cursor 기반
 // 첫 조회: offset=0, cursor=undefined
 ###
 GET {{baseUrl}}/comments
+Authorization: Bearer {{accessToken}}
 ###
 GET {{baseUrl}}/comments?type=all&cursor=90
+Authorization: Bearer {{accessToken}}
 ###
 GET {{baseUrl}}/comments?type=product&limit=3&cursor=3
+Authorization: Bearer {{accessToken}}
 ###
 GET {{baseUrl}}/comments?type=article&content=연기
+Authorization: Bearer {{accessToken}}
 
 
 
 // 댓글 조회
 ###
 GET {{baseUrl}}/comments/24
-
+Authorization: Bearer {{accessToken}}
 
 // 댓글 등록: 인증
 ###
 POST {{baseUrl}}/comments/articles/21
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
@@ -29,6 +36,7 @@ Content-Type: application/json
 }
 ###
 POST {{baseUrl}}/comments/products/29
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
@@ -38,6 +46,7 @@ Content-Type: application/json
 // 댓글 수정과 삭제: 인증과 인가
 ###
 PATCH {{baseUrl}}/comments/21
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
@@ -46,3 +55,4 @@ Content-Type: application/json
 
 ###
 DELETE {{baseUrl}}/comments/99
+Authorization: Bearer {{accessToken}}

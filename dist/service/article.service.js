@@ -24,26 +24,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const superstruct_1 = require("superstruct");
-const structs_1 = require("../struct/structs");
-const NotFoundError_1 = __importDefault(require("../middleware/errors/NotFoundError"));
+const article_struct_1 = require("../struct/article.struct");
 const article_repo_1 = __importDefault(require("../repository/article.repo"));
 const myFuns_1 = require("../lib/myFuns");
 const selectFields_1 = require("../lib/selectFields");
+const NotFoundError_1 = __importDefault(require("../middleware/errors/NotFoundError"));
 // 게시물 생성, 수정, 삭제: 토큰 인증된 유저만 가능
 function post(userId, data) {
     return __awaiter(this, void 0, void 0, function* () {
         const articleData = Object.assign(Object.assign({}, data), { userId });
-        (0, superstruct_1.assert)(articleData, structs_1.CreateArticle);
+        (0, superstruct_1.assert)(articleData, article_struct_1.CreateArticle);
         const article = yield article_repo_1.default.post(articleData);
         return article;
     });
 }
 function patch(articleId, articleData) {
     return __awaiter(this, void 0, void 0, function* () {
-        (0, superstruct_1.assert)(articleData, structs_1.PatchArticle);
+        (0, superstruct_1.assert)(articleData, article_struct_1.PatchArticle);
         const article = yield article_repo_1.default.patch(Number(articleId), articleData);
         if ((0, myFuns_1.isEmpty)(article))
-            throw new NotFoundError_1.default('article', Number(articleId));
+            throw new NotFoundError_1.default();
         return article;
     });
 }

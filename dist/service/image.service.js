@@ -12,94 +12,127 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const path_1 = __importDefault(require("path"));
-const constants_1 = require("../lib/constants");
-const user_repo_1 = __importDefault(require("../repository/user.repo"));
-const article_repo_1 = __importDefault(require("../repository/article.repo"));
-const product_repo_1 = __importDefault(require("../repository/product.repo"));
 const selectFields_1 = require("../lib/selectFields");
-function get(originalUrl, id) {
+const client_s3_1 = require("@aws-sdk/client-s3");
+const s3Client_1 = require("../lib/s3Client");
+const constants_1 = require("../lib/constants");
+const path_1 = __importDefault(require("path"));
+const internalServerError_1 = __importDefault(require("../middleware/errors/internalServerError"));
+const interfaceType_1 = require("../types/interfaceType");
+const bucket = constants_1.BUCKETNAME;
+const region = constants_1.REGION;
+function getList(type, id) {
     return __awaiter(this, void 0, void 0, function* () {
-        let item = {};
-        if (originalUrl.includes('users')) {
-            item = yield user_repo_1.default.findById(Number(id));
-            return (0, selectFields_1.selectUserFields)(item, 'core');
+        var _a;
+        const key = `images/${type}/${id}/`;
+        const command = new client_s3_1.ListObjectsV2Command({ Bucket: bucket, Prefix: key });
+        try {
+            const data = yield s3Client_1.s3Client.send(command);
+            const imageUrls = ((_a = data.Contents) !== null && _a !== void 0 ? _a : []).map((obj) => `https://${bucket}.s3.${region}.amazonaws.com/${obj.Key}`);
+            return imageUrls;
         }
-        else if (originalUrl.includes('products')) {
-            item = yield product_repo_1.default.findById(Number(id));
-            return (0, selectFields_1.selectFields)(item);
+        catch (err) {
+            throw new internalServerError_1.default('S3 장애/권한 오류');
         }
-        else {
-            item = yield article_repo_1.default.findById(Number(id));
-            return (0, selectFields_1.selectFields)(item);
+        // DB에서 imageUrls 찾아 반환하는 경우 (현업에서 더 쓰는 방식이라 함)
+        //   const repo = RepoMap[type];
+        //   const imageUrlsDB = await repo.findImgUrls(id);
+        //   return imageUrlsDB;
+    });
+}
+function get(type, id, filename) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const key = `images/${type}/${id}/${filename}`;
+        try {
+            const imgObj = yield s3Client_1.s3Client.send(new client_s3_1.GetObjectCommand({ Bucket: bucket, Key: key }));
+            return imgObj;
+        }
+        catch (err) {
+            throw new internalServerError_1.default('AWS S3 fetch failure');
         }
     });
 }
-function post(originalUrl, id, protocol, file, host) {
+function post(input) {
     return __awaiter(this, void 0, void 0, function* () {
-        // 업로드된 파일을 접근 가능한 URL생성해서 응답으로 반환
-        let staticPath = '';
-        let publicPath = '';
-        let item = {};
-        if (originalUrl.includes('products')) {
-            staticPath = path_1.default.join(constants_1.STATIC_IMG_PATH, '/product'); // 이미지 저장 폴더 설정: 현재는 localhost
-            publicPath = path_1.default.join(constants_1.PUBLIC_IMG_PATH, '/product'); // 위 폴더를 가리키는 public용 라우터 폴더
-            item = (yield product_repo_1.default.findById(Number(id)));
+        const { type: imgType, id, file } = input;
+        // AWS S3에 이미지 저장
+        const ext = path_1.default.extname(file.originalname);
+        const key = `images/${imgType}/${id}/${Date.now()}${ext}`;
+        const params = {
+            Bucket: constants_1.BUCKETNAME,
+            Key: key,
+            Body: file.buffer,
+            ContentType: file.mimetype
+        };
+        const command = new client_s3_1.PutObjectCommand(params);
+        try {
+            yield s3Client_1.s3Client.send(command);
         }
-        if (originalUrl.includes('articles')) {
-            staticPath = path_1.default.join(constants_1.STATIC_IMG_PATH, '/article');
-            publicPath = path_1.default.join(constants_1.PUBLIC_IMG_PATH, '/article');
-            item = (yield article_repo_1.default.findById(Number(id)));
+        catch (err) {
+            throw new internalServerError_1.default('AWS S3 upload failure');
         }
-        if (originalUrl.includes('users')) {
-            staticPath = path_1.default.join(constants_1.STATIC_IMG_PATH, '/user');
-            publicPath = path_1.default.join(constants_1.PUBLIC_IMG_PATH, '/user');
-            item = (yield user_repo_1.default.findById(Number(id)));
-        }
-        const newImageUrl = file
-            ? `${protocol}://${host}${path_1.default.posix.join(publicPath, file.filename)}`
-            : null;
+        // DB에 새 imageUrl 저장
+        const repo = interfaceType_1.RepoMap[imgType];
+        const imageUrls = yield repo.findImgUrls(input.id);
+        const newImageUrl = `https://${bucket}.s3.${region}.amazonaws.com/${key}`;
         let updatedUrls = [];
-        if ('imageUrls' in item) {
-            updatedUrls = [...item.imageUrls, newImageUrl]; // 기존 imageUrls에 이번 것 끝에 넣어줌
+        if (imageUrls) {
+            updatedUrls = [...imageUrls, newImageUrl]; // 기존 imageUrls에 이번 것 끝에 넣어줌
         }
         else {
             updatedUrls = [newImageUrl];
         }
         const imageData = { imageUrls: updatedUrls };
-        if (originalUrl.includes('products')) {
-            item = yield product_repo_1.default.patch(Number(id), imageData);
-            return (0, selectFields_1.selectFields)(item);
-        }
-        if (originalUrl.includes('articles')) {
-            item = yield article_repo_1.default.patch(Number(id), imageData);
-            return (0, selectFields_1.selectFields)(item);
-        }
-        if (originalUrl.includes('users')) {
-            item = yield user_repo_1.default.patch(Number(id), imageData);
+        const item = yield repo.patch(input.id, imageData);
+        if (imgType === 'users')
             return (0, selectFields_1.selectUserFields)(item, 'core');
-        }
+        else
+            return (0, selectFields_1.selectFields)(item);
     });
 }
-function erase(originalUrl, id) {
+function del(type, id, filename) {
     return __awaiter(this, void 0, void 0, function* () {
-        let item = {};
-        if (originalUrl.includes('products')) {
-            item = yield product_repo_1.default.patch(Number(id), { imageUrls: [] });
-            return (0, selectFields_1.selectFields)(item);
-        }
-        if (originalUrl.includes('articles')) {
-            item = yield article_repo_1.default.patch(Number(id), { imageUrls: [] });
-            return (0, selectFields_1.selectFields)(item);
-        }
-        if (originalUrl.includes('users')) {
-            item = yield user_repo_1.default.patch(Number(id), { imageUrls: [] });
+        const key = `images/${type}/${id}/${filename}`;
+        yield s3Client_1.s3Client.send(new client_s3_1.DeleteObjectCommand({ Bucket: bucket, Key: key }));
+        const repo = interfaceType_1.RepoMap[type];
+        const delImgUrl = `https://${bucket}.s3.${region}.amazonaws.com/${key}`;
+        const imageUrls = yield repo.findImgUrls(id);
+        const i = imageUrls.indexOf(delImgUrl);
+        if (i !== -1)
+            imageUrls.splice(i, 1);
+        const item = yield repo.patch(id, { imageUrls });
+        if (type === 'users')
             return (0, selectFields_1.selectUserFields)(item, 'core');
+        else
+            return (0, selectFields_1.selectFields)(item);
+    });
+}
+function delList(type, id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        var _a;
+        const key = `images/${type}/${id}/`;
+        let command = new client_s3_1.ListObjectsV2Command({ Bucket: bucket, Prefix: key });
+        const list = yield s3Client_1.s3Client.send(command);
+        if ((_a = list.Contents) === null || _a === void 0 ? void 0 : _a.length) {
+            yield s3Client_1.s3Client.send(new client_s3_1.DeleteObjectsCommand({
+                Bucket: bucket,
+                Delete: {
+                    Objects: list.Contents.map((obj) => ({ Key: obj.Key }))
+                }
+            }));
         }
+        const repo = interfaceType_1.RepoMap[type];
+        const item = yield repo.patch(id, { imageUrls: [] });
+        if (type === 'users')
+            return (0, selectFields_1.selectUserFields)(item, 'core');
+        else
+            return (0, selectFields_1.selectFields)(item);
     });
 }
 exports.default = {
+    getList,
     get,
     post,
-    erase
+    del,
+    delList
 };

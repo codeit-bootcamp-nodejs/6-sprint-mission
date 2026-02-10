@@ -67,9 +67,36 @@ function getList(where, orderBy, offset, limit) {
 }
 function findById(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prismaClient_1.default.product.findFirstOrThrow({
+        return yield prismaClient_1.default.product.findUniqueOrThrow({
             where: { id },
             include: { comments: true, likedUsers: true } // 관계형 필드도 일단 가져온다
+        });
+    });
+}
+function findImgUrls(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield prismaClient_1.default.product.findUniqueOrThrow({
+            where: { id },
+            select: { imageUrls: true }
+        });
+        return result.imageUrls;
+    });
+}
+function createPriceRecord(data) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return prismaClient_1.default.productPriceHistory.create({ data });
+    });
+}
+function getPriceRecord(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return prismaClient_1.default.productPriceHistory.findUnique({ where: { id } });
+    });
+}
+function getPriceRecords(productId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return prismaClient_1.default.productPriceHistory.findMany({
+            where: { productId },
+            orderBy: { createdAt: 'asc' }
         });
     });
 }
@@ -80,6 +107,10 @@ exports.default = {
     cancelLike,
     erase,
     findById,
+    findImgUrls,
     countById,
-    getList
+    getList,
+    createPriceRecord,
+    getPriceRecords,
+    getPriceRecord
 };

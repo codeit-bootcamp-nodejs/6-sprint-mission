@@ -54,7 +54,7 @@ async function login(data: LoginDto): Promise<TokenType> {
 }
 
 function logout(userId: number, tokenData: Response): void {
-  clearTokenCookies(tokenData);
+  tokenData.clearCookie(REFRESH_TOKEN_COOKIE_NAME, { path: '/users/tokens' });
 
   const io = getIO();
   for (const s of io.of('/').sockets.values()) {
@@ -64,20 +64,11 @@ function logout(userId: number, tokenData: Response): void {
   }
 }
 
-async function issueTokens(
-  tokenData: Record<string, string | undefined>
-): ReturnType<typeof login> {
-  const refreshToken = check_refreshTokenValidity(tokenData);
+async function issueTokens(refreshToken: string): ReturnType<typeof login> {
   const { userId } = verifyRefreshToken(refreshToken);
   const user = await verifyUserExist(userId);
 
   return generateTokens(user.id);
-}
-
-function viewTokens(tokenData: Record<string, string | undefined>): TokenType {
-  const accessToken = tokenData[ACCESS_TOKEN_COOKIE_NAME];
-  const refreshToken = tokenData[REFRESH_TOKEN_COOKIE_NAME];
-  return { accessToken, refreshToken };
 }
 
 //------------------------------------ local functions
@@ -107,20 +98,20 @@ export async function check_passwordValidity(
   return isPasswordSame;
 }
 
-function clearTokenCookies(tokenData: Response): void {
-  tokenData.clearCookie(ACCESS_TOKEN_COOKIE_NAME);
-  tokenData.clearCookie(REFRESH_TOKEN_COOKIE_NAME, { path: '/users/tokens' });
-  // refreshToken은 지정된 path가 있음
-}
+//function clearTokenCookies(tokenData: Response): void {
+//tokenData.clearCookie(ACCESS_TOKEN_COOKIE_NAME);
+//tokenData.clearCookie(REFRESH_TOKEN_COOKIE_NAME, { path: '/users/tokens' });
+// refreshToken은 지정된 path가 있음
+//}
 
-function check_refreshTokenValidity(tokenData: Record<string, string | undefined>): string {
-  const refreshToken = tokenData[REFRESH_TOKEN_COOKIE_NAME];
-  if (!refreshToken) {
-    console.log('Tokens expired');
-    throw new UnauthorizedError('토큰이 만료되었습니다');
-  }
-  return refreshToken;
-}
+// function check_refreshTokenValidity(tokenData: Record<string, string | undefined>): string {
+//   const refreshToken = tokenData[REFRESH_TOKEN_COOKIE_NAME];
+//   if (!refreshToken) {
+//     console.log('Tokens expired');
+//     throw new UnauthorizedError('토큰이 만료되었습니다');
+//   }
+//   return refreshToken;
+// }
 
 async function verifyUserExist(userId: number): Promise<User> {
   const user = await userRepo.findById(userId);
@@ -136,7 +127,6 @@ export default {
   login,
   logout,
   issueTokens,
-  viewTokens,
   verifyUserExist,
   filterPassword,
   hashingPassword,

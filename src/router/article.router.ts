@@ -8,22 +8,22 @@ import { allowedArticleKeys } from '../lib/constants';
 
 const articleRouter = express.Router();
 
-articleRouter.get('/', withTryCatch(articleControl.getList));
-articleRouter.get('/:id', authenticate, withTryCatch(articleControl.get));
-articleRouter.post('/:id/like/toggle', authenticate, withTryCatch(articleControl.likeToggle));
+articleRouter.get('/', authenticate({ optional: true }), withTryCatch(articleControl.getList));
+articleRouter.get('/:id', authenticate(), withTryCatch(articleControl.get));
+articleRouter.post('/:id/like/toggle', authenticate(), withTryCatch(articleControl.likeToggle));
 articleRouter.post(
   '/',
-  authenticate,
+  authenticate(),
   validateReqBody(allowedArticleKeys, true),
   withTryCatch(articleControl.post)
 );
 articleRouter.patch(
   '/:id',
-  authenticate,
+  authenticate(),
   authorize,
   validateReqBody(allowedArticleKeys),
   withTryCatch(articleControl.patch)
 );
-articleRouter.delete('/:id', authenticate, authorize, withTryCatch(articleControl.erase));
+articleRouter.delete('/:id', authenticate(), authorize, withTryCatch(articleControl.erase));
 
 export default articleRouter;
