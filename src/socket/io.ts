@@ -7,10 +7,42 @@ let io: Server | null = null;
 
 export const SOCKET_EVENT_NOTIFICATION = 'notification';
 
+function toOrigin(value: string): string | null {
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+
+  try {
+    return new URL(trimmed).origin;
+  } catch {
+    return null;
+  }
+}
+
+function getAllowedOrigins(): string[] {
+  const configured = (process.env.SOCKET_CORS_ORIGINS ?? '')
+    .split(',')
+    .map((value) => toOrigin(value))
+    .filter((value): value is string => Boolean(value));
+
+  if (configured.length > 0) {
+    return Array.from(new Set(configured));
+  }
+
+  const defaults = [
+    toOrigin(process.env.BASE_URL ?? ''),
+    toOrigin('http://localhost:3000'),
+    toOrigin('http://localhost:5173'),
+  ].filter((value): value is string => Boolean(value));
+
+  return Array.from(new Set(defaults));
+}
+
 export function initSocket(server: HttpServer) {
+  const allowedOrigins = getAllowedOrigins();
+
   io = new Server(server, {
     cors: {
-      origin: '*',
+      origin: allowedOrigins,
       credentials: true,
     },
   });
@@ -45,6 +77,8 @@ export function initSocket(server: HttpServer) {
 }
 
 export function emitToUser<T>(userId: number, event: string, payload: T) {
-  if (!io) return;
+  if (!io) {
+    throw new Error('Socket.IO server is not initialized');
+  }
   io.to(`user:${userId}`).emit(event, payload);
 }

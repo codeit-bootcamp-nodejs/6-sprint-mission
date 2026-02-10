@@ -1,0 +1,47 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          port: 22
+          command_timeout: 30m
+          script: |
+            set -e
+            cd /home/ec2-user/sprint-5/6-sprint-mission-copy
+            export GIT_TERMINAL_PROMPT=0
+
+            # Prefer GitHub secret, fallback to EC2 .env.
+            if [ -n "${{ secrets.DATABASE_URL }}" ]; then
+              export DATABASE_URL='${{ secrets.DATABASE_URL }}'
+            fi
+
+            if [ -z "${DATABASE_URL:-}" ] && [ -f .env ]; then
+              set -a
+              . ./.env
+              set +a
+            fi
+
+            if [ -z "${DATABASE_URL:-}" ]; then
+              echo "DATABASE_URL is empty. Set GitHub secret DATABASE_URL or configure EC2 .env."
+              exit 1
+            fi
+
+            git pull --ff-only origin main
+            npm ci
+            npx prisma generate
+            npx prisma migrate deploy
+            npm run build
+            pm2 reload infra/ec2/ecosystem.config.cjs --update-env || pm2 start infra/ec2/ecosystem.config.cjs

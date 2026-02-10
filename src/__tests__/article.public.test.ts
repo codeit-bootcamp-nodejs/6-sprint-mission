@@ -4,7 +4,7 @@ import prisma from '../config/prisma.js';
 import { createUserWithToken, resetDb } from '../test/test-helpers.js';
 
 describe('Article API (public)', () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     await resetDb();
   });
 

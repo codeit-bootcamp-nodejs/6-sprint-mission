@@ -3,7 +3,7 @@ import { app } from '../app.js';
 import { resetDb } from '../test/test-helpers.js';
 
 describe('Auth API', () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     await resetDb();
   });
 
