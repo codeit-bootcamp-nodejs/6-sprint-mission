@@ -38,26 +38,23 @@
 
 ## 제출
 
-AWS S3 버킷 정책 설정: /infra/s3/policy.png
+- AWS S3 버킷 정책 설정: /infra/s3/policy.png
 
-AWS RDS 인스턴스 정책 설정
-/infra/rds/secure-group-inbound.png
+- AWS RDS 인스턴스 정책 설정
+  - /infra/rds/secure-group-inbound.png
+  - /infra/rds/secure-group-inbound.png
 
-/infra/rds/secure-group-inbound.png
+- AWS EC2 인스턴스 보안 그룹 설정
+  - /infra/ec2/secure-group-inbound.png
+  - /infra/ec2/secure-group-outbound.png
 
-AWS EC2 인스턴스 보안 그룹 설정
-/infra/ec2/secure-group-inbound.png
+- (심화) pm2 실행에 사용되었던 명령어: /infra/ec2/start.sh
 
-/infra/ec2/secure-group-outbound.png
+- (심화) pm2 실행에 사용헀던 설정 파일: /infra/ec2/ecosystem.config.js
 
-(심화) pm2 실행에 사용되었던 명령어: /infra/ec2/start.sh
-
-(심화) pm2 실행에 사용헀던 설정 파일: /infra/ec2/ecosystem.config.js
-
-(심화) nginx 실행에 사용했던 설정 파일: /infra/ec2/nginx.conf
+- (심화) nginx 실행에 사용했던 설정 파일: /infra/ec2/nginx.conf
 
 ## 멘토에게
 
-- 미션 8 제출본에 작성하였습니다. PR 리뷰 받기 전 버전입니다.
-- 엔드포인트 테스트는 그럭저럭 할 만 했지만, mock과 spy를 사용한 유닛 테스트는 힘들었습니다. 테스트 하고자 하는 코드는 커버리지에 포함되었습니다.
-- product 서비스 단의 로직에 spy를 사용한 test를 작성하면서, 타입 정의가 잘못 되어 있음을 발견하고 몇가지 수정을 헀습니다. 제대로 하고자 한다면, 대대적으로 타입 정의를 다시해야 할 곳이 많지만, 일단은 이것으로 제출합니다.
+- image API에서 AWS S3를 사용하도록 수정하였고, 테스트 완료하였습니다.
+- image API를 User, Product, Article이 공유하고 있습니다. req.originalUrl에서 users, products, 또는 articles를 포함하는지 if문을 사용하여 각각의 service와 repo 함수를 부르고 있는지라 중복이 많습니다. 그래서 수정하였습니다.

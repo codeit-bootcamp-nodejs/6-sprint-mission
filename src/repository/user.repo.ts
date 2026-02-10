@@ -48,9 +48,6 @@ async function findImgUrls(id: number): Promise<string[]> {
     where: { id },
     select: { imageUrls: true }
   });
-  if (result.imageUrls) {
-    throw new NotFoundError('imageUrls not found');
-  }
   return result.imageUrls;
 }
 

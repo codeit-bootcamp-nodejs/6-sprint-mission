@@ -1,12 +1,13 @@
 @baseUrl = http://localhost:3000
 
 //------------------------상품 이미지 APIs
-GET {{baseUrl}}/images/products/29
+GET {{baseUrl}}/images/products/32
 ###
+GET {{baseUrl}}/images/products/32/1770697009465.png
 
 // 토큰 인증 + 인가 (상품을 등록한 유저만 가능)
 ###
-POST {{baseUrl}}/images/products/29
+POST {{baseUrl}}/images/products/33
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
@@ -17,7 +18,9 @@ Content-Type: image/png
 --MyBoundary--
 
 ###
-DELETE {{baseUrl}}/images/products/30
+DELETE {{baseUrl}}/images/products/33
+###
+DELETE {{baseUrl}}/images/products/32/1770697009465.png
 
 
 
@@ -27,41 +30,45 @@ DELETE {{baseUrl}}/images/products/30
 // 사촌 비니 
 
 ###
-GET {{baseUrl}}/images/articles/16
+GET {{baseUrl}}/images/articles/20
+###
+GET {{baseUrl}}/images/articles/20/1770698048592.png 
 
 ###
-POST {{baseUrl}}/images/articles/16
+POST {{baseUrl}}/images/articles/20
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
-Content-Disposition: form-data; name="image"; filename="lalaLand.png"
+Content-Disposition: form-data; name="image"; filename="eternalSunshine.png"
 Content-Type: image/png
 
-< ./images/article/lalaLand.png
+< ./images/article/eternalSunshine.png
 --MyBoundary--
 
 ###
-DELETE {{baseUrl}}/images/articles/16
+DELETE {{baseUrl}}/images/articles/20
+###
+DELETE {{baseUrl}}/images/articles/20/1770698048592.png
 
 
 //------------------------ 사용자 이미지 APIs
 
 ###
-GET {{baseUrl}}/images/users/5
+GET {{baseUrl}}/images/users/4
 ###
-GET {{baseUrl}}/images/users/2/23465476.png
+GET {{baseUrl}}/images/users/1/1770696383105.png
 ###
-DELETE {{baseUrl}}/images/users/2/23465476.png
+DELETE {{baseUrl}}/images/users/1/1770696383105.png
 
 ###
-POST {{baseUrl}}/images/users/5
+POST {{baseUrl}}/images/users/3
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
-Content-Disposition: form-data; name="image"; filename="EmmaStone.png"
+Content-Disposition: form-data; name="image"; filename="Sam.png"
 Content-Type: image/png
 
-< ./images/user/EmmaStone.png
+< ./images/user/Sam.png
 --MyBoundary--
 
 ###

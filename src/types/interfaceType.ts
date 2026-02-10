@@ -61,10 +61,21 @@ interface ImageFile {
   size: number;
 }
 
+// 이미지 관련
+import userRepo from '../repository/user.repo';
+import articleRepo from '../repository/article.repo';
+import productRepo from '../repository/product.repo';
+
+export const RepoMap = {
+  products: productRepo,
+  articles: articleRepo,
+  users: userRepo
+} as const;
+
+export type ImgSourceType = keyof typeof RepoMap;
+
 export interface ImagePostInput {
-  path: string;
-  targetId: number;
-  protocol: string;
-  host?: string;
+  type: ImgSourceType;
+  id: number;
   file: ImageFile;
 }

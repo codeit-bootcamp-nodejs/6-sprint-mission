@@ -1,6 +1,3 @@
-import userRepo from '../repository/user.repo';
-import articleRepo from '../repository/article.repo';
-import productRepo from '../repository/product.repo';
 import { selectFields, selectUserFields } from '../lib/selectFields';
 import {
   CompleteArticle,
@@ -8,7 +5,6 @@ import {
   CompleteUser,
   ImagePostInput
 } from '../types/interfaceType';
-import { Prisma } from '@prisma/client';
 
 import {
   PutObjectCommand,
@@ -17,23 +13,17 @@ import {
   DeleteObjectCommand,
   DeleteObjectsCommand
 } from '@aws-sdk/client-s3';
-import fs from 'fs';
 import { s3Client } from '../lib/s3Client';
-import { BUCKETNAME, REGION, ACCESS_KEY_ID, SECRET_ACCESS_KEY } from '../lib/constants';
+import { BUCKETNAME, REGION } from '../lib/constants';
 import path from 'path';
 import InternalServerError from '../middleware/errors/internalServerError';
+import { RepoMap, ImgSourceType } from '../types/interfaceType';
 
 const bucket = BUCKETNAME;
 const region = REGION;
 
-const repoMap = {
-  products: productRepo,
-  articles: articleRepo,
-  users: userRepo
-} as const;
-
-async function getList(path: string, id: number) {
-  const key = `images${path}/`;
+async function getList(type: ImgSourceType, id: number) {
+  const key = `images/${type}/${id}/`;
 
   const command = new ListObjectsV2Command({ Bucket: bucket, Prefix: key });
 
@@ -49,14 +39,14 @@ async function getList(path: string, id: number) {
   }
 
   // DB에서 imageUrls 찾아 반환하는 경우 (현업에서 더 쓰는 방식이라 함)
-  // const type = path.split('/')[1];
-  // const repo = repoMap[type as keyof typeof repoMap];
-  // const imageUrlsDB = await repo.findImgUrls(id);
-  // return imageUrlsDB;
+  //   const repo = RepoMap[type];
+  //   const imageUrlsDB = await repo.findImgUrls(id);
+  //   return imageUrlsDB;
 }
 
-async function get(type: string, filename: string, id: number) {
+async function get(type: string, id: number, filename: string) {
   const key = `images/${type}/${id}/${filename}`;
+
   try {
     const imgObj = await s3Client.send(new GetObjectCommand({ Bucket: bucket, Key: key }));
     return imgObj;
@@ -66,11 +56,11 @@ async function get(type: string, filename: string, id: number) {
 }
 
 async function post(input: ImagePostInput) {
-  const { file, host, protocol } = input;
+  const { type: imgType, id, file } = input;
 
   // AWS S3에 이미지 저장
   const ext = path.extname(file.originalname);
-  const key = `images${input.path}/${Date.now()}${ext}`;
+  const key = `images/${imgType}/${id}/${Date.now()}${ext}`;
 
   const params = {
     Bucket: BUCKETNAME,
@@ -83,14 +73,13 @@ async function post(input: ImagePostInput) {
   try {
     await s3Client.send(command);
   } catch (err) {
-    throw new InternalServerError('S3 업로드 실패');
+    throw new InternalServerError('AWS S3 upload failure');
   }
 
   // DB에 새 imageUrl 저장
-  const type = input.path.split('/')[1];
-  const repo = repoMap[type as keyof typeof repoMap];
+  const repo = RepoMap[imgType];
 
-  const imageUrls = await repo.findImgUrls(input.targetId);
+  const imageUrls = await repo.findImgUrls(input.id);
   const newImageUrl = `https://${bucket}.s3.${region}.amazonaws.com/${key}`;
 
   let updatedUrls = [];
@@ -101,16 +90,16 @@ async function post(input: ImagePostInput) {
   }
 
   const imageData = { imageUrls: updatedUrls };
-  const item = await repo.patch(input.targetId, imageData);
-  if (type === 'users') return selectUserFields(item as CompleteUser, 'core');
+  const item = await repo.patch(input.id, imageData);
+  if (imgType === 'users') return selectUserFields(item as CompleteUser, 'core');
   else return selectFields(item as CompleteProduct | CompleteArticle);
 }
 
-async function del(type: string, filename: string, id: number) {
+async function del(type: ImgSourceType, id: number, filename: string) {
   const key = `images/${type}/${id}/${filename}`;
   await s3Client.send(new DeleteObjectCommand({ Bucket: bucket, Key: key }));
 
-  const repo = repoMap[type as keyof typeof repoMap];
+  const repo = RepoMap[type];
   const delImgUrl = `https://${bucket}.s3.${region}.amazonaws.com/${key}`;
 
   const imageUrls = await repo.findImgUrls(id);
@@ -118,11 +107,12 @@ async function del(type: string, filename: string, id: number) {
   const i = imageUrls.indexOf(delImgUrl);
   if (i !== -1) imageUrls.splice(i, 1);
 
-  await repo.patch(id, { imageUrls });
-  return imageUrls;
+  const item = await repo.patch(id, { imageUrls });
+  if (type === 'users') return selectUserFields(item as CompleteUser, 'core');
+  else return selectFields(item as CompleteProduct | CompleteArticle);
 }
 
-async function delList(type: string, id: number) {
+async function delList(type: ImgSourceType, id: number) {
   const key = `images/${type}/${id}/`;
 
   let command = new ListObjectsV2Command({ Bucket: bucket, Prefix: key });
@@ -139,7 +129,7 @@ async function delList(type: string, id: number) {
     );
   }
 
-  const repo = repoMap[type as keyof typeof repoMap];
+  const repo = RepoMap[type];
   const item = await repo.patch(id, { imageUrls: [] });
   if (type === 'users') return selectUserFields(item as CompleteUser, 'core');
   else return selectFields(item as CompleteProduct | CompleteArticle);
