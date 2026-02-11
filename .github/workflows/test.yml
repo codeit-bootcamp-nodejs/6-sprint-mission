@@ -69,5 +69,5 @@ jobs:
 
       - name: Run Unit Test
         run: |
-          npm run test:unit -c ./jest.config.authorize.js
-          npm run test:unit -c ./jest.config.likeToggle.js
+          npx jest -c ./jest.config.authorize.js
+          npx jest -c ./jest.config.likeToggle.js
