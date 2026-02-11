@@ -22,7 +22,7 @@ describe('Product, Auth, Article APIs 통합 테스트', () => {
       await prisma.user.createMany({ data: userData });
       await prisma.product.createMany({ data: productData });
     });
-    test('할 일이 있을 때는 배열 반환', async () => {
+    test('상품이 있을 때는 배열 반환', async () => {
       const response = await request(app).get('/products');
       expect(response.status).toBe(200);
       expect(response.body.length).toBe(productData.length);

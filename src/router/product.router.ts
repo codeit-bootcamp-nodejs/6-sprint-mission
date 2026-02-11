@@ -8,7 +8,7 @@ import { allowedProductKeys } from '../lib/constants';
 
 const productRouter = express.Router();
 
-productRouter.get('/', authenticate({ optional: true }), withTryCatch(productControl.getList));
+productRouter.get('/', withTryCatch(productControl.getList));
 productRouter.get('/:id', authenticate(), withTryCatch(productControl.get));
 productRouter.post('/:id/like/toggle', authenticate(), withTryCatch(productControl.likeToggle));
 productRouter.post(

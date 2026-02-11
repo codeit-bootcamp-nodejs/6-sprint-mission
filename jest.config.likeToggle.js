@@ -3,7 +3,7 @@ module.exports = {
   verbose: true,
   clearMocks: true,
   collectCoverage: true,
-  testMatch: ['<rootDir>/test/productService_likeToggle.test.ts'],
+  testMatch: ['**/productService_likeToggle.test.ts'],
   transform: {
     '^.+\\.ts$': 'ts-jest'
   },

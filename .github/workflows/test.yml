@@ -12,9 +12,55 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    # PostgreSQL 서비스를 Docker 컨테이너로 함께 실행
+    services:
+      postgres:
+        image: postgres:17 # PostgreSQL 15 버전 사용
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432 # 로컬에서 5432 포트를 통해 접근 가능
+        options: >- # DB가 준비될 때까지 기다리는 설정 (헬스 체크)
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    # 전체 테스트 환경에서 사용할 공통 환경변수
+    env:
+      # PostgreSQL 연결 정보 (Prisma가 이 값을 사용하여 DB 접속)
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/testdb
+
+      # API 기본 주소 및 포트 (예: supertest 등에서 사용)
+      BASE_URL: http://localhost:3000
+      PORT: 3000
+      NODE_ENV: test
+
+      # JWT 서명을 위한 시크릿 키 (테스트용 더미 값)
+      JWT_ACCESS_TOKEN_SECRET: your-secret-key
+      JWT_REFRESH_TOKEN_SECRET: your-refresh-secret-key
+
+      # AWS 관련 설정 - 실제 AWS 리소스를 사용하는 경우에는 Secrets로 값 주입 필요
+      AWS_REGION: ap-northeast-2
+      AWS_ACCESS_KEY_ID: aws-access-key # 실제 키를 넣으면 안 됨 (테스트용 더미 값)
+      AWS_SECRET_ACCESS_KEY: aws-secret-access-key # 실제 키를 넣으면 안 됨
+      AWS_BUCKET_NAME: panda-market
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Debug workspace
+        if: always()
+        run: |
+          echo "=== PWD ==="
+          pwd
+          echo "=== LS ROOT ==="
+          ls -al
+          echo "=== LS TEST ==="
+          ls -al test || true
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -29,12 +75,10 @@ jobs:
         run: npm run typecheck
 
       - name: Run API Tests
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: npm run test
+        run: npx jest -c ./jest.config.api.js --detectOpenHandles
 
       - name: Run Unit Test - authorize
-        run: npm run test:unit -- jest.config.authorize.js
+        run: npx jest -c ./jest.config.authorize.js
 
       - name: Run Unit Test - likeToggle
         run: npm run test:unit -- jest.config.likeToggle.js

@@ -3,7 +3,7 @@ module.exports = {
   verbose: true,
   clearMocks: true,
   collectCoverage: true,
-  testMatch: ['<rootDir>/test/api.test.ts'],
+  testMatch: ['**/api.test.ts'],
   transform: {
     '^.+\\.ts$': 'ts-jest'
   },

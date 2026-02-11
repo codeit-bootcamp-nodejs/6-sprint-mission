@@ -27,7 +27,7 @@ export const allowedArticleKeys = ['title', 'content'];
 export const allowedCommentKeys = ['content'];
 export const allowedUserKeys = ['email', 'nickname', 'password'];
 
-export const BUCKETNAME = required('AWS_BUCKETNAME');
+export const BUCKETNAME = required('AWS_BUCKET_NAME');
 export const REGION = required('AWS_REGION');
 export const ACCESS_KEY_ID = required('AWS_ACCESS_KEY_ID');
 export const SECRET_ACCESS_KEY = required('AWS_SECRET_ACCESS_KEY');

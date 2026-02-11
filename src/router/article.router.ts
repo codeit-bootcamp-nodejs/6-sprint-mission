@@ -8,7 +8,7 @@ import { allowedArticleKeys } from '../lib/constants';
 
 const articleRouter = express.Router();
 
-articleRouter.get('/', authenticate({ optional: true }), withTryCatch(articleControl.getList));
+articleRouter.get('/', withTryCatch(articleControl.getList));
 articleRouter.get('/:id', authenticate(), withTryCatch(articleControl.get));
 articleRouter.post('/:id/like/toggle', authenticate(), withTryCatch(articleControl.likeToggle));
 articleRouter.post(
