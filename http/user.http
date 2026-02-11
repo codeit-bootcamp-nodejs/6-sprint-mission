@@ -1,7 +1,8 @@
-#@baseUrl = http://3.34.97.118
-@baseUrl = http://localhost:3000
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcwNzEzMDU1LCJleHAiOjE3NzA3MTY2NTV9.ViTVxr3EqPXi2aA4fByOJSIqaV1kyyMhMhYyZAHr86I
+@baseUrl = http://3.34.97.118
+#@baseUrl = http://localhost:3000
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiaWF0IjoxNzcwNzI0NzA1LCJleHAiOjE3NzA3MjgzMDV9.erfEWHjhVjsF31SW3Yc1drxEhppXCrxsaGXASaIPFXM
 
+###
 GET {{baseUrl}}/users
 Authorization: Bearer {{accessToken}}
 

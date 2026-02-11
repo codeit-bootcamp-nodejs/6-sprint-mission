@@ -3,7 +3,7 @@ set -e
 
 cd "$(dirname "$0")/../.."
 
-npm ci
+npm ci --production
 npx prisma generate
 npx prisma migrate deploy
 npm run build

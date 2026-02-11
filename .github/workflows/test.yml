@@ -1,0 +1,32 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - 정수영-sprint11 # 특정 브랜치에 푸시될 때 실행
+  pull_request:
+    branches:
+      - main # 특정 브랜치로 향하는 Pull Request가 생성/업데이트될 때 실행
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '24.13.0' # 또는 프로젝트에 필요한 Node.js 버전
+          cache: 'npm' # install 속도가 빨라진다고 함
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type Check
+        run: npm run typecheck
+
+      - name: Run Tests
+        run: npm run test

@@ -1,7 +1,7 @@
-#@baseUrl = http://3.34.97.118
-@baseUrl = http://localhost:3000
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcwNzIyNDA4LCJleHAiOjE3NzA3MjYwMDh9.MxMhHnhdrHVDLs23Sglv-FOSUgJzmShQRplrp5H_84Q
-@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcwNzIyNDA4LCJleHAiOjE3NzA4MDg4MDh9.UsDouuszhUcfwpJ2GfW01RQj8jXtQ2NmBjs9ttNSxsE
+@baseUrl = http://3.34.97.118
+#@baseUrl = http://localhost:3000
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcwNzIyOTI3LCJleHAiOjE3NzA3MjY1Mjd9.ht0uPAB_Bmx4fd2YVFw6JJuZFoV6-0-EIOLah1exhpY
+@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcwNzIyOTI3LCJleHAiOjE3NzA4MDkzMjd9.omUOnB8Bxc43SXb-YtKurBl_EDuxxGj6itsRXF67iSg
 
 ###
 POST {{baseUrl}}/auth/register
@@ -9,9 +9,9 @@ Cookie: access-token={{accessToken}}
 Content-Type: application/json
 
 {
-  "email": "user9@example.com",
-  "nickname": "user9",
-  "password": "password8"
+  "email": "user10@example.com",
+  "nickname": "user10",
+  "password": "password10"
 }
 
 
@@ -20,8 +20,8 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "user1@example.com",
-  "password": "password1"
+  "email": "user10@example.com",
+  "password": "password10"
 }
 
 ###
