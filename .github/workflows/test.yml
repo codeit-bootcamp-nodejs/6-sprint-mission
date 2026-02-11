@@ -28,5 +28,13 @@ jobs:
       - name: Type Check
         run: npm run typecheck
 
-      - name: Run Tests
+      - name: Run API Tests
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: npm run test
+
+      - name: Run Unit Test - authorize
+        run: npm run test:unit -- jest.config.authorize.js
+
+      - name: Run Unit Test - likeToggle
+        run: npm run test:unit -- jest.config.likeToggle.js

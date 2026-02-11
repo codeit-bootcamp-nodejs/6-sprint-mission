@@ -3,14 +3,12 @@ module.exports = {
   verbose: true,
   clearMocks: true,
   collectCoverage: true,
-  testMatch: ['**/*.test.ts'],
+  testMatch: ['<rootDir>/test/api.test.ts'],
   transform: {
     '^.+\\.ts$': 'ts-jest'
   },
   moduleFileExtensions: ['ts', 'js'],
   collectCoverageFrom: [
-    //'src/service/product.service.ts'  // for likeToggle test
-    //'src/middleware/authorize.ts'     // for authorize test
     'src/controller/auth.control.ts', // rest for API test
     'src/controller/product.control.ts',
     'src/controller/article.control.ts',

@@ -25,4 +25,8 @@
 
 ## 멘토에게
 
-- 감이 안 잡히지만 해보겠습니다.
+- 이번 commit에 된 일
+  - test.yml 작성 (docker 사용 이전임)
+  - GitHub PAT에 workflow 권한 줌 (강의 중에 이미 함)
+  - 코드 준비: package.json, jest.config.js 등
+  - 리포지토리 브랜치 규칙 설정 (test 패스해야 merge하도록 main 브랜치 보호)

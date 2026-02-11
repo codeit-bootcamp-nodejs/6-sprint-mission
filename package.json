@@ -26,7 +26,6 @@
     "@types/node": "^20.11.24",
     "@types/socket.io": "^3.0.2",
     "@types/supertest": "^6.0.3",
-    "@types/ws": "^8.18.1",
     "concurrently": "^9.2.1",
     "depcheck": "^1.4.7",
     "dotenv-cli": "^11.0.0",
@@ -42,6 +41,7 @@
   "type": "commonjs",
   "main": "dist/main.js",
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "build": "tsc",
     "start": "node dist/main.js",
     "dev1": "nodemon --watch src --exec ts-node src/main.ts",
@@ -49,8 +49,8 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "ts-node prisma/seed.ts",
-    "test": "dotenv -e .env.test -- npm run prisma:migrate && dotenv -e .env.test -- npx prisma generate && dotenv -e .env.test -- jest --detectOpenHandles",
-    "test1": "jest",
+    "test": "dotenv -e .env.test -- npm run prisma:migrate && dotenv -e .env.test -- npx prisma generate && dotenv -e .env.test -- jest ./test/api.test.ts -c jest.config_apiTest.js --detectOpenHandles",
+    "test:unit": "jest -c",
     "coverage": "dotenv -e .env.test -- jest --coverage"
   }
 }
