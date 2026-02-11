@@ -11,12 +11,16 @@ import { SafeUser, TokenType } from '../types/interfaceType';
 import { getIO } from '../websocket/socketIO';
 import ConflictError from '../middleware/errors/ConflictError';
 import ForbiddenError from '../middleware/errors/ForbiddenError';
-import UnauthorizedError from '../middleware/errors/UnauthorizedError';
 import NotFoundError from '../middleware/errors/NotFoundError';
 
 async function register(data: CreateUserDto): Promise<SafeUser> {
   assert(data, CreateUser);
   const { email, nickname, password } = data;
+
+  console.log('========================================================================');
+  console.log('email=', email);
+  console.log('found=', await userRepo.findByEmail(email));
+  console.log('========================================================================');
 
   const user = await userRepo.findByEmail(email);
   if (user) {

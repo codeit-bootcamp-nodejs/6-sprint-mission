@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">48.38% </span>
+                <span class="strong">43.58% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>15/31</span>
+                <span class='fraction'>17/39</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">25% </span>
+                <span class="strong">15% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/8</span>
+                <span class='fraction'>3/20</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">45.45% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>15/30</span>
+                <span class='fraction'>15/33</span>
             </div>
         
             
@@ -142,18 +142,11 @@
 <a name='L77'></a><a href='#L77'>77</a>
 <a name='L78'></a><a href='#L78'>78</a>
 <a name='L79'></a><a href='#L79'>79</a>
-<a name='L80'></a><a href='#L80'>80</a>
-<a name='L81'></a><a href='#L81'>81</a>
-<a name='L82'></a><a href='#L82'>82</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L80'></a><a href='#L80'>80</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -167,7 +160,6 @@
 <span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-yes">18x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -183,18 +175,22 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -203,7 +199,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -228,39 +224,37 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Request, Response } from 'express';
 import { assert } from 'superstruct';
 import { CreateUser } from '../struct/user.struct';
-import {
-  REFRESH_TOKEN_COOKIE_NAME,
-  ACCESS_TOKEN_COOKIE_NAME,
-  NODE_ENV,
-  REFRESH_TOKEN_MAXAGE,
-  ACCESS_TOKEN_MAXAGE
-} from '../lib/constants';
+import { NODE_ENV, REFRESH_TOKEN_COOKIE_NAME, REFRESH_TOKEN_MAXAGE } from '../lib/constants';
 import authService from '../service/auth.service';
+import UnauthorizedError from '../middleware/errors/UnauthorizedError';
 &nbsp;
 async function register(req: Request, res: Response): Promise&lt;void&gt; {
   assert(req.body, CreateUser);
   const newUser = await authService.register(req.body);
-  console.log(`User_${newUser.id} registered successfully`);
+  <span class="missing-if-branch" title="else path not taken" >E</span>if (NODE_ENV === 'development') console.log(`User_${newUser.id} registered successfully`);
   res.status(201).json(newUser);
 }
 &nbsp;
 async function login(req: Request, res: Response): Promise&lt;void&gt; {
   const { accessToken, refreshToken } = await authService.login(req.body);
-  setTokenCookies(res, accessToken, refreshToken);
-  console.log(`User logged-in`);
-  //console.log(res.getHeader('set-cookie'));
-  res.status(200).send({ accessToken });
+  setTokenCookies(res, refreshToken);
+  <span class="missing-if-branch" title="else path not taken" >E</span>if (NODE_ENV === 'development') console.log(`User logged-in`);
+  res.status(200).json({ accessToken });
 }
 &nbsp;
-async function <span class="fstat-no" title="function not covered" >logout(</span>req: Request, res: Response): Promise&lt;void&gt; {
+function <span class="fstat-no" title="function not covered" >logout(</span>req: Request, res: Response) {
 <span class="cstat-no" title="statement not covered" >  authService.logout(req.user.id, res);</span>
-<span class="cstat-no" title="statement not covered" >  console.log(`User logged-out`);</span>
+<span class="cstat-no" title="statement not covered" >  if (NODE_ENV === 'development') <span class="cstat-no" title="statement not covered" >console.log(`User logged-out`);</span></span>
 <span class="cstat-no" title="statement not covered" >  res.status(200).send({ message: '사용자가 로그아웃 하였습니다' });</span>
 }
 &nbsp;
-async function <span class="fstat-no" title="function not covered" >viewTokens(</span>req: Request, res: Response): Promise&lt;void&gt; {
+function <span class="fstat-no" title="function not covered" >viewTokens(</span>req: Request, res: Response) {
 <span class="cstat-no" title="statement not covered" >  if (NODE_ENV === 'development') {</span>
-    const { accessToken, refreshToken } = <span class="cstat-no" title="statement not covered" >authService.viewTokens(req.cookies);</span>
+    const auth = <span class="cstat-no" title="statement not covered" >req.headers.authorization;</span>
+<span class="cstat-no" title="statement not covered" >    if (!auth?.startsWith('Bearer ')) <span class="cstat-no" title="statement not covered" >throw new UnauthorizedError();</span></span>
+    const accessToken = <span class="cstat-no" title="statement not covered" >auth.slice(7);</span>
+    const refreshToken = <span class="cstat-no" title="statement not covered" >req.cookies[REFRESH_TOKEN_COOKIE_NAME];</span>
+&nbsp;
 <span class="cstat-no" title="statement not covered" >    console.log('');</span>
 <span class="cstat-no" title="statement not covered" >    console.log(`accessToken:  ${accessToken}`);</span>
 <span class="cstat-no" title="statement not covered" >    console.log(`refreshToken: ${refreshToken}`);</span>
@@ -272,24 +266,24 @@ async function <span class="fstat-no" title="function not covered" >viewTokens(<
 }
 &nbsp;
 async function <span class="fstat-no" title="function not covered" >issueTokens(</span>req: Request, res: Response): Promise&lt;void&gt; {
-  const { accessToken, refreshToken } = <span class="cstat-no" title="statement not covered" >await authService.issueTokens(req.cookies);</span>
-<span class="cstat-no" title="statement not covered" >  setTokenCookies(res, accessToken, refreshToken);</span>
-<span class="cstat-no" title="statement not covered" >  console.log(`Tokens refreshed`);</span>
+  const { accessToken, refreshToken } = <span class="cstat-no" title="statement not covered" >await authService.issueTokens(req.cookies.refreshToken);</span>
+<span class="cstat-no" title="statement not covered" >  if (NODE_ENV === 'development') <span class="cstat-no" title="statement not covered" >console.log(`Tokens refreshed`);</span></span>
+<span class="cstat-no" title="statement not covered" >  setTokenCookies(res, refreshToken);</span>
 <span class="cstat-no" title="statement not covered" >  res.status(201).send({ accessToken });</span>
 }
 &nbsp;
 //-------------------------------------------------- local functions
 function setTokenCookies(
   res: Response,
-  accessToken: string | undefined,
+  //accessToken: string | undefined,
   refreshToken: string | undefined
 ): void {
-  res.cookie(ACCESS_TOKEN_COOKIE_NAME, accessToken, {
-    httpOnly: true,
-    secure: NODE_ENV === 'production', // false: 쓸데없이 우회적인 표현
-    sameSite: 'lax',
-    maxAge: ACCESS_TOKEN_MAXAGE || <span class="branch-1 cbranch-no" title="branch not covered" >1 * 60 * 60 * 1000 </span>// 1 hour
-  });
+  // res.cookie(ACCESS_TOKEN_COOKIE_NAME, accessToken, {
+  //   httpOnly: true,
+  //   secure: NODE_ENV === 'production', // false: 쓸데없이 우회적인 표현
+  //   sameSite: 'lax',
+  //   maxAge: ACCESS_TOKEN_MAXAGE || 1 * 60 * 60 * 1000 // 1 hour
+  // });
   res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
     httpOnly: true,
     secure: NODE_ENV === 'production',
@@ -313,7 +307,7 @@ export default {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-31T11:43:28.508Z
+                at 2026-02-11T06:50:20.196Z
             </div>
         <script src="prettify.js"></script>
         <script>

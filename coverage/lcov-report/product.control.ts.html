@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>41/41</span>
+                <span class='fraction'>47/47</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">82.14% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>18/18</span>
+                <span class='fraction'>23/28</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>41/41</span>
+                <span class='fraction'>44/44</span>
             </div>
         
             
@@ -166,7 +166,13 @@
 <a name='L101'></a><a href='#L101'>101</a>
 <a name='L102'></a><a href='#L102'>102</a>
 <a name='L103'></a><a href='#L103'>103</a>
-<a name='L104'></a><a href='#L104'>104</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -186,6 +192,8 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -204,6 +212,8 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -269,7 +279,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import productService from '../service/product.service';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { NODE_ENV } from '../lib/constants';
+import productService from '../service/product.service';
 import { Request, Response, NextFunction } from 'express';
 &nbsp;
 // 상품 등록: 토큰 인증된 유저만 가능
@@ -284,11 +295,13 @@ async function post(req: Request, res: Response, next: NextFunction): Promise&lt
     tags: tags
   };
   const [product, priceRecord] = await productService.post(productData);
-  console.log('');
-  console.log(`Product_${product.id} created by User_${req.user.id}`);
-  console.log(`Product_${product.id} has PriceRecord_${priceRecord.id}`);
-  console.log(priceRecord);
-  console.log('');
+  <span class="missing-if-branch" title="else path not taken" >E</span>if (NODE_ENV === 'development') {
+    console.log('');
+    console.log(`Product_${product.id} created by User_${req.user.id}`);
+    console.log(`Product_${product.id} has PriceRecord_${priceRecord.id}`);
+    console.log(priceRecord);
+    console.log('');
+  }
   res.status(201).json(product);
 }
 &nbsp;
@@ -305,8 +318,10 @@ async function patch(req: Request, res: Response, next: NextFunction): Promise&l
   };
 &nbsp;
   const product = await productService.patch(Number(id), productData);
-  console.log(`Product_${id} patched by ${req.user.nickname}`);
-  console.log('');
+  <span class="missing-if-branch" title="else path not taken" >E</span>if (NODE_ENV === 'development') {
+    console.log(`Product_${id} patched by ${req.user.nickname}`);
+    console.log('');
+  }
   res.status(200).json(product);
 }
 &nbsp;
@@ -314,7 +329,7 @@ async function patch(req: Request, res: Response, next: NextFunction): Promise&l
 async function erase(req: Request, res: Response, next: NextFunction): Promise&lt;void&gt; {
   const { id } = req.params;
   await productService.erase(Number(id));
-  console.log(`Product_${id} deleted by ${req.user.nickname}`);
+  <span class="missing-if-branch" title="else path not taken" >E</span>if (NODE_ENV === 'development') console.log(`Product_${id} deleted by ${req.user.nickname}`);
   res.status(204).send({ message: '상품이 삭제되었습니다' });
 }
 &nbsp;
@@ -331,7 +346,7 @@ async function getList(req: Request, res: Response, next: NextFunction): Promise
   const description = req.query.description as string | undefined;
 &nbsp;
   const products = await productService.getList(offset, limit, order, name, description);
-  console.log('Product list fetched');
+  <span class="missing-if-branch" title="else path not taken" >E</span>if (NODE_ENV === 'development') console.log('Product list fetched');
   res.status(200).json(products);
 }
 &nbsp;
@@ -341,7 +356,7 @@ async function get(req: Request, res: Response, next: NextFunction): Promise&lt;
   const { id: productId } = req.params;
   const userId = req.user.id;
   const product = await productService.get(userId, Number(productId));
-  console.log(`Product_${productId} fetched (in detail)`);
+  <span class="missing-if-branch" title="else path not taken" >E</span>if (NODE_ENV === 'development') console.log(`Product_${productId} fetched (in detail)`);
   res.status(200).json(product);
 }
 &nbsp;
@@ -379,7 +394,7 @@ export default {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-31T11:43:28.508Z
+                at 2026-02-11T06:50:20.196Z
             </div>
         <script src="prettify.js"></script>
         <script>

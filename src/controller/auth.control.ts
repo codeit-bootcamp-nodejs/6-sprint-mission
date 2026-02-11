@@ -26,20 +26,16 @@ function logout(req: Request, res: Response) {
 }
 
 function viewTokens(req: Request, res: Response) {
-  if (NODE_ENV === 'development') {
-    const auth = req.headers.authorization;
-    if (!auth?.startsWith('Bearer ')) throw new UnauthorizedError();
-    const accessToken = auth.slice(7);
-    const refreshToken = req.cookies[REFRESH_TOKEN_COOKIE_NAME];
+  const auth = req.headers.authorization;
+  if (!auth?.startsWith('Bearer ')) throw new UnauthorizedError();
+  const accessToken = auth.slice(7);
+  const refreshToken = req.cookies[REFRESH_TOKEN_COOKIE_NAME];
 
-    console.log('');
-    console.log(`accessToken:  ${accessToken}`);
-    console.log(`refreshToken: ${refreshToken}`);
-    console.log('');
-    if (!refreshToken) res.status(404).send({ message: '로그인 하세요' });
-  } else {
-    res.status(403).send({ message: '개발자 옵션입니다' });
-  }
+  console.log('');
+  console.log(`accessToken:  ${accessToken}`);
+  console.log(`refreshToken: ${refreshToken}`);
+  console.log('');
+  if (!refreshToken) res.status(404).send({ message: '로그인 하세요' });
 }
 
 async function issueTokens(req: Request, res: Response): Promise<void> {

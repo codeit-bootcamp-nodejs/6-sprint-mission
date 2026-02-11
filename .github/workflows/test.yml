@@ -52,16 +52,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Debug workspace
-        if: always()
-        run: |
-          echo "=== PWD ==="
-          pwd
-          echo "=== LS ROOT ==="
-          ls -al
-          echo "=== LS TEST ==="
-          ls -al test || true
-
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -71,14 +61,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Setup Prisma
+        run: |
+          npx prisma migrate deploy
+          npx prisma generate
+
       - name: Type Check
         run: npm run typecheck
 
       - name: Run API Tests
         run: npx jest -c ./jest.config.api.js --detectOpenHandles
 
-      - name: Run Unit Test - authorize
-        run: npx jest -c ./jest.config.authorize.js
-
-      - name: Run Unit Test - likeToggle
-        run: npm run test:unit -- jest.config.likeToggle.js
+      - name: Run Unit Test
+        run: |
+          npx jest -c ./jest.config.authorize.js
+          npx jest -c ./jest.config.likeToggle.js
