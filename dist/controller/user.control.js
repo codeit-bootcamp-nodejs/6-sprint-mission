@@ -17,24 +17,18 @@ const constants_1 = require("../lib/constants");
 function getList(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const users = (yield user_service_1.default.getList());
-        if (constants_1.NODE_ENV === 'development' && users.length > 1)
-            console.log('User list fetched');
         res.status(200).json(users);
     });
 }
 function getInfo(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = yield user_service_1.default.getInfo(req.user.id);
-        if (constants_1.NODE_ENV === 'development')
-            console.log(`User${req.user.id}: user info fetched`);
         res.status(200).json(user);
     });
 }
 function patchInfo(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = yield user_service_1.default.patchInfo(req.user.id, req.body);
-        if (constants_1.NODE_ENV === 'development')
-            console.log(`User${req.user.id}: user info edited`);
         res.status(200).json(user);
     });
 }
@@ -43,40 +37,30 @@ function patchPassword(req, res) {
         const { id: userId } = req.user;
         const { password_now: oldPassword, password_new: newPassword } = req.body;
         const user = yield user_service_1.default.patchPassword(userId, oldPassword, newPassword);
-        if (constants_1.NODE_ENV === 'development')
-            console.log(`User${req.user.id}: user password changed`);
         res.status(200).send({ message: '비밀번호가 변경되었습니다' });
     });
 }
 function getProducts(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const products = yield user_service_1.default.getProducts(req.user.id);
-        if (constants_1.NODE_ENV === 'development')
-            console.log(`User${req.user.id}: products posted by the user`);
         res.status(200).json(products);
     });
 }
 function getArticles(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const articles = yield user_service_1.default.getArticles(req.user.id);
-        if (constants_1.NODE_ENV === 'development')
-            console.log(`User${req.user.id}: articles posted by the user`);
         res.status(200).json(articles);
     });
 }
 function getLikedProducts(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const products = yield user_service_1.default.getLikedProducts(req.user.id);
-        if (constants_1.NODE_ENV === 'development')
-            console.log(`User${req.user.id}: favorite products`);
         res.status(200).json(products);
     });
 }
 function getLikedArticles(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const articles = yield user_service_1.default.getLikedArticles(req.user.id);
-        if (constants_1.NODE_ENV === 'development')
-            console.log(`User${req.user.id}: favorite articles`);
         res.status(200).json(articles);
     });
 }

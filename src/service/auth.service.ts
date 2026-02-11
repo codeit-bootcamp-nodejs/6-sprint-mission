@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import userRepo from '../repository/user.repo';
-import { ACCESS_TOKEN_COOKIE_NAME, REFRESH_TOKEN_COOKIE_NAME } from '../lib/constants';
+import { REFRESH_TOKEN_COOKIE_NAME } from '../lib/constants';
 import { generateTokens, verifyRefreshToken } from '../lib/token';
 import { assert } from 'superstruct';
 import { CreateUser } from '../struct/user.struct';
@@ -17,16 +17,8 @@ async function register(data: CreateUserDto): Promise<SafeUser> {
   assert(data, CreateUser);
   const { email, nickname, password } = data;
 
-  console.log('========================================================================');
-  console.log('email=', email);
-  console.log('found=', await userRepo.findByEmail(email));
-  console.log('========================================================================');
-
   const user = await userRepo.findByEmail(email);
-  if (user) {
-    console.log('User registered already');
-    throw new ConflictError('이미 등록된 이메일입니다');
-  }
+  if (user) throw new ConflictError('이미 등록된 이메일입니다');
 
   const newData = {
     email,
@@ -43,10 +35,7 @@ async function login(data: LoginDto): Promise<TokenType> {
   if (!user) throw new NotFoundError();
 
   const isPasswordOk = await check_passwordValidity(data.password, user.password);
-  if (!isPasswordOk) {
-    console.log('Invalid password');
-    throw new ForbiddenError('비밀번호가 틀렸습니다');
-  }
+  if (!isPasswordOk) throw new ForbiddenError('비밀번호가 틀렸습니다');
 
   if (user.notifications.length) {
     const unreadCount = user.notifications.filter((n) => n.isRead === false).length;
@@ -58,7 +47,7 @@ async function login(data: LoginDto): Promise<TokenType> {
 }
 
 function logout(userId: number, tokenData: Response): void {
-  tokenData.clearCookie(REFRESH_TOKEN_COOKIE_NAME, { path: '/users/tokens' });
+  tokenData.clearCookie(REFRESH_TOKEN_COOKIE_NAME, { path: '/auth/tokens' });
 
   const io = getIO();
   for (const s of io.of('/').sockets.values()) {
@@ -119,10 +108,9 @@ export async function check_passwordValidity(
 
 async function verifyUserExist(userId: number): Promise<User> {
   const user = await userRepo.findById(userId);
-  if (!user) {
-    console.log('No user found. Resgister again.');
-    throw new NotFoundError('등록되지 않은 사용자입니다');
-  }
+  // if (!user) {
+  //   throw new NotFoundError('등록되지 않은 사용자입니다');
+  // }
   return user;
 }
 

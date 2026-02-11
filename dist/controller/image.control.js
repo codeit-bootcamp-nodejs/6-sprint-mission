@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const image_service_1 = __importDefault(require("../service/image.service"));
 const NotFoundError_1 = __importDefault(require("../middleware/errors/NotFoundError"));
 const BadRequestError_1 = __importDefault(require("../middleware/errors/BadRequestError"));
-const constants_1 = require("../lib/constants");
 // 이미지 목록 imageUrls 조회, 개발 위해 현재는 전체 상품/게시물 출력.
 // req.originalUrl로 서비스에서 product인지 article인지 구분
 function getList(req, res, next) {
@@ -38,8 +37,6 @@ function get(req, res, next) {
         if (!imgObj.Body)
             throw new Error('Image body not found');
         res.setHeader('Content-Type', (_a = imgObj.ContentType) !== null && _a !== void 0 ? _a : 'application/octet-stream');
-        if (constants_1.NODE_ENV == 'development')
-            console.log('image fetched');
         const bytes = yield imgObj.Body.transformToByteArray();
         res.end(Buffer.from(bytes));
     });
@@ -66,11 +63,6 @@ function post(req, res, next) {
         });
         if (!item)
             throw new NotFoundError_1.default();
-        if (constants_1.NODE_ENV == 'development') {
-            console.log('Image uploaded in AWS S3. ImgUrls in DB updated.');
-            console.log(item.imageUrls);
-            console.log('');
-        }
         res.status(201).json(item);
     });
 }
@@ -80,10 +72,6 @@ function delList(req, res, next) {
         const { id } = req.params;
         const { type } = req.params;
         const item = yield image_service_1.default.delList(type, Number(id));
-        if (constants_1.NODE_ENV == 'development') {
-            console.log(item);
-            console.log('ImageUrls deleted');
-        }
         res.status(204).send({ message: '이미지가 삭제되었습니다' });
     });
 }
@@ -92,10 +80,6 @@ function del(req, res, next) {
         const { id, filename } = req.params;
         const { type } = req.params;
         const item = yield image_service_1.default.del(type, Number(id), filename);
-        if (constants_1.NODE_ENV == 'development') {
-            console.log(item);
-            console.log('ImageUrls deleted');
-        }
         res.status(204).send({ message: '이미지가 삭제되었습니다' });
     });
 }

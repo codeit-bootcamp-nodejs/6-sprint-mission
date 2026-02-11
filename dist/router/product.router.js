@@ -11,7 +11,7 @@ const withTryCatch_1 = __importDefault(require("../lib/withTryCatch"));
 const validateReqBody_1 = require("../middleware/validateReqBody");
 const constants_1 = require("../lib/constants");
 const productRouter = express_1.default.Router();
-productRouter.get('/', (0, authenticate_1.default)({ optional: true }), (0, withTryCatch_1.default)(product_control_1.default.getList));
+productRouter.get('/', (0, withTryCatch_1.default)(product_control_1.default.getList));
 productRouter.get('/:id', (0, authenticate_1.default)(), (0, withTryCatch_1.default)(product_control_1.default.get));
 productRouter.post('/:id/like/toggle', (0, authenticate_1.default)(), (0, withTryCatch_1.default)(product_control_1.default.likeToggle));
 productRouter.post('/', (0, authenticate_1.default)(), (0, validateReqBody_1.validateReqBody)(constants_1.allowedProductKeys, true), (0, withTryCatch_1.default)(product_control_1.default.post));

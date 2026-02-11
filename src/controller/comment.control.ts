@@ -1,4 +1,3 @@
-import { NODE_ENV } from '../lib/constants';
 import commentService from '../service/comment.service';
 import { Request, Response, NextFunction } from 'express';
 
@@ -23,7 +22,6 @@ async function getList(req: Request, res: Response, next: NextFunction): Promise
 // 1개 댓글 조회
 async function get(req: Request, res: Response, next: NextFunction): Promise<void> {
   const comment = await commentService.get(req.params.id);
-  if (NODE_ENV === 'development') console.log('Comments fetched');
   res.status(200).json(comment);
 }
 
@@ -38,10 +36,6 @@ async function postArticle(req: Request, res: Response, next: NextFunction): Pro
   const { id: userId } = req.user;
 
   const comment = await commentService.postArticle(content, Number(id), userId);
-  if (NODE_ENV === 'development') {
-    console.log('');
-    console.log('Comment created');
-  }
   res.status(200).json(comment);
 }
 
@@ -51,7 +45,6 @@ async function postProduct(req: Request, res: Response, next: NextFunction): Pro
   const { id: userId } = req.user;
 
   const comment = await commentService.postProduct(content, Number(id), userId);
-  if (NODE_ENV === 'development') console.log('Comment created');
   res.status(200).json(comment);
 }
 
@@ -60,7 +53,6 @@ async function postProduct(req: Request, res: Response, next: NextFunction): Pro
 // 입력 필드: content
 async function patch(req: Request, res: Response, next: NextFunction): Promise<void> {
   const comment = await commentService.patch(req.params.id, req.body, req.user.id);
-  if (NODE_ENV === 'development') console.log('Comments edited.');
   res.status(201).json(comment);
 }
 
@@ -68,7 +60,6 @@ async function patch(req: Request, res: Response, next: NextFunction): Promise<v
 // req.params에 commentId 있어야 함
 async function erase(req: Request, res: Response, next: NextFunction): Promise<void> {
   await commentService.erase(req.params.id);
-  if (NODE_ENV === 'development') console.log('Comment deleted.');
   res.status(204).send('Comment deleted.');
 }
 

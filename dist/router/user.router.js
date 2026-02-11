@@ -10,7 +10,7 @@ const authenticate_1 = __importDefault(require("../middleware/authenticate"));
 const constants_1 = require("../lib/constants");
 const validateReqBody_1 = require("../middleware/validateReqBody");
 const userRouter = express_1.default.Router();
-userRouter.get('/', (0, authenticate_1.default)({ optional: true }), (0, withTryCatch_1.default)(user_control_1.default.getList)); // 부가기능
+userRouter.get('/', (0, withTryCatch_1.default)(user_control_1.default.getList)); // 부가기능
 // 인증된 유저 APIs (비번은 res로 보여주지 않음)
 userRouter.get('/info', (0, authenticate_1.default)(), (0, withTryCatch_1.default)(user_control_1.default.getInfo)); // 자신의 정보 조회
 userRouter.patch('/info/edit', (0, authenticate_1.default)(), (0, validateReqBody_1.validateReqBody)(constants_1.allowedUserKeys), (0, withTryCatch_1.default)(user_control_1.default.patchInfo)); // 토큰 인증 정보 수정, 비번 제외

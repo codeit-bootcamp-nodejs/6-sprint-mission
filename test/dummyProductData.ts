@@ -2,7 +2,6 @@ import { Prisma } from '@prisma/client';
 
 export const productData: Prisma.ProductCreateManyInput[] = [
   {
-    id: 1,
     name: 'Product 1',
     description: 'Description 1',
     price: 1000,
@@ -12,7 +11,6 @@ export const productData: Prisma.ProductCreateManyInput[] = [
     updatedAt: new Date('2026-01-19')
   },
   {
-    id: 2,
     name: 'Product 2',
     description: 'Description 2',
     price: 2000,
@@ -22,7 +20,6 @@ export const productData: Prisma.ProductCreateManyInput[] = [
     updatedAt: new Date('2026-01-20')
   },
   {
-    id: 3,
     name: 'Product 3',
     description: 'Description 3',
     price: 3000,

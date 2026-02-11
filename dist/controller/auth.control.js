@@ -21,8 +21,6 @@ function register(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         (0, superstruct_1.assert)(req.body, user_struct_1.CreateUser);
         const newUser = yield auth_service_1.default.register(req.body);
-        if (constants_1.NODE_ENV === 'development')
-            console.log(`User_${newUser.id} registered successfully`);
         res.status(201).json(newUser);
     });
 }
@@ -30,40 +28,29 @@ function login(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { accessToken, refreshToken } = yield auth_service_1.default.login(req.body);
         setTokenCookies(res, refreshToken);
-        if (constants_1.NODE_ENV === 'development')
-            console.log(`User logged-in`);
         res.status(200).json({ accessToken });
     });
 }
 function logout(req, res) {
     auth_service_1.default.logout(req.user.id, res);
-    if (constants_1.NODE_ENV === 'development')
-        console.log(`User logged-out`);
     res.status(200).send({ message: '사용자가 로그아웃 하였습니다' });
 }
 function viewTokens(req, res) {
-    if (constants_1.NODE_ENV === 'development') {
-        const auth = req.headers.authorization;
-        if (!(auth === null || auth === void 0 ? void 0 : auth.startsWith('Bearer ')))
-            throw new UnauthorizedError_1.default();
-        const accessToken = auth.slice(7);
-        const refreshToken = req.cookies[constants_1.REFRESH_TOKEN_COOKIE_NAME];
-        console.log('');
-        console.log(`accessToken:  ${accessToken}`);
-        console.log(`refreshToken: ${refreshToken}`);
-        console.log('');
-        if (!refreshToken)
-            res.status(404).send({ message: '로그인 하세요' });
-    }
-    else {
-        res.status(403).send({ message: '개발자 옵션입니다' });
-    }
+    const auth = req.headers.authorization;
+    if (!(auth === null || auth === void 0 ? void 0 : auth.startsWith('Bearer ')))
+        throw new UnauthorizedError_1.default();
+    const accessToken = auth.slice(7);
+    const refreshToken = req.cookies[constants_1.REFRESH_TOKEN_COOKIE_NAME];
+    console.log('');
+    console.log(`accessToken:  ${accessToken}`);
+    console.log(`refreshToken: ${refreshToken}`);
+    console.log('');
+    //if (!refreshToken) res.status(404).send({ message: '로그인 하세요' });
 }
 function issueTokens(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { accessToken, refreshToken } = yield auth_service_1.default.issueTokens(req.cookies.refreshToken);
-        if (constants_1.NODE_ENV === 'development')
-            console.log(`Tokens refreshed`);
+        //console.log(req.cookies[REFRESH_TOKEN_COOKIE_NAME]);
+        const { accessToken, refreshToken } = yield auth_service_1.default.issueTokens(req.cookies[constants_1.REFRESH_TOKEN_COOKIE_NAME]);
         setTokenCookies(res, refreshToken);
         res.status(201).send({ accessToken });
     });

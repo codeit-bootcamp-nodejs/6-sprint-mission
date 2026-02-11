@@ -41,10 +41,8 @@ function register(data) {
         (0, superstruct_1.assert)(data, user_struct_1.CreateUser);
         const { email, nickname, password } = data;
         const user = yield user_repo_1.default.findByEmail(email);
-        if (user) {
-            console.log('User registered already');
+        if (user)
             throw new ConflictError_1.default('이미 등록된 이메일입니다');
-        }
         const newData = {
             email,
             nickname,
@@ -60,10 +58,8 @@ function login(data) {
         if (!user)
             throw new NotFoundError_1.default();
         const isPasswordOk = yield check_passwordValidity(data.password, user.password);
-        if (!isPasswordOk) {
-            console.log('Invalid password');
+        if (!isPasswordOk)
             throw new ForbiddenError_1.default('비밀번호가 틀렸습니다');
-        }
         if (user.notifications.length) {
             const unreadCount = user.notifications.filter((n) => n.isRead === false).length;
             console.log(`You have ${unreadCount} unread notifications`);
@@ -73,7 +69,7 @@ function login(data) {
     });
 }
 function logout(userId, tokenData) {
-    tokenData.clearCookie(constants_1.REFRESH_TOKEN_COOKIE_NAME, { path: '/users/tokens' });
+    tokenData.clearCookie(constants_1.REFRESH_TOKEN_COOKIE_NAME, { path: '/auth/tokens' });
     const io = (0, socketIO_1.getIO)();
     for (const s of io.of('/').sockets.values()) {
         if (s.data.userId === userId) {
@@ -129,10 +125,9 @@ function check_passwordValidity(textPassword, savedPassword) {
 function verifyUserExist(userId) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = yield user_repo_1.default.findById(userId);
-        if (!user) {
-            console.log('No user found. Resgister again.');
-            throw new NotFoundError_1.default('등록되지 않은 사용자입니다');
-        }
+        // if (!user) {
+        //   throw new NotFoundError('등록되지 않은 사용자입니다');
+        // }
         return user;
     });
 }

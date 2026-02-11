@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const constants_1 = require("../lib/constants");
 const comment_service_1 = __importDefault(require("../service/comment.service"));
 // 모든 댓글 목록 조회
 // 페이지네이션: cursor 기반 (default: limit=10)
@@ -36,8 +35,6 @@ function getList(req, res, next) {
 function get(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const comment = yield comment_service_1.default.get(req.params.id);
-        if (constants_1.NODE_ENV === 'development')
-            console.log('Comments fetched');
         res.status(200).json(comment);
     });
 }
@@ -51,10 +48,6 @@ function postArticle(req, res, next) {
         const { id } = req.params;
         const { id: userId } = req.user;
         const comment = yield comment_service_1.default.postArticle(content, Number(id), userId);
-        if (constants_1.NODE_ENV === 'development') {
-            console.log('');
-            console.log('Comment created');
-        }
         res.status(200).json(comment);
     });
 }
@@ -64,8 +57,6 @@ function postProduct(req, res, next) {
         const { id } = req.params;
         const { id: userId } = req.user;
         const comment = yield comment_service_1.default.postProduct(content, Number(id), userId);
-        if (constants_1.NODE_ENV === 'development')
-            console.log('Comment created');
         res.status(200).json(comment);
     });
 }
@@ -75,8 +66,6 @@ function postProduct(req, res, next) {
 function patch(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const comment = yield comment_service_1.default.patch(req.params.id, req.body, req.user.id);
-        if (constants_1.NODE_ENV === 'development')
-            console.log('Comments edited.');
         res.status(201).json(comment);
     });
 }
@@ -85,8 +74,6 @@ function patch(req, res, next) {
 function erase(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         yield comment_service_1.default.erase(req.params.id);
-        if (constants_1.NODE_ENV === 'development')
-            console.log('Comment deleted.');
         res.status(204).send('Comment deleted.');
     });
 }

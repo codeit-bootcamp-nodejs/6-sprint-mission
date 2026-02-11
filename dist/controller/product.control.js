@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const constants_1 = require("../lib/constants");
 const product_service_1 = __importDefault(require("../service/product.service"));
 // 상품 등록: 토큰 인증된 유저만 가능
 // 입력 필드: name, description, price, tags
@@ -27,13 +26,6 @@ function post(req, res, next) {
             tags: tags
         };
         const [product, priceRecord] = yield product_service_1.default.post(productData);
-        if (constants_1.NODE_ENV === 'development') {
-            console.log('');
-            console.log(`Product_${product.id} created by User_${req.user.id}`);
-            console.log(`Product_${product.id} has PriceRecord_${priceRecord.id}`);
-            console.log(priceRecord);
-            console.log('');
-        }
         res.status(201).json(product);
     });
 }
@@ -49,10 +41,6 @@ function patch(req, res, next) {
             tags: tags !== null && tags !== void 0 ? tags : undefined
         };
         const product = yield product_service_1.default.patch(Number(id), productData);
-        if (constants_1.NODE_ENV === 'development') {
-            console.log(`Product_${id} patched by ${req.user.nickname}`);
-            console.log('');
-        }
         res.status(200).json(product);
     });
 }
@@ -61,8 +49,6 @@ function erase(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const { id } = req.params;
         yield product_service_1.default.erase(Number(id));
-        if (constants_1.NODE_ENV === 'development')
-            console.log(`Product_${id} deleted by ${req.user.nickname}`);
         res.status(204).send({ message: '상품이 삭제되었습니다' });
     });
 }
@@ -79,8 +65,6 @@ function getList(req, res, next) {
         const name = req.query.name;
         const description = req.query.description;
         const products = yield product_service_1.default.getList(offset, limit, order, name, description);
-        if (constants_1.NODE_ENV === 'development')
-            console.log('Product list fetched');
         res.status(200).json(products);
     });
 }
@@ -91,8 +75,6 @@ function get(req, res, next) {
         const { id: productId } = req.params;
         const userId = req.user.id;
         const product = yield product_service_1.default.get(userId, Number(productId));
-        if (constants_1.NODE_ENV === 'development')
-            console.log(`Product_${productId} fetched (in detail)`);
         res.status(200).json(product);
     });
 }

@@ -7,7 +7,7 @@ import { validateReqBody } from '../middleware/validateReqBody';
 
 const userRouter = express.Router();
 
-userRouter.get('/', authenticate({ optional: true }), withTryCatch(userControl.getList)); // 부가기능
+userRouter.get('/', withTryCatch(userControl.getList)); // 부가기능
 
 // 인증된 유저 APIs (비번은 res로 보여주지 않음)
 userRouter.get('/info', authenticate(), withTryCatch(userControl.getInfo)); // 자신의 정보 조회

@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import imageService from '../service/image.service';
 import NotFoundError from '../middleware/errors/NotFoundError';
 import BadRequestError from '../middleware/errors/BadRequestError';
-import { NODE_ENV } from '../lib/constants';
 import { ImgSourceType } from '../types/interfaceType';
 
 // 이미지 목록 imageUrls 조회, 개발 위해 현재는 전체 상품/게시물 출력.
@@ -25,7 +24,6 @@ async function get(req: Request, res: Response, next: NextFunction): Promise<voi
   if (!imgObj.Body) throw new Error('Image body not found');
 
   res.setHeader('Content-Type', imgObj.ContentType ?? 'application/octet-stream');
-  if (NODE_ENV == 'development') console.log('image fetched');
 
   const bytes = await imgObj.Body.transformToByteArray();
   res.end(Buffer.from(bytes));
@@ -52,11 +50,6 @@ async function post(req: Request, res: Response, next: NextFunction): Promise<vo
   });
   if (!item) throw new NotFoundError();
 
-  if (NODE_ENV == 'development') {
-    console.log('Image uploaded in AWS S3. ImgUrls in DB updated.');
-    console.log(item.imageUrls);
-    console.log('');
-  }
   res.status(201).json(item);
 }
 
@@ -66,10 +59,6 @@ async function delList(req: Request, res: Response, next: NextFunction): Promise
   const { type } = req.params as { type: ImgSourceType };
 
   const item = await imageService.delList(type, Number(id));
-  if (NODE_ENV == 'development') {
-    console.log(item);
-    console.log('ImageUrls deleted');
-  }
   res.status(204).send({ message: '이미지가 삭제되었습니다' });
 }
 
@@ -77,10 +66,6 @@ async function del(req: Request, res: Response, next: NextFunction): Promise<voi
   const { id, filename } = req.params;
   const { type } = req.params as { type: ImgSourceType };
   const item = await imageService.del(type, Number(id), filename);
-  if (NODE_ENV == 'development') {
-    console.log(item);
-    console.log('ImageUrls deleted');
-  }
   res.status(204).send({ message: '이미지가 삭제되었습니다' });
 }
 

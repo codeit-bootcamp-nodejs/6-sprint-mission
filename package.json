@@ -49,9 +49,9 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "ts-node prisma/seed.ts",
-    "test": "npm run prisma:migrate && npx prisma generate && jest -c ./jest.config.api.js --detectOpenHandles",
+    "test1": "npm run prisma:migrate && npx prisma generate && jest -c ./jest.config.api.js --detectOpenHandles",
     "test:unit": "jest",
     "coverage": "dotenv -e .env.test -- jest --coverage",
-    "test0": "dotenv -e .env.test -- npm run prisma:migrate && dotenv -e .env.test -- npx prisma generate && dotenv -e .env.test -- jest -c ./jest.config.api.js --detectOpenHandles"
+    "test": "dotenv -e .env.test -- npm run prisma:migrate && dotenv -e .env.test -- npx prisma generate && dotenv -e .env.test -- jest -c ./jest.config.api.js --detectOpenHandles"
   }
 }

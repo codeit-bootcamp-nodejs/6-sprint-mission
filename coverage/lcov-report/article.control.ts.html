@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>32/32</span>
+                <span class='fraction'>21/21</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">68.75% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>11/16</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>30/30</span>
+                <span class='fraction'>21/21</span>
             </div>
         
             
@@ -118,23 +118,11 @@
 <a name='L53'></a><a href='#L53'>53</a>
 <a name='L54'></a><a href='#L54'>54</a>
 <a name='L55'></a><a href='#L55'>55</a>
-<a name='L56'></a><a href='#L56'>56</a>
-<a name='L57'></a><a href='#L57'>57</a>
-<a name='L58'></a><a href='#L58'>58</a>
-<a name='L59'></a><a href='#L59'>59</a>
-<a name='L60'></a><a href='#L60'>60</a>
-<a name='L61'></a><a href='#L61'>61</a>
-<a name='L62'></a><a href='#L62'>62</a>
-<a name='L63'></a><a href='#L63'>63</a>
-<a name='L64'></a><a href='#L64'>64</a>
-<a name='L65'></a><a href='#L65'>65</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L56'></a><a href='#L56'>56</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -143,14 +131,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -163,7 +147,6 @@
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -173,7 +156,6 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -191,31 +173,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { NODE_ENV } from '../lib/constants';
-import articleService from '../service/article.service';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import articleService from '../service/article.service';
 import { Request, Response } from 'express';
 &nbsp;
 // 게시물 등록, 수정, 삭제: 토큰 인증된 유저만 가능
 async function post(req: Request, res: Response): Promise&lt;void&gt; {
   const article = await articleService.post(req.user.id, req.body);
-  <span class="missing-if-branch" title="else path not taken" >E</span>if (NODE_ENV === 'development')
-    console.log(`Article_${article.id} posted successfully by user${req.user.id}`);
   res.status(201).json(article);
 }
 &nbsp;
 // 게시물 수정
 async function patch(req: Request, res: Response): Promise&lt;void&gt; {
   const article = await articleService.patch(req.params.id, req.body);
-  <span class="missing-if-branch" title="else path not taken" >E</span>if (NODE_ENV === 'development')
-    console.log(`Article_${req.params.id} edited by user${req.user.id}`);
   res.status(200).json(article);
 }
 &nbsp;
 // 게시물 삭제
 async function erase(req: Request, res: Response): Promise&lt;void&gt; {
   await articleService.erase(req.params.id);
-  <span class="missing-if-branch" title="else path not taken" >E</span>if (NODE_ENV === 'development')
-    console.log(`Article_${req.params.id} deleted by user${req.user.id}`);
   res.status(204).send({ message: '게시물이 삭제되었습니다' });
 }
 &nbsp;
@@ -228,7 +203,6 @@ async function getList(req: Request, res: Response): Promise&lt;void&gt; {
   const content = req.query.content as string | undefined;
 &nbsp;
   const articles = await articleService.getList(offset, limit, order, title, content);
-  <span class="missing-if-branch" title="else path not taken" >E</span>if (NODE_ENV === 'development') console.log('Article list fetched');
   res.status(200).json(articles);
 }
 &nbsp;
@@ -237,7 +211,6 @@ async function get(req: Request, res: Response): Promise&lt;void&gt; {
   const { id: articleId } = req.params;
   const userId = req.user.id;
   const article = await articleService.get(userId, articleId);
-  <span class="missing-if-branch" title="else path not taken" >E</span>if (NODE_ENV === 'development') console.log('Article fetched (in detail)');
   res.status(200).json(article);
 }
 &nbsp;
@@ -262,7 +235,7 @@ export default {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-02-11T06:50:20.196Z
+                at 2026-02-11T15:20:23.971Z
             </div>
         <script src="prettify.js"></script>
         <script>
