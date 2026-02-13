@@ -4,7 +4,6 @@ import BadRequestError from './errors/BadRequestError';
 const ALLOWED_MIME_TYPES = ['image/png', 'image/jpeg', 'image/jpg'];
 const FILE_SIZE_LIMIT = 5 * 1024 * 1024;
 
-// multer 인스터스 생성 -> 라우터에서 미들웨어로 사용
 const upload = multer({
   storage: multer.memoryStorage(),
 

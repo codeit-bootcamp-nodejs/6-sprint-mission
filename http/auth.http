@@ -1,7 +1,7 @@
 #@baseUrl = http://3.34.97.118
 @baseUrl = http://localhost:3000
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcwODE5MDM2LCJleHAiOjE3NzA4MjI2MzZ9.qSPArExkhbAQsYAeQ4qY_fEU-hxJhIjf1y0lxloniLw
-@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcwODE5MDM2LCJleHAiOjE3NzA5MDU0MzZ9.DFiIEzMxbxBP-utNdG6sf8iwDklfCQAftIw81ELpBzk
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcwOTc4NDkyLCJleHAiOjE3NzA5ODIwOTJ9.WdHaHMXmR2BqRgfnt3Ig7wmX-T4AMS2aUIt0pL9Bx1s
+@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcwOTc4NDkyLCJleHAiOjE3NzEwNjQ4OTJ9.xYu5oTVjqsw2fwYNfdQ4F5ah8woCzmgY2pl5eGMbDN4
 ###
 POST {{baseUrl}}/auth/register
 Cookie: access-token={{accessToken}}
@@ -19,8 +19,8 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "user1@example.com",
-  "password": "password1"
+  "email": "user3@example.com",
+  "password": "password3"
 }
 
 ###

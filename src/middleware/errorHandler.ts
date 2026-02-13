@@ -17,7 +17,7 @@ const defaultMessageByStatus: Record<number, string> = {
 };
 
 export function globalErrorHandler(err: any, req: Request, res: Response, next: NextFunction) {
-  console.error(err);
+  // console.error(err); // 개발용
 
   let statusCode: number | undefined = err.statusCode;
   let message: string | undefined = err.message;

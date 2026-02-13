@@ -19,8 +19,6 @@ function authenticate(options?: { optional?: boolean }) {
       const { userId } = verifyAccessToken(accessToken);
 
       const user = await authService.verifyUserExist(userId);
-      if (!user) throw new UnauthorizedError();
-
       req.user = user;
       next();
     } catch (err) {

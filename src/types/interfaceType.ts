@@ -54,14 +54,16 @@ export type Comment2show =
 
 export type TokenType = { accessToken: string | undefined; refreshToken: string | undefined };
 
-interface ImageFile {
+// 이미지 관련
+export interface ImageFile {
   buffer: Buffer;
   mimetype: string;
   originalname: string;
   size: number;
+  destination: string;
+  filename: string;
 }
 
-// 이미지 관련
 import userRepo from '../repository/user.repo';
 import articleRepo from '../repository/article.repo';
 import productRepo from '../repository/product.repo';
@@ -74,8 +76,19 @@ export const RepoMap = {
 
 export type ImgSourceType = keyof typeof RepoMap;
 
+export type ImgUploadParams = {
+  id: string;
+  type: ImgSourceType;
+};
+
 export interface ImagePostInput {
   type: ImgSourceType;
   id: number;
+  baseUrl: string;
   file: ImageFile;
+}
+
+export interface ImageResult {
+  body: Buffer;
+  contentType: string;
 }

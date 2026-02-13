@@ -18,7 +18,7 @@ export const ACCESS_TOKEN_MAXAGE = 1 * 60 * 60 * 1000; // 1 hour
 export const REFRESH_TOKEN_MAXAGE = 1 * 24 * 60 * 60 * 1000; // 1 day
 
 // image paths
-//export const STATIC_IMG_PATH = path.resolve(process.cwd(), 'images_upload'); //pc경로 루트디렉토리의 images
+export const STATIC_IMG_PATH = path.resolve(process.cwd(), 'upload'); //pc경로 루트디렉토리의 images
 //export const PUBLIC_IMG_PATH = '/public/images'; //url경로
 
 // validate req.body
@@ -31,6 +31,11 @@ export const BUCKETNAME = required('AWS_BUCKET_NAME');
 export const REGION = required('AWS_REGION');
 export const ACCESS_KEY_ID = required('AWS_ACCESS_KEY_ID');
 export const SECRET_ACCESS_KEY = required('AWS_SECRET_ACCESS_KEY');
+
+export const BASE_URL =
+  NODE_ENV === 'production'
+    ? `https://${BUCKETNAME}.s3.${REGION}.amazonaws.com`
+    : `http://localhost:${PORT}`;
 
 function required(key: string): string {
   const value = process.env[key];

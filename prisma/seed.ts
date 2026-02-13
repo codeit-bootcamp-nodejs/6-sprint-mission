@@ -13,6 +13,11 @@ async function main() {
   await prisma.product.deleteMany();
   await prisma.article.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.$executeRawUnsafe(`TRUNCATE TABLE "User" RESTART IDENTITY CASCADE`);
+  await prisma.$executeRawUnsafe(`TRUNCATE TABLE "Product" RESTART IDENTITY CASCADE`);
+  await prisma.$executeRawUnsafe(`TRUNCATE TABLE "ProductPriceHistory" RESTART IDENTITY CASCADE`);
+  await prisma.$executeRawUnsafe(`TRUNCATE TABLE "Article" RESTART IDENTITY CASCADE`);
+  await prisma.$executeRawUnsafe(`TRUNCATE TABLE "Comment" RESTART IDENTITY CASCADE`);
 
   console.log('Seeding started...');
   const userData = USERS.map((user) => {

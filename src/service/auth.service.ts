@@ -12,6 +12,7 @@ import { getIO } from '../websocket/socketIO';
 import ConflictError from '../middleware/errors/ConflictError';
 import ForbiddenError from '../middleware/errors/ForbiddenError';
 import NotFoundError from '../middleware/errors/NotFoundError';
+import UnauthorizedError from '../middleware/errors/UnauthorizedError';
 
 async function register(data: CreateUserDto): Promise<SafeUser> {
   assert(data, CreateUser);
@@ -108,9 +109,9 @@ export async function check_passwordValidity(
 
 async function verifyUserExist(userId: number): Promise<User> {
   const user = await userRepo.findById(userId);
-  // if (!user) {
-  //   throw new NotFoundError('등록되지 않은 사용자입니다');
-  // }
+  if (!user) {
+    throw new UnauthorizedError();
+  }
   return user;
 }
 

@@ -1,6 +1,6 @@
 #@baseUrl = http://3.34.97.118
 @baseUrl = http://localhost:3000
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcwODE5MDM2LCJleHAiOjE3NzA4MjI2MzZ9.qSPArExkhbAQsYAeQ4qY_fEU-hxJhIjf1y0lxloniLw
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzcwOTgxMTQ0LCJleHAiOjE3NzA5ODQ3NDR9.Ork8sMsq7wI_upmxI9Dcz-8C-PCH-D7ydMQ9LHOwuY0
 ###
 GET {{baseUrl}}/users
 Authorization: Bearer {{accessToken}}

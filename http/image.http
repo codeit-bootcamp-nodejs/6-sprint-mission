@@ -1,33 +1,33 @@
-@baseUrl = http://3.34.97.118
-#@baseUrl = http://localhost:3000
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImlhdCI6MTc3MDcyNDkyNCwiZXhwIjoxNzcwNzI4NTI0fQ.r1JIHA_SSJtSKsuEm_mC9YXzW8zARINBzYX8fkE4fE0
+#@baseUrl = http://3.34.97.118
+@baseUrl = http://localhost:3000
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzcwOTgwMDQ2LCJleHAiOjE3NzA5ODM2NDZ9.0ac7muNUMArrnwccYcPRh0NYuk-Vc8D032nhidOMg_M
 
 //------------------------ 사용자 이미지 APIs
 
 ###
-GET {{baseUrl}}/images/users/5
+GET {{baseUrl}}/images/users/3
 Authorization: Bearer {{accessToken}}
 ###
-GET {{baseUrl}}/images/users/10/1770724959449.png
+GET {{baseUrl}}/images/users/3/1770980271794.png
 Authorization: Bearer {{accessToken}}
 
 ###
-POST {{baseUrl}}/images/users/10
+POST {{baseUrl}}/images/users/3
 Authorization: Bearer {{accessToken}}
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
-Content-Disposition: form-data; name="image"; filename="YeolMae.png"
+Content-Disposition: form-data; name="image"; filename="Hillie3.png"
 Content-Type: image/png
 
-< ./images/user/YeolMae.png
+< ./images/users/Hillie3.png
 --MyBoundary--
 
 ###
-DELETE {{baseUrl}}/images/users/26
+DELETE {{baseUrl}}/images/users/1
 Authorization: Bearer {{accessToken}}
 ###
-DELETE {{baseUrl}}/images/users/1/1770723139787.png
+DELETE {{baseUrl}}/images/users/3/1770980271794.png
 Authorization: Bearer {{accessToken}}
 
 
@@ -36,24 +36,24 @@ Authorization: Bearer {{accessToken}}
 GET {{baseUrl}}/images/products/12
 Authorization: Bearer {{accessToken}}
 ###
-GET {{baseUrl}}/images/products/32/1770697009465.png
+GET {{baseUrl}}/images/products/12/1770979758546.png
 Authorization: Bearer {{accessToken}}
 
 // 토큰 인증 + 인가 (상품을 등록한 유저만 가능)
 ###
-POST {{baseUrl}}/images/products/26
+POST {{baseUrl}}/images/products/12
 Authorization: Bearer {{accessToken}}
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
-Content-Disposition: form-data; name="image"; filename="iPadProM2.png"
+Content-Disposition: form-data; name="image"; filename="kindle11.png"
 Content-Type: image/png
 
-< ./images/product/iPadProM2.png
+< ./images/products/kindle11.png
 --MyBoundary--
 
 ###
-DELETE {{baseUrl}}/images/products/26
+DELETE {{baseUrl}}/images/products/12
 Authorization: Bearer {{accessToken}}
 ###
 DELETE {{baseUrl}}/images/products/12/1770704226337.png
@@ -70,26 +70,26 @@ Authorization: Bearer {{accessToken}}
 GET {{baseUrl}}/images/articles/9
 Authorization: Bearer {{accessToken}}
 ###
-GET {{baseUrl}}/images/articles/20/1770698048592.png 
+GET {{baseUrl}}/images/articles/4/1770979944399.png
 Authorization: Bearer {{accessToken}}
 
 ###
-POST {{baseUrl}}/images/articles/16
+POST {{baseUrl}}/images/articles/4
 Authorization: Bearer {{accessToken}}
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
-Content-Disposition: form-data; name="image"; filename="lalaLand.png"
+Content-Disposition: form-data; name="image"; filename="lordRings.png"
 Content-Type: image/png
 
-< ./images/article/lalaLand.png
+< ./images/articles/lordRings.png
 --MyBoundary--
 
 ###
-DELETE {{baseUrl}}/images/articles/16
+DELETE {{baseUrl}}/images/articles/4
 Authorization: Bearer {{accessToken}}
 ###
-DELETE {{baseUrl}}/images/articles/9/1770704311657.png
+DELETE {{baseUrl}}/images/articles/21/1770979448777.png
 Authorization: Bearer {{accessToken}}
 
 
