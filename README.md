@@ -20,10 +20,6 @@
 - [x] 데이터베이스는 Postgres 이미지를 사용해 연결하도록 구현
 - [x] 실행된 Express 서버 컨테이너는 호스트 머신에서 3000번 포트로 접근 가능하도록 구현
 
-### 추가 구현
-
-- GitHub Actions workflow로 자동 배포: /.github/workflows/deploy.yml
-
 ## 제출
 
 - Github actions는 .github/workflows/ 폴더에 저장해서 제출
@@ -31,4 +27,5 @@
 
 ## 멘토에게
 
-- 이번 commit에 된 일
+- 미션10에서 이미지 upload 저장을 AWS S3에 하도록 수정했는데, 이번 미션11에서는 docker volume에 저장해야 해서, NODE_ENV='production'이면 전자를, 'development'이면 후자를 하도록 분기하였습니다.
+- CI/CD, docker는 했지만 아주 혼란스럽습니다.

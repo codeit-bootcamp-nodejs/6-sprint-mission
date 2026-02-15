@@ -1,7 +1,7 @@
 node_modules/
 hide/
 images/
-images_upload/
+uploads/
 .env*
 .git
 .gitignore

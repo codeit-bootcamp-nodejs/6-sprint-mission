@@ -1,10 +1,12 @@
 .vscode
 node_modules/
 images/
-images_upload/
+uploads/
 prisma/ERD/
-.env
-.env.test
+coverage/
+.env*
+.dockerignore
+.gitmessage.txt
 .prettierrc
 src/router/index.txt
 src/controller/index.txt
@@ -18,4 +20,5 @@ public/socket-client-test-old1.html
 public/socket-client-test-old2.html
 README_mission5.md
 README_mission8.md
+docker_command.md
 

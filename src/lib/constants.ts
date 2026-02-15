@@ -18,7 +18,7 @@ export const ACCESS_TOKEN_MAXAGE = 1 * 60 * 60 * 1000; // 1 hour
 export const REFRESH_TOKEN_MAXAGE = 1 * 24 * 60 * 60 * 1000; // 1 day
 
 // image paths
-export const STATIC_IMG_PATH = path.resolve(process.cwd(), 'upload'); //pc경로 루트디렉토리의 images
+export const STATIC_IMG_PATH = path.resolve(process.cwd(), 'uploads'); //pc경로 루트디렉토리의 images
 //export const PUBLIC_IMG_PATH = '/public/images'; //url경로
 
 // validate req.body

@@ -1,6 +1,7 @@
 #@baseUrl = http://3.34.97.118
-@baseUrl = http://localhost:3000
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzcwOTc5NTMzLCJleHAiOjE3NzA5ODMxMzN9.qFgnzZg5edq55RpzMj97OJy7a89aFqmd9UELWe5SLrw
+@baseUrl = http://localhost:3001
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcxMTY0NDAyLCJleHAiOjE3NzExNjgwMDJ9.rwRzFiIdIpXMJJBRkh34-yW9YsrA15QwY1LJWKmTWmY
+
 
 // 상품 목록 조회
 // 페이지네이션: offset 기반 (default 값: offset=0, limit=undefined)

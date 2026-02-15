@@ -1,26 +1,26 @@
 #@baseUrl = http://3.34.97.118
-@baseUrl = http://localhost:3000
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzcwOTgwMDQ2LCJleHAiOjE3NzA5ODM2NDZ9.0ac7muNUMArrnwccYcPRh0NYuk-Vc8D032nhidOMg_M
+@baseUrl = http://localhost:3001
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcxMTY0NDAyLCJleHAiOjE3NzExNjgwMDJ9.rwRzFiIdIpXMJJBRkh34-yW9YsrA15QwY1LJWKmTWmY
 
 //------------------------ 사용자 이미지 APIs
 
 ###
-GET {{baseUrl}}/images/users/3
+GET {{baseUrl}}/images/users/1
 Authorization: Bearer {{accessToken}}
 ###
 GET {{baseUrl}}/images/users/3/1770980271794.png
 Authorization: Bearer {{accessToken}}
 
 ###
-POST {{baseUrl}}/images/users/3
+POST {{baseUrl}}/images/users/1
 Authorization: Bearer {{accessToken}}
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
-Content-Disposition: form-data; name="image"; filename="Hillie3.png"
+Content-Disposition: form-data; name="image"; filename="Frodo.png"
 Content-Type: image/png
 
-< ./images/users/Hillie3.png
+< ./images/users/Frodo.png
 --MyBoundary--
 
 ###
