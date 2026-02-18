@@ -1,12 +1,32 @@
 import request from 'supertest';
 import app from '../src/app';
 import { prisma } from '../src/utils/prismaClient';
+import bcrypt from 'bcrypt';
 
 const agent = request.agent(app);
 
 describe('인증이 필요하지 않은 상품 API 테스트', () => {
   beforeAll(async () => {
     await prisma.product.deleteMany();
+    await prisma.user.deleteMany();
+    await prisma.user.createMany({
+      data: [
+        {
+          id: 1,
+          email: 'user1@example.com',
+          password: 'password123',
+          name: 'test',
+          nickname: 'test',
+        },
+        {
+          id: 2,
+          email: 'user2@example.com',
+          password: 'password123',
+          name: 'test2',
+          nickname: 'test2',
+        },
+      ],
+    });
     const product = await prisma.product.create({
       data: {
         id: 1,
@@ -30,6 +50,8 @@ describe('인증이 필요하지 않은 상품 API 테스트', () => {
   });
 
   afterAll(async () => {
+    await prisma.product.deleteMany();
+    await prisma.user.deleteMany();
     await prisma.$disconnect();
   });
 
@@ -90,6 +112,18 @@ describe('인증이 필요하지 않은 상품 API 테스트', () => {
 describe('인증이 필요한 상품 API 테스트', () => {
   let productId: number;
   beforeAll(async () => {
+    await prisma.product.deleteMany();
+    await prisma.user.deleteMany();
+    const hashedPassword = await bcrypt.hash('password123', 10);
+    await prisma.user.create({
+      data: {
+        id: 1,
+        email: 'user1@example.com',
+        password: hashedPassword,
+        name: 'test',
+        nickname: 'test',
+      },
+    });
     const loginResponse = await agent.post('/auth/login').send({
       email: 'user1@example.com',
       password: 'password123',
@@ -108,6 +142,7 @@ describe('인증이 필요한 상품 API 테스트', () => {
 
   afterAll(async () => {
     await prisma.product.deleteMany();
+    await prisma.user.deleteMany();
     await prisma.$disconnect();
   });
 
@@ -128,6 +163,7 @@ describe('인증이 필요한 상품 API 테스트', () => {
         price: 999,
         stock: 10,
         productTags: [{ tag: { tag: '테스트' } }],
+        productImages: [],
       });
       await prisma.product.delete({ where: { id: response.body.id } });
     });

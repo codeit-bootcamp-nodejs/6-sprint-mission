@@ -4,7 +4,7 @@ import {
   DeleteObjectCommand,
   GetObjectCommand,
 } from '@aws-sdk/client-s3';
-import { AWS_REGION, AWS_BUKET_NAME } from './constants';
+import { AWS_REGION, AWS_BUCKET_NAME } from './constants';
 
 const s3 = new S3Client({
   region: AWS_REGION,
@@ -18,7 +18,7 @@ export const putImage = async (
   contentType: string,
 ) => {
   const command = new PutObjectCommand({
-    Bucket: AWS_BUKET_NAME,
+    Bucket: AWS_BUCKET_NAME,
     Key: key,
     Body: body, // SDK stream/buffer 호환
     ContentType: contentType,
@@ -29,7 +29,7 @@ export const putImage = async (
 // 파일 삭제
 export const deleteImage = async (key: string) => {
   const command = new DeleteObjectCommand({
-    Bucket: AWS_BUKET_NAME,
+    Bucket: AWS_BUCKET_NAME,
     Key: key,
   });
   return s3.send(command);
@@ -38,7 +38,7 @@ export const deleteImage = async (key: string) => {
 // 파일 조회 (필요 시)
 export const getImage = async (key: string) => {
   const command = new GetObjectCommand({
-    Bucket: AWS_BUKET_NAME,
+    Bucket: AWS_BUCKET_NAME,
     Key: key,
   });
   return s3.send(command);
@@ -46,5 +46,5 @@ export const getImage = async (key: string) => {
 
 // S3 URL 생성 헬퍼
 export const getS3Url = (key: string) => {
-  return `https://${AWS_BUKET_NAME}.s3.${AWS_REGION}.amazonaws.com/${key}`;
+  return `https://${AWS_BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/${key}`;
 };

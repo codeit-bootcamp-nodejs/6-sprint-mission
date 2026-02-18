@@ -13,6 +13,7 @@ export class ArticleRepository {
         title: true,
         content: true,
         updatedAt: true,
+        userId: true,
         articleImages: { select: { id: true, url: true } },
       },
     });
@@ -31,6 +32,7 @@ export class ArticleRepository {
         title: true,
         content: true,
         updatedAt: true,
+        userId: true,
         articleImages: { select: { id: true, url: true } },
       },
     });

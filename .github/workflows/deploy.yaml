@@ -1,0 +1,27 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - 김민혁
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          port: 22
+          script: |
+            # 프로젝트 경로로 이동 (서버의 실제 경로로 수정 필요 - 예: /home/ubuntu/project-name)
+            cd /home/ec2-user/6-sprint-mission-km
+
+            # 최신 코드 받기 (Main 브랜치)
+            git pull origin 김민혁
+
+            # 의존성 설치 및 빌드 스크립트 실행
+            sh infra/ec2/start.sh

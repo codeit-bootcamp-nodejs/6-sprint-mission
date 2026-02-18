@@ -1,9 +1,24 @@
 import request from 'supertest';
 import app from '../src/app';
 import { prisma } from '../src/utils/prismaClient';
+import bcrypt from 'bcrypt';
 
 describe('로그인 및 회원가입 API 통합 테스트', () => {
+  beforeAll(async () => {
+    await prisma.user.deleteMany();
+    const hashedPassword = await bcrypt.hash('password123', 10);
+    await prisma.user.create({
+      data: {
+        email: 'user1@example.com',
+        password: hashedPassword,
+        name: 'test',
+        nickname: 'test',
+      },
+    });
+  });
+
   afterAll(async () => {
+    await prisma.user.deleteMany();
     await prisma.$disconnect();
   });
   describe('회원가입 요청 API 테스트', () => {

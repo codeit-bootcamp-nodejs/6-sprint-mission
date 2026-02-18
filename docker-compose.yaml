@@ -1,0 +1,52 @@
+name: panda-market
+
+services:
+  server:
+    image: minyeok98/panda-market:latest
+    build:
+      args:
+        - NODE_VERSION=24.13.0
+      dockerfile: Dockerfile
+      pull: true
+      context: .
+    container_name: panda-market
+    env_file: .env # .env 파일의 변수들을 사용
+    environment:
+      - IS_LOCAL=true # 로컬에서만 파일 시스템 저장을 활성화
+    ports:
+      - '3000:3000' # 호스트:컨테이너 포트 연결
+    depends_on:
+      db: # DB가 켜진 후에 실행
+        condition: service_healthy
+    networks:
+      - panda-network
+    command: sh -c "npx prisma generate && npx prisma migrate deploy && npm run start"
+    volumes:
+      - ./uploads:/app/uploads
+
+  db:
+    image: postgres:16
+    container_name: panda-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: mission
+    ports:
+      - '5432:5432'
+    networks:
+      - panda-network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - panda-volume:/var/lib/postgresql/data
+
+volumes:
+  panda-volume:
+
+networks:
+  panda-network:
+    driver: bridge

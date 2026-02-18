@@ -1,12 +1,31 @@
 import request from 'supertest';
 import app from '../src/app';
 import { prisma } from '../src/utils/prismaClient';
-
+import bcrypt from 'bcrypt';
 const agent = request.agent(app);
 
 describe('인증이 필요하지 않은 게시글 API에 대한 통합 테스트', () => {
   beforeAll(async () => {
     await prisma.article.deleteMany();
+    await prisma.user.deleteMany();
+    await prisma.user.createMany({
+      data: [
+        {
+          id: 1,
+          email: 'user1@example.com',
+          password: 'password123',
+          name: 'test',
+          nickname: 'test',
+        },
+        {
+          id: 2,
+          email: 'user2@example.com',
+          password: 'password123',
+          name: 'test2',
+          nickname: 'test2',
+        },
+      ],
+    });
     await prisma.article.create({
       data: {
         id: 1,
@@ -27,6 +46,7 @@ describe('인증이 필요하지 않은 게시글 API에 대한 통합 테스트
 
   afterAll(async () => {
     await prisma.article.deleteMany();
+    await prisma.user.deleteMany();
     await prisma.$disconnect();
   });
   describe('아티클 목록 조회 API 테스트', () => {
@@ -82,6 +102,19 @@ describe('인증이 필요하지 않은 게시글 API에 대한 통합 테스트
 describe('인증이 필요한 게시글 API에 대한 통합 테스트', () => {
   let articleId: number;
   beforeAll(async () => {
+    await prisma.article.deleteMany();
+    await prisma.user.deleteMany();
+    const hashedPassword = await bcrypt.hash('password123', 10);
+    await prisma.user.create({
+      data: {
+        id: 1,
+        email: 'user1@example.com',
+        password: hashedPassword,
+        name: 'test',
+        nickname: 'test',
+      },
+    });
+
     const loginResponse = await agent.post('/auth/login').send({
       email: 'user1@example.com',
       password: 'password123',
@@ -98,6 +131,7 @@ describe('인증이 필요한 게시글 API에 대한 통합 테스트', () => {
 
   afterAll(async () => {
     await prisma.article.deleteMany();
+    await prisma.user.deleteMany();
     await prisma.$disconnect();
   });
 
@@ -108,6 +142,7 @@ describe('인증이 필요한 게시글 API에 대한 통합 테스트', () => {
         content: '게시글 생성 테스트',
       });
       expect(response.status).toBe(201);
+      console.log(response.body);
       expect(response.body).toMatchObject({
         title: '게시글 생성 테스트',
         content: '게시글 생성 테스트',

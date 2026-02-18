@@ -298,7 +298,7 @@ export const ORDERS = [
     updatedAt: '2023-07-19T14:20:00.000Z',
     orderItems: [
       {
-        productId: 'fb25f677-bca3-43d9-b2b4-7040efb0f3fc', // 리바이스 청바지
+        productId: 'fb25f677-bca3-43d9-b2b4-7040efb0f3fc', // 리바이스 청바지 깃플로우워크 테스트
         quantity: 1,
         unitPrice: 12868,
       },

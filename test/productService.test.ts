@@ -142,6 +142,7 @@ describe('ProductService 유닛 테스트', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
         productTags: [{ tag: { tag: 'newTag' } }], // select 결과 시늉
+        productImages: [],
       } as any);
 
       const response = await productService.createProduct(createProductData, user);
@@ -153,18 +154,16 @@ describe('ProductService 유닛 테스트', () => {
       //  expect.objectContaining({}) : 객체안에 특정 속성이 있는지 확인 없어도 가능 하지만 완벽히 일치 해야함
       expect(productRepository.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          data: expect.objectContaining({
-            productName: 'New Product',
-            description: 'Description',
-            price: 1000,
-            stock: 10,
-            productTags: {
-              create: {
-                tag: { connect: { id: 10 } },
-              },
+          productName: 'New Product',
+          description: 'Description',
+          price: 1000,
+          stock: 10,
+          productTags: {
+            create: {
+              tag: { connect: { id: 10 } },
             },
-            user: { connect: { id: user.id } },
-          }),
+          },
+          user: { connect: { id: user.id } },
         }),
       );
       expect(response.productName).toBe('New Product');
@@ -196,6 +195,7 @@ describe('ProductService 유닛 테스트', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
       productTags: [{ tag: { tag: 'existingTag' } }], // select 결과 시늉
+      productImages: [],
     } as any);
 
     const response = await productService.createProduct(createProductData, user);
@@ -207,18 +207,16 @@ describe('ProductService 유닛 테스트', () => {
     //  expect.objectContaining({}) : 객체안에 특정 속성이 있는지 확인 없어도 가능 하지만 완벽히 일치 해야함
     expect(productRepository.create).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: expect.objectContaining({
-          productName: 'New Product',
-          description: 'Description',
-          price: 1000,
-          stock: 10,
-          productTags: {
-            create: {
-              tag: { connect: { id: 9 } },
-            },
+        productName: 'New Product',
+        description: 'Description',
+        price: 1000,
+        stock: 10,
+        productTags: {
+          create: {
+            tag: { connect: { id: 9 } },
           },
-          user: { connect: { id: user.id } },
-        }),
+        },
+        user: { connect: { id: user.id } },
       }),
     );
     expect(response.productName).toBe('New Product');
@@ -262,6 +260,7 @@ describe('ProductService 유닛 테스트', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
         productTags: [{ tag: { tag: 'existingTag' } }], // select 결과 시늉
+        productImages: [],
       } as any);
 
       // 4. 좋아요 누른 유저 목록 설정 (가격 변동 알림 대상)
@@ -288,17 +287,16 @@ describe('ProductService 유닛 테스트', () => {
       });
       //  expect.objectContaining({}) : 객체안에 특정 속성이 있는지 확인 없어도 가능 하지만 완벽히 일치 해야함
       expect(productRepository.update).toHaveBeenCalledWith(
+        user.id,
         expect.objectContaining({
-          where: { id: user.id },
-          data: expect.objectContaining({
-            price: 2000,
-            stock: 20,
-            productTags: {
-              create: {
-                tag: { connect: { id: 9 } },
-              },
+          price: 2000,
+          stock: 20,
+          productTags: {
+            deleteMany: {},
+            create: {
+              tag: { connect: { id: 9 } },
             },
-          }),
+          },
         }),
       );
       expect(response.productName).toBe('New Product');

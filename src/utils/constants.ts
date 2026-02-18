@@ -8,7 +8,7 @@ const JWT_ACCESS_TOKEN_SECRET =
 const JWT_REFRESH_TOKEN_SECRET =
   process.env.JWT_REFRESH_TOKEN_SECRET || 'this_is_temporary_refresh_token_secret';
 const AWS_REGION = process.env.AWS_REGION;
-const AWS_BUKET_NAME = process.env.AWS_BUKET_NAME;
+const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
 const ACCESS_TOKEN_COOKIE_NAME = 'access-token';
 const REFRESH_TOKEN_COOKIE_NAME = 'refresh-token';
 
@@ -20,5 +20,5 @@ export {
   ACCESS_TOKEN_COOKIE_NAME,
   REFRESH_TOKEN_COOKIE_NAME,
   AWS_REGION,
-  AWS_BUKET_NAME,
+  AWS_BUCKET_NAME,
 };

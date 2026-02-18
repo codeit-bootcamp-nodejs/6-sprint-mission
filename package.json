@@ -41,7 +41,8 @@
     "start": "node dist/main.js",
     "dev": "nodemon --watch src --exec ts-node src/main.ts",
     "build": "tsc",
-    "test": "jest  --coverage"
+    "type-check": "tsc --noEmit",
+    "test": "jest --runInBand --coverage"
   },
   "prisma": {
     "seed": "node prisma/seed.js"

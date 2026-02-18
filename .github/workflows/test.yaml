@@ -1,0 +1,60 @@
+name: Run Tests on Pull Request
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/testdb
+      PORT: 3000
+      JWT_ACCESS_TOKEN_SECRET: test_access_token_secret
+      JWT_REFRESH_TOKEN_SECRET: test_refresh_token_secret
+      AWS_REGION: ap-northeast-2
+      AWS_BUKET_NAME: test-bucket
+      # AWS SDK 초기화를 위한 더미 값 (실제 S3 접근 안 함, CI 환경에는 자격 증명이 없으므로 필수)
+      AWS_ACCESS_KEY_ID: test_access_key
+      AWS_SECRET_ACCESS_KEY: test_secret_key
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Run Migrations
+        run: npx prisma migrate deploy
+
+      - name: Run Type Check
+        run: npm run type-check
+
+      - name: Run Tests
+        run: npm test
