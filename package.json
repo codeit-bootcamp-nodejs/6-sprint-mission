@@ -3,6 +3,7 @@
   "scripts": {
     "start": "node ./dist/main.js",
     "build": "tsc",
+    "test": "npm run build",
     "dev": "tsx src/main.ts",
     "dev:watch": "tsx watch src/main.ts",
     "test": "NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --runInBand",

@@ -1,0 +1,56 @@
+name: PR Test
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: ci_user
+          POSTGRES_PASSWORD: ci_password
+          POSTGRES_DB: ci_test_db
+        options: >-
+          --health-cmd "pg_isready -U ci_user -d ci_test_db"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      POSTGRES_USER: ci_user
+      POSTGRES_PASSWORD: ci_password
+      POSTGRES_DB: ci_test_db
+      DATABASE_URL: postgresql://ci_user:ci_password@localhost:5432/ci_test_db
+      JWT_ACCESS_TOKEN_SECRET: test_secret_key
+      JWT_REFRESH_TOKEN_SECRET: test_secret_key
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Apply database migrations
+        run: npx prisma migrate deploy
+
+      - name: build
+        run: npm run build
+
+      - name: Run tests
+        run: npm test

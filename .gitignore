@@ -14,6 +14,8 @@ yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 
+
+
 # Node 진단 리포트 (node --report-on-fatalerror)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
@@ -122,20 +124,6 @@ dist
 
 # TernJS 포트 파일
 .tern-port
-
-### VSCode 관련 ###
-# 개인 개발환경 설정 제외 (필요한 일부만 허용)
-.vscode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-!.vscode/*.code-snippets
-
-# VSCode Local History
-.history/
-*.vsix
 
 # Ionide (F# 관련)
 .ionide

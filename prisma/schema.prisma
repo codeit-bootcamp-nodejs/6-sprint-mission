@@ -55,18 +55,18 @@ model Comment {
 }
 
 model User {
-    id        Int        @id @default(autoincrement())
-    email     String     @unique
-    nickname  String
-    image     String?
-    password  String
-    createdAt DateTime   @default(now())
-    updatedAt DateTime   @updatedAt
-    articles  Article[]
-    products  Product[]
-    comments  Comment[]
-    favorites Favorite[]
-    likes     Like[]
+    id            Int            @id @default(autoincrement())
+    email         String         @unique
+    nickname      String
+    image         String?
+    password      String
+    createdAt     DateTime       @default(now())
+    updatedAt     DateTime       @updatedAt
+    articles      Article[]
+    products      Product[]
+    comments      Comment[]
+    favorites     Favorite[]
+    likes         Like[]
     notifications Notification[]
 }
 
