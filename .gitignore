@@ -1,3 +1,6 @@
-node_modules/
-rest/
+node_modules
+mission12_practice
+mission13_practice
+.github
+.gitignore
 .prettierrc
