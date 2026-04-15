@@ -93,3 +93,39 @@ function quickSortRecursive(nums, low, high) {
 export function quickSort(nums) {
   quickSortRecursive(nums, 0, nums.length - 1);
 }
+
+function heapify(nums, heapSize, rootIndex) {
+  let largestIndex = rootIndex;
+  const leftChildIndex = rootIndex * 2 + 1;
+  const rightChildIndex = rootIndex * 2 + 2;
+
+  if (
+    leftChildIndex < heapSize &&
+    nums[leftChildIndex] > nums[largestIndex]
+  ) {
+    largestIndex = leftChildIndex;
+  }
+
+  if (
+    rightChildIndex < heapSize &&
+    nums[rightChildIndex] > nums[largestIndex]
+  ) {
+    largestIndex = rightChildIndex;
+  }
+
+  if (largestIndex !== rootIndex) {
+    swap(nums, rootIndex, largestIndex);
+    heapify(nums, heapSize, largestIndex);
+  }
+}
+
+export function heapsort(nums) {
+  for (let i = Math.floor(nums.length / 2) - 1; i >= 0; i -= 1) {
+    heapify(nums, nums.length, i);
+  }
+
+  for (let i = nums.length - 1; i > 0; i -= 1) {
+    swap(nums, 0, i);
+    heapify(nums, i, 0);
+  }
+}
