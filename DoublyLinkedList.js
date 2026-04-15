@@ -85,3 +85,20 @@ class DoublyLinkedList {
 }
 
 module.exports = DoublyLinkedList;
+
+if (require.main === module) {
+  const list = new DoublyLinkedList();
+  console.log("find (empty):", list.findNode(1));
+
+  list.addToHead(2);
+  list.addToHead(1);
+  list.addToTail(3);
+  console.log("head:", list.head?.value, "tail:", list.tail?.value);
+
+  list.insertAfter(2, 2.5);
+  console.log("after insertAfter(2,2.5):", list.findNode(2.5)?.value);
+
+  list.removeNode(2.5);
+  console.log("find 2.5 (removed):", list.findNode(2.5));
+  console.log("head:", list.head?.value, "tail:", list.tail?.value);
+}

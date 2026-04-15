@@ -54,3 +54,19 @@ class LinkedList {
 }
 
 module.exports = LinkedList;
+
+if (require.main === module) {
+  const list = new LinkedList();
+  console.log("find (empty):", list.findNode(1));
+
+  list.addNode(1);
+  list.addNode(2);
+  list.addNode(4);
+  console.log("find 2:", list.findNode(2)?.value);
+
+  list.insertAfter(2, 3);
+  console.log("after insertAfter(2,3):", list.findNode(3)?.value);
+
+  list.removeAfter(3); // removes 4
+  console.log("find 4 (removed):", list.findNode(4));
+}

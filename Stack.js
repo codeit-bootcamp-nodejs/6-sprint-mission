@@ -25,3 +25,19 @@ class Stack {
 }
 
 module.exports = Stack;
+
+if (require.main === module) {
+  const stack = new Stack();
+  console.log("isEmpty:", stack.isEmpty());
+  console.log("peek (empty):", stack.peek());
+  console.log("pop (empty):", stack.pop());
+
+  stack.push(1);
+  stack.push(2);
+  stack.push(3);
+  console.log("peek:", stack.peek());
+  console.log("pop:", stack.pop());
+  console.log("pop:", stack.pop());
+  console.log("pop:", stack.pop());
+  console.log("isEmpty:", stack.isEmpty());
+}

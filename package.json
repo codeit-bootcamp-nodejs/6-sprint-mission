@@ -1,0 +1,15 @@
+{
+  "name": "algorithm",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "queue": "node algorithm/Queue.js",
+    "stack": "node algorithm/Stack.js",
+    "linkedlist": "node algorithm/LinkedList.js",
+    "doublylinkedlist": "node algorithm/DoublyLinkedList.js",
+    "bst": "node algorithm/BinarySearchTree.js",
+    "sorts": "node algorithm/sorts.js",
+    "test": "node algorithm/Queue.js && node algorithm/Stack.js && node algorithm/LinkedList.js && node algorithm/DoublyLinkedList.js && node algorithm/BinarySearchTree.js"
+  }
+}

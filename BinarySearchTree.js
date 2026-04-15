@@ -92,3 +92,19 @@ class BinarySearchTree {
 }
 
 module.exports = BinarySearchTree;
+
+if (require.main === module) {
+  const bst = new BinarySearchTree();
+  console.log("find (empty):", bst.find(10));
+
+  [5, 3, 7, 2, 4, 6, 8].forEach((v) => bst.insert(v));
+  console.log("find 6:", bst.find(6)?.value);
+  console.log("find 9:", bst.find(9));
+
+  bst.remove(2); // leaf
+  console.log("after remove(2), find 2:", bst.find(2));
+
+  bst.remove(7); // has two children
+  console.log("after remove(7), find 7:", bst.find(7));
+  console.log("root:", bst.root?.value);
+}

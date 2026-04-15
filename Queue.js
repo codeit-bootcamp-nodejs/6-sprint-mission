@@ -33,3 +33,19 @@ class Queue {
 }
 
 module.exports = Queue;
+
+if (require.main === module) {
+  const q = new Queue();
+  console.log("isEmpty:", q.isEmpty());
+  console.log("peek (empty):", q.peek());
+  console.log("dequeue (empty):", q.dequeue());
+
+  q.enqueue(1);
+  q.enqueue(2);
+  q.enqueue(3);
+  console.log("peek:", q.peek());
+  console.log("dequeue:", q.dequeue());
+  console.log("dequeue:", q.dequeue());
+  console.log("dequeue:", q.dequeue());
+  console.log("isEmpty:", q.isEmpty());
+}
