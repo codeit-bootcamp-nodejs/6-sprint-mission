@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Socket.IO 알림 테스트</title>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <style>
+      body {
+        font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+        padding: 24px;
+        line-height: 1.5;
+      }
+      #log {
+        white-space: pre-wrap;
+        background: #f7f7f7;
+        padding: 12px;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>알림 테스트</h1>
+    <p>액세스 토큰을 입력하고 연결 버튼을 누르세요.</p>
+    <div>
+      <label for="token">Access Token</label>
+      <input id="token" type="text" placeholder="여기에 액세스 토큰 입력" />
+      <button id="connect">연결</button>
+      <button id="disconnect">끊기</button>
+    </div>
+    <p>
+      Live Server 자동 리로드를 피하려면 파일을 직접 열거나 로컬 서버를
+      사용하세요.
+    </p>
+    <div>
+      <button id="open-file">파일로 열기 안내</button>
+      <button id="open-http">로컬 서버 안내</button>
+    </div>
+    <pre id="log"></pre>
+
+    <script>
+      const log = document.getElementById('log');
+      const tokenInput = document.getElementById('token');
+      const connectButton = document.getElementById('connect');
+      const disconnectButton = document.getElementById('disconnect');
+      const openFileButton = document.getElementById('open-file');
+      const openHttpButton = document.getElementById('open-http');
+      let socket = null;
+      const storageKey = 'socketAccessToken';
+
+      tokenInput.value = localStorage.getItem(storageKey) || '';
+
+      function attachListeners() {
+        if (!socket) return;
+
+        socket.on('connect', () => {
+          log.textContent += 'connected\n';
+        });
+
+        socket.on('notification', (data) => {
+          log.textContent += `notification: ${JSON.stringify(data)}\n`;
+        });
+
+        socket.on('connect_error', (err) => {
+          log.textContent += `error: ${err.message}\n`;
+        });
+
+        socket.on('disconnect', () => {
+          log.textContent += 'disconnected\n';
+        });
+      }
+
+      connectButton.addEventListener('click', () => {
+        const accessToken = tokenInput.value.trim();
+        if (!accessToken) {
+          log.textContent += 'error: access token이 필요합니다\n';
+          return;
+        }
+        localStorage.setItem(storageKey, accessToken);
+        if (socket) {
+          socket.disconnect();
+          socket = null;
+        }
+        socket = io('http://localhost:4000', {
+          auth: { token: accessToken },
+        });
+        attachListeners();
+      });
+
+      disconnectButton.addEventListener('click', () => {
+        if (socket) {
+          socket.disconnect();
+          socket = null;
+        }
+      });
+
+      openFileButton.addEventListener('click', () => {
+        log.textContent +=
+          '안내: Finder에서 src/test/socket-test.html 더블클릭으로 file://로 여세요.\n';
+      });
+
+      openHttpButton.addEventListener('click', () => {
+        log.textContent +=
+          '안내: 터미널에서 `python3 -m http.server 5500` 실행 후 http://127.0.0.1:5500/src/test/socket-test.html 접속.\n';
+      });
+    </script>
+  </body>
+</html>

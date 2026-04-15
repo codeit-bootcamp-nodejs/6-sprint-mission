@@ -1,0 +1,178 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 태그
+enum Tag {
+  NONE
+  FASHION
+  BEAUTY
+  SPORTS
+  ELECTRONICS
+  HOME_INTERIOR
+  HOUSEHOLD_SUPPLIES
+  KITCHENWARE
+}
+
+// 알림 타입
+enum NotificationType {
+  PRODUCT_PRICE_CHANGED
+  ARTICLE_COMMENTED
+}
+
+// 상품 
+model Product {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  price       Float
+  stock       Int
+  tags        Tag     @default(NONE)
+  imagePath   String?
+
+  // 관계
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         Int
+  purchase       Purchase[]
+  productComment ProductComment[]
+  productLike    ProductLike[]
+  notifications  Notification[]
+
+  // 타임스탬프
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 게시글
+model Article {
+  id      Int    @id @default(autoincrement())
+  title   String
+  content String
+
+  // 관계
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  comment     ArticleComment[]
+  articleLike ArticleLike[]
+  notifications Notification[]
+
+  // 타임스탬프 =
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 게시글 댓글
+model ArticleComment {
+  id      Int    @id @default(autoincrement())
+  content String
+
+  // 관계
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId Int
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+
+  // 타임스탬프
+  createdAt DateTime @default(now())
+}
+
+// 상품 댓글
+model ProductComment {
+  id      Int    @id @default(autoincrement())
+  content String
+
+  // 관계
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+
+  // 타임스탬프
+  createdAt DateTime @default(now())
+}
+
+// 구매
+model Purchase {
+  id        Int   @id @default(autoincrement())
+  quantity  Int
+  unitPrice Float
+
+  // 관계
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+
+  // 타임스탬프
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 유저
+model User {
+  id           Int     @id @default(autoincrement())
+  email        String  @unique
+  nickname     String
+  image        String?
+  password     String
+  refreshToken String? // nullable 필수!
+
+  // 관계
+  products        Product[]
+  articles        Article[]
+  productComments ProductComment[]
+  articleComments ArticleComment[]
+  productLikes    ProductLike[]
+  articleLikes    ArticleLike[]
+  notifications   Notification[]
+
+  // 타임스탬프
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 상품 좋아요
+model ProductLike {
+  id Int @id @default(autoincrement())
+
+  // 관계
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+
+  // 복합유니크
+  @@unique([userId, productId])
+}
+
+// 게시글 좋아요
+model ArticleLike {
+  id Int @id @default(autoincrement())
+
+  // 관계
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId Int
+
+  // 복합유니크
+  @@unique([userId, articleId])
+}
+
+// 알림
+model Notification {
+  id        Int              @id @default(autoincrement())
+  type      NotificationType
+  message   String
+  isRead    Boolean          @default(false)
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  product   Product?         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int?
+  article   Article?         @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId Int?
+  createdAt DateTime         @default(now())
+}

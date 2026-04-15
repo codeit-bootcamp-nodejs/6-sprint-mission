@@ -1,0 +1,158 @@
+# TODO) Git-Ignore: 노드 기반 프로젝트 공통 무시 규칙
+# =====================================================================
+# Node.js 개발환경에서 자동 생성되거나, 필요 없는 파일들 제외
+# 팀 개발 시 불필요한 파일이 Git에 올라가는 것을 방지하기 위한 설정
+# =====================================================================
+
+### Node 기본 ###
+# 로그 파일 (서버 실행 중 생기는 log들은 커밋할 필요 없음)
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Node 진단 리포트 (node --report-on-fatalerror)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# 실행 중 생성되는 pid 파일
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# jscoverage/JSCover 결과물
+lib-cov
+
+# 테스트 커버리지 디렉토리
+coverage
+*.lcov
+
+# nyc 테스트 커버리지 출력
+.nyc_output
+
+# Grunt 내부 저장소
+.grunt
+
+# Bower 패키지 디렉토리
+bower_components
+
+# node-waf 설정 파일
+.lock-wscript
+
+# Node 애드온 빌드 파일
+build/Release
+
+# 의존성 패키지 디렉토리
+node_modules/
+jspm_packages/
+
+# Snowpack 의존성
+web_modules/
+
+# TypeScript 캐시
+*.tsbuildinfo
+
+# npm 캐시(선택)
+.npm
+
+# ESLint 캐시
+.eslintcache
+
+# stylelint 캐시
+.stylelintcache
+
+# Microbundle 캐시
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Node REPL 히스토리
+.node_repl_history
+
+# npm pack 생성 파일
+*.tgz
+
+# Yarn 무결성 파일
+.yarn-integrity
+
+### 환경 변수 ###
+# 중요: 비밀키가 포함된 env 파일은 절대 Git에 올리지 않음
+.env
+**/.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+### 웹 번들러 / 프레임워크 ###
+# Parcel
+.cache
+.parcel-cache
+
+# Next.js 빌드 결과물
+.next
+out
+
+# Nuxt.js 빌드 결과물
+.nuxt
+dist
+
+# Gatsby 캐시
+.cache/
+
+# VuePress 빌드 결과물
+.vuepress/dist
+.temp
+
+# Docusaurus 캐시
+.docusaurus
+
+# Serverless 빌드 출력을 제외
+.serverless/
+
+# FuseBox 캐시
+.fusebox/
+
+# DynamoDB Local
+.dynamodb/
+
+# TernJS 포트 파일
+.tern-port
+
+### VSCode 관련 ###
+# 개인 개발환경 설정 제외 (필요한 일부만 허용)
+.vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# VSCode Local History
+.history/
+*.vsix
+
+# Ionide (F# 관련)
+.ionide
+
+### Yarn v2 ###
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+### SvelteKit ###
+.svelte-kit
+
+### Webpack ###
+.webpack/
+
+### 개인 작업 디렉토리 ###
+# temp 폴더는 개인 테스트용이므로 Git에 올리지 않음
+temp/

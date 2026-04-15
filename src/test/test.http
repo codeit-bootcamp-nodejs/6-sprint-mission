@@ -1,0 +1,90 @@
+@baseUrl = http://localhost:4000
+@accessToken = YOUR_ACCESS_TOKEN
+@refreshToken = YOUR_REFRESH_TOKEN
+
+### 회원가입
+POST {{baseUrl}}/users/register
+Content-Type: application/json
+
+{
+  "email": "user1@example.com",
+  "password": "user1234",
+  "nickname": "panda",
+  "image": null
+}
+
+### 로그인
+POST {{baseUrl}}/users/login
+Content-Type: application/json
+
+{
+  "email": "user1@example.com",
+  "password": "user1234"
+}
+
+### 토큰 재발급 (accessToken 발급)
+POST {{baseUrl}}/users/token/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+### 알림 목록 조회
+GET {{baseUrl}}/notifications
+Authorization: Bearer {{accessToken}}
+
+### 미읽음 알림 개수 조회
+GET {{baseUrl}}/notifications/unread-count
+Authorization: Bearer {{accessToken}}
+
+### 알림 읽음 처리
+PATCH {{baseUrl}}/notifications/1/read
+Authorization: Bearer {{accessToken}}
+
+### 상품 생성
+POST {{baseUrl}}/products
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "테스트 상품",
+  "description": "소켓 알림 테스트용 상품",
+  "price": 12000,
+  "stock": 111,
+  "tags": "NONE",
+  "imagePath": "test.png"
+}
+
+### 게시글 생성
+POST {{baseUrl}}/articles
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "title": "알림 테스트 게시글",
+  "content": "댓글 알림 테스트용 글입니다"
+}
+
+### 상품 좋아요 등록 (가격 변경 알림 대상)
+POST {{baseUrl}}/product-likes/1/like
+Authorization: Bearer {{accessToken}}
+
+### 상품 가격 변경(알림 트리거)
+PATCH {{baseUrl}}/products/1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "price": 12345
+}
+
+### 게시글 댓글 생성(알림 트리거)
+POST {{baseUrl}}/article-comments
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "articleId": 1,
+  "content": "테스트 댓글입니다"
+}
