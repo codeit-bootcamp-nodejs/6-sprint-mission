@@ -83,10 +83,79 @@ class BinarySearchTree {
   }
 }
 
+/** 반복문 기반 이진 탐색 트리 구현 */
+class IterativeBinarySearchTree {
+  constructor() {
+    this.root = null;
+  }
+
+  insert(value) {
+    const node = new TreeNode(value);
+    if (!this.root) {
+      this.root = node;
+      return;
+    }
+    let cur = this.root;
+    while (true) {
+      if (value < cur.value) {
+        if (!cur.left) {
+          cur.left = node;
+          return;
+        }
+        cur = cur.left;
+      } else if (value > cur.value) {
+        if (!cur.right) {
+          cur.right = node;
+          return;
+        }
+        cur = cur.right;
+      } else {
+        return;
+      }
+    }
+  }
+
+  find(value) {
+    let cur = this.root;
+    while (cur) {
+      if (cur.value === value) return cur;
+      cur = value < cur.value ? cur.left : cur.right;
+    }
+    return null;
+  }
+
+  remove(value) {
+    if (!this.find(value)) return false;
+    this.root = this._removeNode(this.root, value);
+    return true;
+  }
+
+  _removeNode(node, value) {
+    if (!node) return null;
+    if (value < node.value) {
+      node.left = this._removeNode(node.left, value);
+      return node;
+    }
+    if (value > node.value) {
+      node.right = this._removeNode(node.right, value);
+      return node;
+    }
+    if (!node.left && !node.right) return null;
+    if (!node.left) return node.right;
+    if (!node.right) return node.left;
+    let succ = node.right;
+    while (succ.left) succ = succ.left;
+    node.value = succ.value;
+    node.right = this._removeNode(node.right, succ.value);
+    return node;
+  }
+}
+
 module.exports = BinarySearchTree;
+module.exports.IterativeBinarySearchTree = IterativeBinarySearchTree;
 
 if (require.main === module) {
-  // 1) 빈 트리에서 탐색 시 null 반환 확인
+  // 1) 재귀 기반 BST 동작 확인
   const bst = new BinarySearchTree();
   console.log("find (empty):", bst.find(10));
 
@@ -103,4 +172,11 @@ if (require.main === module) {
   bst.remove(7); // has two children
   console.log("after remove(7), find 7:", bst.find(7));
   console.log("root:", bst.root?.value);
+
+  // 5) 반복문 기반 BST 동작 확인
+  const bstIter = new IterativeBinarySearchTree();
+  [10, 5, 15, 3, 7, 12, 18].forEach((v) => bstIter.insert(v));
+  console.log("iter find 12:", bstIter.find(12)?.value);
+  bstIter.remove(5);
+  console.log("iter after remove(5), find 5:", bstIter.find(5));
 }

@@ -71,10 +71,62 @@ class LinkedList {
   }
 }
 
+/** 재귀 기반 단방향 연결 리스트 구현 */
+class RecursiveLinkedList {
+  constructor() {
+    this.head = null;
+  }
+
+  addNode(value) {
+    const node = new ListNode(value);
+    if (!this.head) {
+      this.head = node;
+      return;
+    }
+    this._appendRec(this.head, node);
+  }
+
+  _appendRec(cur, node) {
+    if (!cur.next) {
+      cur.next = node;
+      return;
+    }
+    this._appendRec(cur.next, node);
+  }
+
+  findNode(value) {
+    return this._findRec(this.head, value);
+  }
+
+  _findRec(node, value) {
+    if (!node) return null;
+    if (node.value === value) return node;
+    return this._findRec(node.next, value);
+  }
+
+  insertAfter(targetValue, newValue) {
+    const target = this.findNode(targetValue);
+    if (!target) return false;
+    const inserted = new ListNode(newValue);
+    inserted.next = target.next;
+    target.next = inserted;
+    return true;
+  }
+
+  removeAfter(targetValue) {
+    const target = this.findNode(targetValue);
+    if (!target || !target.next) return null;
+    const removed = target.next;
+    target.next = removed.next;
+    return removed.value;
+  }
+}
+
 module.exports = LinkedList;
+module.exports.RecursiveLinkedList = RecursiveLinkedList;
 
 if (require.main === module) {
-  // 1) 기본 리스트 생성: 1 -> 2 -> 4
+  // 1) 반복문 기반 리스트 동작 확인
   const list = new LinkedList();
   [1, 2, 4].forEach((v) => list.addNode(v));
 
@@ -89,4 +141,11 @@ if (require.main === module) {
   // 4) 2 뒤 노드(3) 제거 후 제거 결과 확인
   console.log("removeAfter(2):", list.removeAfter(2));
   console.log("find 3 after remove:", list.findNode(3));
+
+  // 5) 재귀 기반 리스트 동작 확인
+  const recList = new RecursiveLinkedList();
+  ["a", "b", "d"].forEach((v) => recList.addNode(v));
+  recList.insertAfter("b", "c");
+  console.log("recursive find c:", recList.findNode("c")?.value);
+  console.log("recursive removeAfter(b):", recList.removeAfter("b"));
 }

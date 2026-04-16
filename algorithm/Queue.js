@@ -51,10 +51,42 @@ class Queue {
   }
 }
 
+/** 두 개의 스택으로 구현한 큐 */
+class QueueTwoStacks {
+  constructor() {
+    this._in = [];
+    this._out = [];
+  }
+
+  enqueue(value) {
+    this._in.push(value);
+  }
+
+  _moveIfNeeded() {
+    if (this._out.length) return;
+    while (this._in.length) this._out.push(this._in.pop());
+  }
+
+  dequeue() {
+    this._moveIfNeeded();
+    return this._out.pop();
+  }
+
+  peek() {
+    this._moveIfNeeded();
+    return this._out[this._out.length - 1];
+  }
+
+  isEmpty() {
+    return this._in.length === 0 && this._out.length === 0;
+  }
+}
+
 module.exports = Queue;
+module.exports.QueueTwoStacks = QueueTwoStacks;
 
 if (require.main === module) {
-  // 1) 초기 상태 확인
+  // 1) 연결 리스트 기반 큐 동작 확인
   const queue = new Queue();
   console.log("isEmpty (init):", queue.isEmpty());
 
@@ -70,4 +102,13 @@ if (require.main === module) {
 
   // 4) 하나를 뺀 뒤에도 원소가 남아 있는지 확인
   console.log("isEmpty (end):", queue.isEmpty());
+
+  // 5) 두 스택 기반 큐 동작 확인
+  const queue2 = new QueueTwoStacks();
+  queue2.enqueue("x");
+  queue2.enqueue("y");
+  queue2.enqueue("z");
+  console.log("two-stack peek:", queue2.peek());
+  console.log("two-stack dequeue:", queue2.dequeue());
+  console.log("two-stack peek after dequeue:", queue2.peek());
 }

@@ -37,10 +37,40 @@ class Stack {
   }
 }
 
+/** 연결 리스트 기반 스택 구현 */
+class StackLinkedList {
+  constructor() {
+    this._top = null;
+    this._size = 0;
+  }
+
+  push(value) {
+    this._top = { value, next: this._top };
+    this._size++;
+  }
+
+  pop() {
+    if (!this._top) return undefined;
+    const { value } = this._top;
+    this._top = this._top.next;
+    this._size--;
+    return value;
+  }
+
+  peek() {
+    return this._top ? this._top.value : undefined;
+  }
+
+  isEmpty() {
+    return this._size === 0;
+  }
+}
+
 module.exports = Stack;
+module.exports.StackLinkedList = StackLinkedList;
 
 if (require.main === module) {
-  // 1) 초기 상태 확인
+  // 1) 배열 기반 스택 동작 확인
   const stack = new Stack();
   console.log("isEmpty (init):", stack.isEmpty());
 
@@ -56,4 +86,13 @@ if (require.main === module) {
 
   // 4) 하나를 꺼낸 뒤에도 원소가 남아 있는지 확인
   console.log("isEmpty (end):", stack.isEmpty());
+
+  // 5) 연결 리스트 기반 스택 동작 확인
+  const linkedStack = new StackLinkedList();
+  linkedStack.push("a");
+  linkedStack.push("b");
+  linkedStack.push("c");
+  console.log("linked peek:", linkedStack.peek());
+  console.log("linked pop:", linkedStack.pop());
+  console.log("linked peek after pop:", linkedStack.peek());
 }

@@ -93,10 +93,66 @@ class DoublyLinkedList {
   }
 }
 
+/** 센티넬 노드를 사용하는 이중 연결 리스트 구현 */
+class SentinelDoublyLinkedList {
+  constructor() {
+    this._head = { value: null, prev: null, next: null };
+    this._tail = { value: null, prev: this._head, next: null };
+    this._head.next = this._tail;
+  }
+
+  addToHead(value) {
+    this._insertBetween(value, this._head, this._head.next);
+  }
+
+  addToTail(value) {
+    this._insertBetween(value, this._tail.prev, this._tail);
+  }
+
+  _insertBetween(value, prev, next) {
+    const node = { value, prev, next };
+    prev.next = node;
+    next.prev = node;
+  }
+
+  findNode(value) {
+    let cur = this._head.next;
+    while (cur !== this._tail) {
+      if (cur.value === value) return cur;
+      cur = cur.next;
+    }
+    return null;
+  }
+
+  insertAfter(targetValue, newValue) {
+    const target = this.findNode(targetValue);
+    if (!target) return false;
+    this._insertBetween(newValue, target, target.next);
+    return true;
+  }
+
+  removeNode(value) {
+    const node = this.findNode(value);
+    if (!node) return false;
+    node.prev.next = node.next;
+    node.next.prev = node.prev;
+    return true;
+  }
+
+  get head() {
+    return this._head.next === this._tail ? null : this._head.next;
+  }
+
+  get tail() {
+    return this._tail.prev === this._head ? null : this._tail.prev;
+  }
+}
+
 module.exports = DoublyLinkedList;
+module.exports.SentinelDoublyLinkedList = SentinelDoublyLinkedList;
 
 if (require.main === module) {
-  // 1) head/tail 양쪽 삽입으로 리스트 구성: 1 <-> 2 <-> 3 <-> 5
+  // 1) 일반 포인터 기반 리스트 동작 확인
   const list = new DoublyLinkedList();
   list.addToHead(2);
   list.addToHead(1);
@@ -114,4 +170,13 @@ if (require.main === module) {
   console.log("removeNode(1):", list.removeNode(1));
   console.log("removeNode(5):", list.removeNode(5));
   console.log("head/tail after remove:", list.head?.value, list.tail?.value);
+
+  // 5) 센티넬 기반 리스트 동작 확인
+  const sentinelList = new SentinelDoublyLinkedList();
+  sentinelList.addToHead(20);
+  sentinelList.addToHead(10);
+  sentinelList.addToTail(30);
+  console.log("sentinel head/tail:", sentinelList.head?.value, sentinelList.tail?.value);
+  console.log("sentinel insertAfter(20, 25):", sentinelList.insertAfter(20, 25));
+  console.log("sentinel removeNode(10):", sentinelList.removeNode(10));
 }
