@@ -24,7 +24,8 @@ class BinarySearchTree {
   _insertNode(node, value) {
     if (!node) return new TreeNode(value);
     if (value < node.value) node.left = this._insertNode(node.left, value);
-    else if (value > node.value) node.right = this._insertNode(node.right, value);
+    else if (value > node.value)
+      node.right = this._insertNode(node.right, value);
     return node;
   }
 
