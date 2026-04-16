@@ -122,3 +122,32 @@ module.exports = {
   quickSort,
   heapsort,
 };
+
+if (require.main === module) {
+  // 동일한 입력 배열을 각 정렬 알고리즘으로 비교하기 위한 원본 데이터
+  const base = [5, 1, 4, 2, 8, 3];
+
+  // selectionSort는 제자리 정렬이므로 복사본(a)에 적용
+  const a = [...base];
+  selectionSort(a);
+  console.log("selectionSort:", a);
+
+  // insertionSort도 제자리 정렬이므로 복사본(b)에 적용
+  const b = [...base];
+  insertionSort(b);
+  console.log("insertionSort:", b);
+
+  // mergeSort는 새 배열을 반환하므로 원본(base) 그대로 전달
+  const c = mergeSort(base);
+  console.log("mergeSort:", c);
+
+  // quickSort는 제자리 정렬이므로 복사본(d)에 적용
+  const d = [...base];
+  quickSort(d);
+  console.log("quickSort:", d);
+
+  // heapsort도 제자리 정렬이므로 복사본(e)에 적용
+  const e = [...base];
+  heapsort(e);
+  console.log("heapsort:", e);
+}

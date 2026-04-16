@@ -94,3 +94,24 @@ class DoublyLinkedList {
 }
 
 module.exports = DoublyLinkedList;
+
+if (require.main === module) {
+  // 1) head/tail 양쪽 삽입으로 리스트 구성: 1 <-> 2 <-> 3 <-> 5
+  const list = new DoublyLinkedList();
+  list.addToHead(2);
+  list.addToHead(1);
+  list.addToTail(3);
+  list.addToTail(5);
+
+  // 2) 양 끝 포인터가 기대값을 가리키는지 확인
+  console.log("head/tail:", list.head?.value, list.tail?.value);
+
+  // 3) 중간 삽입(3 뒤에 4) 및 탐색 확인
+  console.log("insertAfter(3, 4):", list.insertAfter(3, 4));
+  console.log("find 4:", list.findNode(4)?.value);
+
+  // 4) head/tail 삭제 후 포인터 갱신 확인
+  console.log("removeNode(1):", list.removeNode(1));
+  console.log("removeNode(5):", list.removeNode(5));
+  console.log("head/tail after remove:", list.head?.value, list.tail?.value);
+}

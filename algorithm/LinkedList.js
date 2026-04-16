@@ -72,3 +72,21 @@ class LinkedList {
 }
 
 module.exports = LinkedList;
+
+if (require.main === module) {
+  // 1) 기본 리스트 생성: 1 -> 2 -> 4
+  const list = new LinkedList();
+  [1, 2, 4].forEach((v) => list.addNode(v));
+
+  // 2) 존재/미존재 값 탐색 확인
+  console.log("find 2:", list.findNode(2)?.value);
+  console.log("find 9:", list.findNode(9));
+
+  // 3) 2 뒤에 3 삽입 후 정상 연결 확인
+  console.log("insertAfter(2, 3):", list.insertAfter(2, 3));
+  console.log("find 3:", list.findNode(3)?.value);
+
+  // 4) 2 뒤 노드(3) 제거 후 제거 결과 확인
+  console.log("removeAfter(2):", list.removeAfter(2));
+  console.log("find 3 after remove:", list.findNode(3));
+}

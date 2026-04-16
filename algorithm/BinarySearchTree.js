@@ -84,3 +84,23 @@ class BinarySearchTree {
 }
 
 module.exports = BinarySearchTree;
+
+if (require.main === module) {
+  // 1) 빈 트리에서 탐색 시 null 반환 확인
+  const bst = new BinarySearchTree();
+  console.log("find (empty):", bst.find(10));
+
+  // 2) 샘플 데이터 삽입 후 탐색 동작 확인
+  [5, 3, 7, 2, 4, 6, 8].forEach((v) => bst.insert(v));
+  console.log("find 6:", bst.find(6)?.value);
+  console.log("find 9:", bst.find(9));
+
+  // 3) 리프 노드 삭제 케이스 확인
+  bst.remove(2); // leaf
+  console.log("after remove(2), find 2:", bst.find(2));
+
+  // 4) 자식이 2개인 노드 삭제 케이스 확인
+  bst.remove(7); // has two children
+  console.log("after remove(7), find 7:", bst.find(7));
+  console.log("root:", bst.root?.value);
+}

@@ -52,3 +52,22 @@ class Queue {
 }
 
 module.exports = Queue;
+
+if (require.main === module) {
+  // 1) 초기 상태 확인
+  const queue = new Queue();
+  console.log("isEmpty (init):", queue.isEmpty());
+
+  // 2) 값 3개를 enqueue 해서 FIFO 구조를 만듭니다.
+  queue.enqueue(1);
+  queue.enqueue(2);
+  queue.enqueue(3);
+
+  // 3) peek/dequeue 결과로 먼저 넣은 값(1)이 먼저 나오는지 확인
+  console.log("peek:", queue.peek());
+  console.log("dequeue:", queue.dequeue());
+  console.log("peek after dequeue:", queue.peek());
+
+  // 4) 하나를 뺀 뒤에도 원소가 남아 있는지 확인
+  console.log("isEmpty (end):", queue.isEmpty());
+}
