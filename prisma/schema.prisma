@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 1. 중고마켓 - 상품 스키마
+model Product {
+  id          String   @id @default(uuid())
+  name        String // 상품명
+  description String // 상품 설명
+  price       Int // 가격 (양수)
+  tags        String[] // 태그 목록 (String 배열)
+  image_url   String? // 이미지 URL (선택사항)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // onDelete: Cascade 설정
+  comments ProductComment[]
+
+  @@map("products")
+}
+
+// 2. 중고마켓 - 댓글 스키마
+model ProductComment {
+  id        String   @id @default(uuid())
+  content   String // 댓글 내용
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Product와의 관계 설정
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_comments")
+}
+
+// 3. 자유게시판 - 게시글 스키마
+model Article {
+  id        String   @id @default(uuid())
+  title     String // 게시글 제목
+  content   String // 게시글 내용
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // onDelete: Cascade 설정
+  comments ArticleComment[]
+
+  @@map("articles")
+}
+
+// 4. 자유게시판 - 댓글 스키마
+model ArticleComment {
+  id        String   @id @default(uuid())
+  content   String // 댓글 내용
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Article과의 관계 설정
+  articleId String
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@map("article_comments")
+}
