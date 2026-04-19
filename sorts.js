@@ -104,3 +104,55 @@ console.log('\n4. 퀵 정렬 테스트');
 const nums4 = [3, 1, 2];
 quickSort(nums4);
 console.log(nums4);
+
+/** 
+ * 힙 정렬
+함수 이름: heapsort()
+숫자형 배열을 받아서 받은 배열을 정렬된 상태로 수정
+ */
+
+function heapsort(arr) {
+  const n = arr.length;
+
+  // 1. 최대 힙(Max Heap) 구성
+  for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
+    heapify(arr, n, i);
+  }
+
+  // 2. 힙에서 요소를 하나씩 추출하여 정렬
+  for (let i = n - 1; i > 0; i--) {
+    // 현재 루트(최댓값)를 배열의 끝으로 보냄
+    [arr[0], arr[i]] = [arr[i], arr[0]];
+    // 배열의 크기를 줄여서 다시 최대 힙 구성
+    heapify(arr, i, 0);
+  }
+}
+
+// 힙의 성질을 유지하도록 돕는 함수
+function heapify(arr, n, i) {
+  let largest = i; // 루트를 가장 큰 값으로 가정
+  const left = 2 * i + 1;
+  const right = 2 * i + 2;
+
+  // 왼쪽 자식이 더 크면 largest 업데이트
+  if (left < n && arr[left] > arr[largest]) {
+    largest = left;
+  }
+
+  // 오른쪽 자식이 더 크면 largest 업데이트
+  if (right < n && arr[right] > arr[largest]) {
+    largest = right;
+  }
+
+  // largest가 루트가 아니면 위치를 교환하고 서브트리에 대해 재귀 호출
+  if (largest !== i) {
+    [arr[i], arr[largest]] = [arr[largest], arr[i]];
+    heapify(arr, n, largest);
+  }
+}
+
+// 테스트
+console.log('\n5. 힙 정렬 테스트');
+const nums5 = [3, 1, 2, 5, 4];
+heapsort(nums5);
+console.log(nums5);
