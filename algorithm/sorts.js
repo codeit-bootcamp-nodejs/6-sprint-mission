@@ -83,9 +83,71 @@ function quickSort(arr, low = 0, high = arr.length - 1) {
   }
 }
 
+/** 힙 정렬용: 인덱스 [시작, 끝] 구간에서 루트를 최대 힙 속성에 맞게 아래로 내립니다. */
+function siftDown(arr, start, end) {
+  let root = start;
+  while (true) {
+    const left = root * 2 + 1;
+    if (left > end) break;
+    let largest = root;
+    if (arr[largest] < arr[left]) largest = left;
+    const right = left + 1;
+    if (right <= end && arr[largest] < arr[right]) largest = right;
+    if (largest === root) break;
+    [arr[root], arr[largest]] = [arr[largest], arr[root]];
+    root = largest;
+  }
+}
+
+/**
+ * 힙 정렬 — 배열을 제자리에서 오름차순으로 정렬합니다.
+ * @param {number[]} arr
+ */
+function heapsort(arr) {
+  const n = arr.length;
+  if (n <= 1) return;
+  for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
+    siftDown(arr, i, n - 1);
+  }
+  for (let end = n - 1; end > 0; end--) {
+    [arr[0], arr[end]] = [arr[end], arr[0]];
+    siftDown(arr, 0, end - 1);
+  }
+}
+
 module.exports = {
   selectionSort,
   insertionSort,
   mergeSort,
   quickSort,
+  heapsort,
 };
+
+if (require.main === module) {
+  // 동일한 입력 배열을 각 정렬 알고리즘으로 비교하기 위한 원본 데이터
+  const base = [5, 1, 4, 2, 8, 3];
+
+  // selectionSort는 제자리 정렬이므로 복사본(a)에 적용
+  const a = [...base];
+  selectionSort(a);
+  console.log("selectionSort:", a);
+
+  // insertionSort도 제자리 정렬이므로 복사본(b)에 적용
+  const b = [...base];
+  insertionSort(b);
+  console.log("insertionSort:", b);
+
+  // mergeSort는 새 배열을 반환하므로 원본(base) 그대로 전달
+  const c = mergeSort(base);
+  console.log("mergeSort:", c);
+
+  // quickSort는 제자리 정렬이므로 복사본(d)에 적용
+  const d = [...base];
+  quickSort(d);
+  console.log("quickSort:", d);
+
+  // heapsort도 제자리 정렬이므로 복사본(e)에 적용
+  const e = [...base];
+  heapsort(e);
+  console.log("heapsort:", e);
+}

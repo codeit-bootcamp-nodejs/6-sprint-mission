@@ -2,17 +2,12 @@
   "name": "6-sprint-mission",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/app.js",
-    "start": "node src/app.js",
-    "seed": "node scripts/prisma-seed.js"
-  },
-  "prisma": {
-    "seed": "node scripts/prisma-seed.js"
+    "test": "node --test 'algorithm/**/*.test.js'"
   },
   "repository": {
+    "type": "git",
     "url": "git+https://github.com/wndms328-lgtm/6-sprint-mission.git"
   },
   "author": "",
@@ -20,18 +15,5 @@
   "bugs": {
     "url": "https://github.com/wndms328-lgtm/6-sprint-mission/issues"
   },
-  "homepage": "https://github.com/wndms328-lgtm/6-sprint-mission#readme",
-  "dependencies": {
-    "@prisma/client": "^6.18.0",
-    "axios": "^1.13.1",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0",
-    "mongoose": "^7.8.7",
-    "multer": "^2.0.2"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.10",
-    "prisma": "^6.18.0"
-  }
+  "homepage": "https://github.com/wndms328-lgtm/6-sprint-mission#readme"
 }
