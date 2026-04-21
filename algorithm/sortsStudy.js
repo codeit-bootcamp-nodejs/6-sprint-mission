@@ -235,3 +235,69 @@ function partition(arr, left, right) {
 const nums4 = [5, 8, 3, 2, 7, 1, 4, 9, 6];
 quickSort(nums4);
 console.log(`퀵 정렬 결과 : ${nums4}`);
+
+// =========================================
+
+console.log("=-.-=-.-=-.-=-.-= 힙 정렬 =-.-=-.-=-.-.-.-=");
+
+// 힙 정렬 (Heap sort)
+// 숫자형 배열을 받아서 받은 배열을 정렬된 상태로 수정
+
+// 핵심 키워드 :
+// - Max Heap(최대 힙): 부모 노드의 값이 자식 노드의 값보다 크거나 같은 완전 이진 트리
+// - Heapify(힙 생성/유지): 특정 노드를 기준으로 힙의 성질을 만족하도록 트리 구조를 재배치하는 과정
+// - In-place(제자리 정렬): 입력 배열 외에 추가적인 메모리 공간을 거의 사용하지 않아 메모리 효율이 뛰어남
+// - Unstable(불안정 정렬): 동일한 값들의 상대적인 순서가 유지되지 않을 수 있는 특성
+
+function heapSort(arr) {
+  const n = arr.length;
+
+  // 1. 최대 힙 구성 (Build Max Heap)
+  // 배열의 중간(마지막 자식이 있는 노드)부터 루트까지 거꾸로 올라가며 힙을 만듭니다.
+  for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
+    heapify(arr, n, i);
+  }
+
+  // 2. 하나씩 요소를 힙에서 꺼내어 배열 끝으로 보냄 (Extract elements)
+  for (let i = n - 1; i > 0; i--) {
+    // 현재 루트(최대값)를 정렬되지 않은 영역의 마지막 요소와 교체
+    [arr[0], arr[i]] = [arr[i], arr[0]];
+
+    // 루트가 바뀌었으므로, 줄어든 범위(i)에 대해 다시 힙 성질을 복구
+    heapify(arr, i, 0);
+  }
+}
+
+// 힙의 성질을 관리하는 핵심 헬퍼 함수
+function heapify(arr, n, i) {
+  let largest = i; // 루트가 가장 크다고 가정
+  let left = 2 * i + 1; // 왼쪽 자식 인덱스
+  let right = 2 * i + 2; // 오른쪽 자식 인덱스
+
+  // 왼쪽 자식이 부모보다 크다면 largest 갱신
+  if (left < n && arr[left] > arr[largest]) {
+    largest = left;
+  }
+
+  // 오른쪽 자식이 현재 largest보다 크다면 largest 갱신
+  if (right < n && arr[right] > arr[largest]) {
+    largest = right;
+  }
+
+  // largest가 루트(i)가 아니라면 자식과 교체하고, 교체된 자식 노드에 대해 재귀적으로 heapify 수행
+  if (largest !== i) {
+    [arr[i], arr[largest]] = [arr[largest], arr[i]];
+
+    // 영향받는 서브트리를 다시 힙으로 만듦
+    heapify(arr, n, largest);
+  }
+}
+
+// ======================================
+// 테스트 코드 (검증)
+// ======================================
+
+const numsHeap = [4, 10, 3, 5, 1];
+console.log(`힙 정렬 전 배열 : ${numsHeap}`);
+heapSort(numsHeap);
+console.log(`힙 정렬 후 배열 : ${numsHeap}`);

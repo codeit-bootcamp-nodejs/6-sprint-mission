@@ -2,25 +2,80 @@
 
 ### [ 목표 ]
 
-- 자바스크립트로 정렬 알고리즘 구현하기
+- 자바스크립트로 자료 구조 구현하기
+- 자바스크립트로 힙 정렬 구현하기
 
 ### [ 작업 내용 ]
 
-- [x] 선택 정렬 (Selection sort) : 숫자형 배열을 파라미터로 받고, 해당 배열을 수정하도록 구현합니다.
-- [x] 삽입 정렬 (Insertion sort) : 숫자형 배열을 파라미터로 받고, 해당 배열을 수정하도록 구현합니다.
-- [x] 병합 정렬 (Merge sort) : 숫자형 배열을 파라미터로 받고, 정렬된 새로운 배열을 리턴하도록 구현합니다.
-- [x] 퀵 정렬 (Quick sort) : 숫자형 배열을 파라미터로 받고, 해당 배열을 수정하도록 구현합니다.
+1. 다음 자료 구조를 구현해 algorithm 폴더에 저장해 주세요
 
-- 함수 예시
+[x] 링크드 리스트 (Linked List)
 
-```javascript
-const nums = [3, 1, 2];
-console.log(nums); // [3, 1, 2];
-selectionSort(nums);
-console.log(nums); // [1, 2, 3]
-```
+- 파일 이름: LinkedList.js
+- 클래스 이름: LinkedList
+- 메서드:
+  - addNode(value): 리스트의 끝에 새 노드를 추가
+  - findNode(value): 주어진 값을 가지는 노드를 찾아 리턴
+  - insertAfter(targetValue, newValue): 특정 값을 가진 노드 뒤에 새 노드 추가
+  - removeAfter(targetValue): 특정 값을 가진 노드 뒤의 노드를 삭제
+
+<br>
+
+[x] 이중 링크드 리스트 (Doubly Linked List)
+
+- 파일 이름: DoublyLinkedList.js
+- 클래스 이름: DoublyLinkedList
+- 메서드:
+  - addToHead(value): 리스트의 앞쪽에 노드 추가
+  - addToTail(value): 리스트의 뒤쪽에 노드 추가
+  - insertAfter(targetValue, newValue): 특정 값을 가진 노드 뒤에 새 노드 추가
+  - findNode(value): 값을 가진 노드를 찾아 반환합니다.
+  - removeNode(value): 특정 값을 가진 노드 삭제
+
+<br>
+
+[x] 큐 (Queue)
+
+- 파일 이름: Queue.js
+- 클래스 이름: Queue
+- 메서드:
+  - enqueue(value): 큐의 맨 뒤에 값을 추가
+  - dequeue(): 큐의 앞에서 값을 제거하고 그 값을 리턴
+  - peek(): 큐의 앞에 있는 값을 제거하지 않고 리턴
+  - isEmpty(): 큐가 비어 있는지 불린형으로 리턴
+
+<br>
+
+[x] 스택 (Stack)
+
+- 파일 이름: Stack.js
+- 클래스 이름: Stack
+- 메서드:
+  - push(value): 스택의 맨 위에 값을 추가
+  - pop(): 스택의 맨 위 값을 제거하고 그 값을 리턴
+  - peek(): 스택의 맨 위 값을 제거하지 않고 그 값을 리턴
+  - isEmpty(): 스택이 비어 있는지 불린형으로 리턴
+
+<br>
+
+[x] 이진 탐색 트리 (Binary Search Tree)
+
+- 파일 이름: BinarySearchTree.js
+- 클래스 이름: BinarySearchTree
+- 메서드:
+  - insert(value): 트리에 값 추가
+  - find(value): 주어진 값을 찾고 해당 노드를 리턴
+  - remove(value): 트리에서 해당 값을 삭제
+
+<br>
+
+2. 다음 알고리즘을 JavaScript로 구현해 algorithm/sorts.js 파일에 추가로 작성해 주세요.
+
+[x] 힙 정렬
+
+- 함수 이름: heapsort()
+- 숫자형 배열을 받아서 받은 배열을 정렬된 상태로 수정
 
 ## 멘토에게
 
-- 선택 정렬 / 삽입 정렬은 어느정도 이해 했는데, 아직 병합 정렬과 퀵정렬은 완벽하게 이해하지 못했습니다.
-- sorts.js 파일은 과제 제출용 파일이고, sortsStudy.js 파일은 공부용 파일입니다. 검토하실 때 참고 부탁드립니다.
+- 전체적인 이론은 이해 했으나, 아직 구현은 미숙한 것 같습니다.

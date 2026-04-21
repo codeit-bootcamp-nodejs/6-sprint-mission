@@ -1,3 +1,7 @@
+// ======================================
+// ----------- 스프린트 미션 12 -----------
+// ======================================
+
 // 선택 정렬 (Selection sort)
 // 문제 1) 선택 정렬 : 숫자형 배열을 파라미터로 받고, 해당 배열을 수정하도록 구현합니다.
 
@@ -31,7 +35,6 @@ console.log(`선택 정렬 후 배열 : ${nums1}`);
 // 삽입 정렬 (Insertion sort)
 // 문제 2) : 숫자형 배열을 파라미터로 받고, 해당 배열을 수정하도록 구현합니다.
 
-console.log("=-.-=-.-=-.-=-.-= 삽입 정렬 =-.-=-.-=-.-=-.-=");
 function insertionSort(arr) {
   if (arr.length <= 1) {
     return arr;
@@ -135,3 +138,49 @@ const nums4 = [3, 1, 2];
 console.log(`퀵 정렬 전 배열 : ${nums4}`);
 quickSort(nums4);
 console.log(`퀵 정렬 후 배열 : ${nums4}`);
+
+// ======================================
+// ----------- 스프린트 미션 13 -----------
+// ======================================
+
+// 힙 정렬 (Heap sort)
+// 숫자형 배열을 받아서 받은 배열을 정렬된 상태로 수정
+
+function heapSort(arr) {
+  const n = arr.length;
+
+  for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
+    heapify(arr, n, i);
+  }
+
+  for (let i = n - 1; i > 0; i--) {
+    [arr[0], arr[i]] = [arr[i], arr[0]];
+
+    heapify(arr, i, 0);
+  }
+}
+
+function heapify(arr, n, i) {
+  let largest = i;
+  let left = 2 * i + 1;
+  let right = 2 * i + 2;
+
+  if (left < n && arr[left] > arr[largest]) {
+    largest = left;
+  }
+
+  if (right < n && arr[right] > arr[largest]) {
+    largest = right;
+  }
+
+  if (largest !== i) {
+    [arr[i], arr[largest]] = [arr[largest], arr[i]];
+
+    heapify(arr, n, largest);
+  }
+}
+
+const numsHeap = [4, 10, 3, 5, 1];
+console.log(`힙 정렬 전 배열 : ${numsHeap}`);
+heapSort(numsHeap);
+console.log(`힙 정렬 후 배열 : ${numsHeap}`);
