@@ -16,7 +16,16 @@ export const notificationController = {
 
   // 2) 미읽음 개수 조회
   async unreadCount(req: Request, res: Response) {
-    const count = await notificationService.countUnread(req.user!.id);
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: '인증 정보가 없습니다',
+      });
+    }
+
+    const count = await notificationService.countUnread(userId);
 
     res.status(200).json({
       success: true,

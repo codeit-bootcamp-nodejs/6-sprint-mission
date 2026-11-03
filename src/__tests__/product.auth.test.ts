@@ -4,7 +4,7 @@ import prisma from '../config/prisma.js';
 import { createUserWithToken, resetDb } from '../test/test-helpers.js';
 
 describe('Product API (인증 필요)', () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     await resetDb();
   });
 

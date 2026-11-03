@@ -4,7 +4,7 @@ import { app } from '../app.js';
 import { createUserWithToken, resetDb } from '../test/test-helpers.js';
 
 describe('Article API (인증 필요)', () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     await resetDb();
   });
 
